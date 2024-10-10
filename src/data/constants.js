@@ -2,8 +2,8 @@ export const Bio = {
   name: "UDDIN SIYAM",
   roles: [
     "Backend Developer",
-    "DevOps",
-    "Programmer",
+    "DevOps Engineer",
+    "Software Engineer",
   ],
   description:
   "I'm a CS major at Sejong University, Seoul, with 2 years' experience specializing in Java and Spring Boot for AI-driven applications and microservices. I'm passionate about DevOps and thrive in problem-solving and team collaboration to drive innovative solutions. My work spans multilingual environments, including Korean and other languages.",
@@ -40,9 +40,9 @@ export const skills = [
           "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/800px-JavaScript-logo.png",
       },
       {
-        name: "Bootstrap",
+        name: "Tailwind CSS",
         image:
-          "https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tailwind_CSS_Logo.svg/640px-Tailwind_CSS_Logo.svg.png",
       }
     ],
   },
@@ -95,6 +95,23 @@ export const skills = [
   {
     title: "Others",
     skills: [
+      {
+        name: "Llama",
+        image:
+          "https://scontent-ssn1-1.xx.fbcdn.net/v/t39.8562-6/252294889_575082167077436_6034106545912333281_n.svg/meta-logo-primary_standardsize.svg?_nc_cat=1&ccb=1-7&_nc_sid=e280be&_nc_ohc=UlGMbDhZeXsQ7kNvgGAo8Lv&_nc_ht=scontent-ssn1-1.xx&_nc_gid=AqF9ySBW14fCAvkC8Z7enf4&oh=00_AYDmFEjRVZ7zQN1X6rZXIeGlL3mNrz8bXB6q4ivHwRqUaw&oe=670DF439",
+      },
+      
+      {
+        name: "LangChain4j",
+        image:
+          "https://docs.langchain4j.dev/img/logo.svg",
+      },
+      {
+        name: "Swagger",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Swagger-logo.png/640px-Swagger-logo.png",
+      },
+
       {
         name: "Git",
         image:

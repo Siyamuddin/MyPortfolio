@@ -197,7 +197,7 @@ export const education = [
     id: 0,
     img: "https://upload.wikimedia.org/wikipedia/en/8/8d/Sejong_University.png",
     school: "Sejong University, Seoul",
-    date: "Sept 2022 - Aug 2026",
+    date: "Sept 2022 - present",
     grade: "3.50 GPA",
     desc: "I am currently pursuing a Bachelor's degree in Computer Science and Engineering at Sejong University, Soeul, South korea. I have completed 4 semesters and have a CGPA of 3.50. I have taken courses in Data Structures, Java Object-Oriented Programming, Database Management Systems, Operating Systems, and Computer Networks, among others. I am also a Sejong University Excilence scholarship holder.",
     degree: "Bachelor of Engineering - BE, Computer Science and Engineering",

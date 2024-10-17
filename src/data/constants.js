@@ -6,7 +6,7 @@ export const Bio = {
     "Software Engineer",
   ],
   description:
-  "I'm a CS major at Sejong University, Seoul, with 2 years' experience specializing in Java and Spring Boot for AI-driven applications and microservices. I'm passionate about DevOps and thrive in problem-solving and team collaboration to drive innovative solutions. My work spans multilingual environments, including Korean and other languages.",
+  "I'm a CS major at Sejong University, Seoul, with 2 years' experience specializing in Java and Spring Boot for AI-driven applications and microservices. I'm currently practicing DevOps and thrive in problem-solving and team collaboration to drive innovative solutions. My work spans multilingual environments, including Korean and other languages.",
   github: "https://github.com/Siyamuddin",
   resume:
     "https://drive.google.com/file/d/1lZQkXYosYAWAibh_qAaubxB4QvcikX_7/view?usp=drive_link",
@@ -14,38 +14,10 @@ export const Bio = {
   twitter: "https://x.com/SiyamUddin12",
   insta: "https://www.instagram.com/siyam7_/",
   facebook: "https://www.facebook.com/siyam.mizi.9465/",
+  youtube:"https://www.youtube.com/channel/UCEXfHCvKeFF4tpfMhYRDcdg",
 };
 
 export const skills = [
-  {
-    title: "Frontend",
-    skills: [
-      {
-        name: "React Js",
-        image:
-          "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0xMS41IC0xMC4yMzE3NCAyMyAyMC40NjM0OCI+CiAgPHRpdGxlPlJlYWN0IExvZ288L3RpdGxlPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIyLjA1IiBmaWxsPSIjNjFkYWZiIi8+CiAgPGcgc3Ryb2tlPSIjNjFkYWZiIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIi8+CiAgICA8ZWxsaXBzZSByeD0iMTEiIHJ5PSI0LjIiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjApIi8+CiAgPC9nPgo8L3N2Zz4K",
-      },
-      {
-        name: "HTML",
-        image: "https://www.w3.org/html/logo/badge/html5-badge-h-solo.png",
-      },
-      {
-        name: "CSS",
-        image:
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/CSS3_logo_and_wordmark.svg/1452px-CSS3_logo_and_wordmark.svg.png",
-      },
-      {
-        name: "JavaScript",
-        image:
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/800px-JavaScript-logo.png",
-      },
-      {
-        name: "Tailwind CSS",
-        image:
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tailwind_CSS_Logo.svg/640px-Tailwind_CSS_Logo.svg.png",
-      }
-    ],
-  },
   {
     title: "Backend",
     skills: [
@@ -93,12 +65,12 @@ export const skills = [
   },
   
   {
-    title: "Others",
+    title: "Tools",
     skills: [
       {
         name: "Llama",
         image:
-          "https://scontent-ssn1-1.xx.fbcdn.net/v/t39.8562-6/252294889_575082167077436_6034106545912333281_n.svg/meta-logo-primary_standardsize.svg?_nc_cat=1&ccb=1-7&_nc_sid=e280be&_nc_ohc=UlGMbDhZeXsQ7kNvgGAo8Lv&_nc_ht=scontent-ssn1-1.xx&_nc_gid=AqF9ySBW14fCAvkC8Z7enf4&oh=00_AYDmFEjRVZ7zQN1X6rZXIeGlL3mNrz8bXB6q4ivHwRqUaw&oe=670DF439",
+          "https://www.svgrepo.com/show/191122/llama.svg",
       },
       
       {
@@ -145,6 +117,35 @@ export const skills = [
 
     ],
   },
+  {
+    title: "Frontend",
+    skills: [
+      {
+        name: "React Js",
+        image:
+          "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0xMS41IC0xMC4yMzE3NCAyMyAyMC40NjM0OCI+CiAgPHRpdGxlPlJlYWN0IExvZ288L3RpdGxlPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIyLjA1IiBmaWxsPSIjNjFkYWZiIi8+CiAgPGcgc3Ryb2tlPSIjNjFkYWZiIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIi8+CiAgICA8ZWxsaXBzZSByeD0iMTEiIHJ5PSI0LjIiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjApIi8+CiAgPC9nPgo8L3N2Zz4K",
+      },
+      {
+        name: "HTML",
+        image: "https://www.w3.org/html/logo/badge/html5-badge-h-solo.png",
+      },
+      {
+        name: "CSS",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/CSS3_logo_and_wordmark.svg/1452px-CSS3_logo_and_wordmark.svg.png",
+      },
+      {
+        name: "JavaScript",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/800px-JavaScript-logo.png",
+      },
+      {
+        name: "Tailwind CSS",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tailwind_CSS_Logo.svg/640px-Tailwind_CSS_Logo.svg.png",
+      }
+    ],
+  },
 ];
 
 export const experiences = [
@@ -157,7 +158,6 @@ export const experiences = [
     desc: "Working on Backend system development, DevOps and system desgine.",
     skills: [
       "Docker",
-      "Terraform",
       "AWS",
       "EC2",
       "Tomcat",
@@ -226,7 +226,7 @@ export const projects = [
   {
     id: 9,
     title: "AiBuddy",
-    date: "Sept 2024 - present",
+    date: "SEPT 2024 - present",
     description:
     "I have developed a cutting-edge AI-powered student support application using Java and Spring Boot. Employed advanced natural language processing techniques, including LangChain4j, Ollama Llamas3.2, and Ollama's embedding model, to implement Retrieval Augmented Generation (RAG) operations. This innovative approach significantly improved the quality and relevance of AI- generated responses. Students can easily upload lecture materials and benefit from personalized AI assistance, enhancing their overall learning experience.(Currently working on it)",
     image:
@@ -272,7 +272,7 @@ export const projects = [
   {
     id: 1,
     title: "ChatBees",
-    date: "Oct 2023 - Present",
+    date: "OCT 2023 - DEC 2023",
     description:
 "A chatting application for multiple users. It allows user to enter in a chatroom just simply providing his/her name and start chatting, it works like walki-talki. It was a class project for the class Problem Solving with Java by prof. Geyanendra Prasad Joshi.",
   image:
@@ -288,8 +288,8 @@ export const projects = [
   },
   {
     id: 2,
-    title: "Smart Task-Manager:",
-    date: "Jan 2023 - Mar 2023",
+    title: "Smart Task-Manager",
+    date: "JAN 2023 - MAR 2023",
     description:
 "This smart task manager enables users to create accounts securely authenticated by JWT. Users can effortlessly create tasks, receiving confirmation emails upon task creation. Additionally, the system automatically sends reminder emails if tasks remain incomplete, ensuring timely completion. This streamlined approach enhances user productivity and accountability while maintaining security and convenience.",
     image:
@@ -298,6 +298,25 @@ export const projects = [
     category: "web app",
     github: "https://github.com/Siyamuddin/smart-task-manager",
     // webapp: "https://brain-tumor.netlify.app/",
+    // member: [
+    //   {
+    //     name: "SIYAM UDDIN",
+    //     img: "https://avatars.githubusercontent.com/u/64485885?v=4",
+    //     linkedin: "https://www.linkedin.com/in/rishav-chanda-b89a791b3/",
+    //     github: "https://github.com/rishavchanda/",
+    //   },
+    // ],
+  },
+  {
+    id: 3,
+    title: "Portfolio",
+    date: "FEB 2024 - MAR 2024",
+    description:" This my portfolio website, you find all my lates skills and projects here. It is user friendly and responsive. It also has dynamic featuers like email response and etc. ",
+    image:"https://media.licdn.com/dms/image/v2/D562DAQGLvmegI-9Tag/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1729179051336?e=1729785600&v=beta&t=NkmcTwpoSUGKBkcJMmkjYp5_UdIInRqh8SXjvqZo5hU",
+    tags: ["Javascript", "React.js", "HTML", "CSS"],
+    category: "web app",
+    github: "https://github.com/Siyamuddin/MyPortfolio",
+    webapp: "https://uddin.netlify.app/",
     // member: [
     //   {
     //     name: "SIYAM UDDIN",

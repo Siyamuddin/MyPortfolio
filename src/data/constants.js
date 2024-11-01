@@ -195,7 +195,7 @@ export const experiences = [
 export const education = [
   {
     id: 0,
-    img: "https://upload.wikimedia.org/wikipedia/en/8/8d/Sejong_University.png",
+    img: "https://upload.wikimedia.org/wikipedia/en/thumb/e/ee/Sejong_University_logo.svg/1200px-Sejong_University_logo.svg.png",
     school: "Sejong University, Seoul",
     date: "Sept 2022 - present",
     grade: "3rd year",
@@ -230,7 +230,7 @@ export const projects = [
     description:
     "I have developed a cutting-edge AI-powered student support application using Java and Spring Boot. Employed advanced natural language processing techniques, including LangChain4j, Ollama Llamas3.2, and Ollama's embedding model, to implement Retrieval Augmented Generation (RAG) operations. This innovative approach significantly improved the quality and relevance of AI- generated responses. Students can easily upload lecture materials and benefit from personalized AI assistance, enhancing their overall learning experience.(Currently working on it)",
     image:
-      "https://media.licdn.com/dms/image/v2/D562DAQF9JGthrqxswA/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1728572952862?e=1729180800&v=beta&t=-YYx0dXeYYRYWVLibyFhGmi7pmF2X3znGqm1zJCLQ04",
+      "https://media.licdn.com/dms/image/v2/D562DAQF9JGthrqxswA/profile-treasury-image-shrink_160_160/profile-treasury-image-shrink_160_160/0/1728572953012?e=1731049200&v=beta&t=G_D54eEaMtBuxKBKCn7j9swSMBIA2_0MQpPQzgM6v7A",
     tags: [
       "Docker",
       "AWS",
@@ -255,7 +255,7 @@ export const projects = [
     description:
     "This platform serves as a user-friendly semi ecommerce duty- free shop, allowing administrators to effortlessly manage products, payments, and sales history. Admins can seamlessly add, update, or remove products while tracking payments and accessing monthly and yearly sales data. Additionally, they have the capability to notify customers about new offers and deals via email",
     image:
-      "https://media.licdn.com/dms/image/v2/D562DAQFyzFCQaFqCjw/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1719357540016?e=1729180800&v=beta&t=52DWtuqL_3qYPcnGxKRZYmxuciCPrFU5jKUSTuEMWJw",
+      "https://media.licdn.com/dms/image/sync/v2/D5627AQEkhWYgPoP5pQ/articleshare-shrink_160/articleshare-shrink_160/0/1726833422956?e=1731049200&v=beta&t=WdRlAiS69OYdWsMASQxrIzIbtvw6o845HxrXFjAIh84",
     tags: ["Spring Boot", "Java", "MySql", "Redis", "Spring Security","Docker"],
     category: "web app",
     github: "https://github.com/rishavchanda/Podstream",
@@ -276,7 +276,7 @@ export const projects = [
     description:
 "A chatting application for multiple users. It allows user to enter in a chatroom just simply providing his/her name and start chatting, it works like walki-talki. It was a class project for the class Problem Solving with Java by prof. Geyanendra Prasad Joshi.",
   image:
-      "https://media.licdn.com/dms/image/v2/D562DAQH-0-uKjIJKtg/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1728573255375?e=1729180800&v=beta&t=TZNNoBDeNgnUuIZBpcW2GbrGTi02Rr_boFSrB7W3MDE",
+      "https://media.licdn.com/dms/image/v2/D562DAQH-0-uKjIJKtg/profile-treasury-image-shrink_160_160/profile-treasury-image-shrink_160_160/0/1728573255843?e=1731049200&v=beta&t=LU4KIUfgBbQPqC2hRRIWXvMNGYr2kSCobxhU3hhftF0",
     tags: [
       "Java",
       "Spring Boot",
@@ -293,7 +293,7 @@ export const projects = [
     description:
 "This smart task manager enables users to create accounts securely authenticated by JWT. Users can effortlessly create tasks, receiving confirmation emails upon task creation. Additionally, the system automatically sends reminder emails if tasks remain incomplete, ensuring timely completion. This streamlined approach enhances user productivity and accountability while maintaining security and convenience.",
     image:
-      "https://media.licdn.com/dms/image/v2/D562DAQHcHwoY-l4Xcw/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1728573396896?e=1729180800&v=beta&t=xc6trNvgW4h2I2kc6kVab7wnzcG5q4IdGTi_a8uYlJU",
+      "https://media.licdn.com/dms/image/v2/D562DAQHcHwoY-l4Xcw/profile-treasury-image-shrink_160_160/profile-treasury-image-shrink_160_160/0/1728573396679?e=1731049200&v=beta&t=2Oi34te_M1RAaOg5sA4IOFFfyoQMTrxxM-ZpEe3Zpt8",
     tags: ["Java", "Spring Boot", "Spring Security", "JWT", "MySql", "Redis"],
     category: "web app",
     github: "https://github.com/Siyamuddin/smart-task-manager",
@@ -312,7 +312,7 @@ export const projects = [
     title: "Portfolio",
     date: "FEB 2024 - MAR 2024",
     description:" This my portfolio website, you find all my lates skills and projects here. It is user friendly and responsive. It also has dynamic featuers like email response and etc. ",
-    image:"https://media.licdn.com/dms/image/v2/D562DAQGLvmegI-9Tag/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1729179051336?e=1729785600&v=beta&t=NkmcTwpoSUGKBkcJMmkjYp5_UdIInRqh8SXjvqZo5hU",
+    image:"https://media.licdn.com/dms/image/v2/D562DAQGLvmegI-9Tag/profile-treasury-image-shrink_160_160/profile-treasury-image-shrink_160_160/0/1729179051500?e=1731049200&v=beta&t=cYdyKtY9jKOS6Qu9MYbZKb6XbY2DqiPlipbJ4HGNzKU",
     tags: ["Javascript", "React.js", "HTML", "CSS"],
     category: "web app",
     github: "https://github.com/Siyamuddin/MyPortfolio",

@@ -246,7 +246,7 @@ export const projects = [
     ],
     category: "web app",
     github: "https://github.com/Siyamuddin/RAG_and_Langchain4j",
-    // webapp: "https://trackify.duckdns.org",
+    webapp: "https://aibuddy.digital/login",
   },
   {
     id: 0,

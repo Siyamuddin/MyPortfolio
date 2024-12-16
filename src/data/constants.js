@@ -10,6 +10,7 @@ export const Bio = {
   github: "https://github.com/Siyamuddin",
   resume:
     "https://drive.google.com/file/d/1uqVJ3NkRjcTTUMNp8CNB3n8Z4CVHOtAU/view?usp=drive_link",
+  aibuddy:"https://aibuddy.digital",
   linkedin: "https://www.linkedin.com/in/uddin-siyam-8953511ab/",
   twitter: "https://x.com/SiyamUddin12",
   insta: "https://www.instagram.com/siyam7_/",

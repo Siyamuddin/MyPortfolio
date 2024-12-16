@@ -4,6 +4,7 @@ import { HeroContainer, HeroBg, HeroLeftContainer, Img, HeroRightContainer, Hero
 import HeroImg from '../../images/HeroImage.jpg'
 import Typewriter from 'typewriter-effect';
 import { Bio } from '../../data/constants';
+import { Padding } from '@mui/icons-material';
 
 const HeroSection = () => {
     return (
@@ -29,6 +30,7 @@ const HeroSection = () => {
                         </TextLoop>
                         <SubTitle>{Bio.description}</SubTitle>
                         <ResumeButton href={Bio.resume} target='display'>Check Resume</ResumeButton>
+                        <ResumeButton href={Bio.aibuddy} target='display' style={{ marginTop: "20px" }}>Use my product</ResumeButton>
                     </HeroLeftContainer>
 
                     <HeroRightContainer id="Right">

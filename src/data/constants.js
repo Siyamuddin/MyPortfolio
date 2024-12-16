@@ -228,7 +228,7 @@ export const projects = [
     title: "AiBuddy",
     date: "SEPT 2024 - present",
     description:
-    "I have developed a cutting-edge AI-powered student support application using Java and Spring Boot. Employed advanced natural language processing techniques, including LangChain4j, Ollama Llamas3.2, and Ollama's embedding model, to implement Retrieval Augmented Generation (RAG) operations. This innovative approach significantly improved the quality and relevance of AI- generated responses. Students can easily upload lecture materials and benefit from personalized AI assistance, enhancing their overall learning experience.(Currently working on it)",
+    "AI-powered student support application using LangChain4j, enhancing response relevance by 30%, benefiting all my campus students. Reduced API response time by 25% through Redis caching optimization. Employed advanced natural language processing techniques, including LangChain4j, Llamas3.2, and embedding model, to implement Retrieval Augmented Generation (RAG) operations with advance Prompt Engineering. This approach significantly improved the quality and relevance of AI-generated responses. Students can easily upload lecture materials and benefit from personalized AI assistance, enhancing their overall learning experience.(Currently working on it)",
     image:
       "https://media.licdn.com/dms/image/v2/D562DAQF9JGthrqxswA/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1728572952862?e=1733317200&v=beta&t=f4zlDELIF6ROInL4f63iIS30rmYXQ56C-zZziPbRCr4",
     tags: [

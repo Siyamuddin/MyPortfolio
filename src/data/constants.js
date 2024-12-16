@@ -9,7 +9,7 @@ export const Bio = {
   "I'm a CS major at Sejong University, Seoul, with 2 years' experience specializing in Java and Spring Boot for AI-driven applications and microservices. I'm currently practicing DevOps and thrive in problem-solving and team collaboration to drive innovative solutions. My work spans multilingual environments, including Korean and other languages.",
   github: "https://github.com/Siyamuddin",
   resume:
-    "https://drive.google.com/file/d/1ImPFxowcX7W51WDQMCFLi3upFLDKjBi4/view?usp=drivesdk",
+    "https://drive.google.com/file/d/1uqVJ3NkRjcTTUMNp8CNB3n8Z4CVHOtAU/view?usp=drive_link",
   linkedin: "https://www.linkedin.com/in/uddin-siyam-8953511ab/",
   twitter: "https://x.com/SiyamUddin12",
   insta: "https://www.instagram.com/siyam7_/",
@@ -230,7 +230,7 @@ export const projects = [
     description:
     "AI-powered student support application using LangChain4j, enhancing response relevance by 30%, benefiting all my campus students. Reduced API response time by 25% through Redis caching optimization. Employed advanced natural language processing techniques, including LangChain4j, Llamas3.2, and embedding model, to implement Retrieval Augmented Generation (RAG) operations with advance Prompt Engineering. This approach significantly improved the quality and relevance of AI-generated responses. Students can easily upload lecture materials and benefit from personalized AI assistance, enhancing their overall learning experience.(Currently working on it)",
     image:
-      "https://media.licdn.com/dms/image/v2/D562DAQF9JGthrqxswA/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1728572952862?e=1733317200&v=beta&t=f4zlDELIF6ROInL4f63iIS30rmYXQ56C-zZziPbRCr4",
+    "/aibuddy.png",
     tags: [
       "Docker",
       "AWS",
@@ -255,7 +255,7 @@ export const projects = [
     description:
     "This platform serves as a user-friendly semi ecommerce duty- free shop, allowing administrators to effortlessly manage products, payments, and sales history. Admins can seamlessly add, update, or remove products while tracking payments and accessing monthly and yearly sales data. Additionally, they have the capability to notify customers about new offers and deals via email",
     image:
-      "https://media.licdn.com/dms/image/sync/v2/D5627AQEkhWYgPoP5pQ/articleshare-shrink_800/articleshare-shrink_800/0/1726833422956?e=1733317200&v=beta&t=dB-hLux1d0LWccyQvN_0iHMBJHfjQGSKWumjidOE3Gg",
+    "/masjidNoor.jpg",
     tags: ["Spring Boot", "Java", "MySql", "Redis", "Spring Security","Docker"],
     category: "web app",
     github: "https://github.com/rishavchanda/Podstream",
@@ -276,7 +276,7 @@ export const projects = [
     description:
 "A chatting application for multiple users. It allows user to enter in a chatroom just simply providing his/her name and start chatting, it works like walki-talki. It was a class project for the class Problem Solving with Java by prof. Geyanendra Prasad Joshi.",
   image:
-      "https://media.licdn.com/dms/image/v2/D562DAQH-0-uKjIJKtg/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1728573255375?e=1733317200&v=beta&t=z7J9zHVVpxAtRPe1UhO1GJp4FCKSls-bs826zhxRoOg",
+  "chatapp.png",
     tags: [
       "Java",
       "Spring Boot",
@@ -293,7 +293,7 @@ export const projects = [
     description:
 "This smart task manager enables users to create accounts securely authenticated by JWT. Users can effortlessly create tasks, receiving confirmation emails upon task creation. Additionally, the system automatically sends reminder emails if tasks remain incomplete, ensuring timely completion. This streamlined approach enhances user productivity and accountability while maintaining security and convenience.",
     image:
-      "https://media.licdn.com/dms/image/v2/D562DAQHcHwoY-l4Xcw/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1728573396896?e=1733317200&v=beta&t=6XywQsSTtlLHjPQGmTnDVZobr4MNePTN-2ceQJISf4I",
+"/stm.png",
     tags: ["Java", "Spring Boot", "Spring Security", "JWT", "MySql", "Redis"],
     category: "web app",
     github: "https://github.com/Siyamuddin/smart-task-manager",
@@ -312,7 +312,7 @@ export const projects = [
     title: "Portfolio",
     date: "FEB 2024 - MAR 2024",
     description:" This my portfolio website, you find all my lates skills and projects here. It is user friendly and responsive. It also has dynamic featuers like email response and etc. ",
-    image:"https://media.licdn.com/dms/image/v2/D562DAQGLvmegI-9Tag/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1729179051336?e=1733317200&v=beta&t=hxnXCKvlfZ4FRfoUkTvYiRAn2CY4k-_jqrIaVVucOcw",
+    image:"/portfolio.png",
     tags: ["Javascript", "React.js", "HTML", "CSS"],
     category: "web app",
     github: "https://github.com/Siyamuddin/MyPortfolio",

@@ -6,7 +6,7 @@ export const Bio = {
     "Software Engineer",
   ],
   description:
-  "I'm a CS major at Sejong University, Seoul, with 2 years' experience specializing in Java and Spring Boot for AI-driven applications and microservices. I'm currently practicing DevOps and thrive in problem-solving and team collaboration to drive innovative solutions. My work spans multilingual environments, including Korean and other languages.",
+  "I have developed an AI-powered student support application using LangChain4j, enhancing response relevance by 30%, benefiting all my campus students. Reduced API response time by 25% through Redis caching optimization. Employed advanced natural language processing techniques, including LangChain4j, Llamas3.2, and embedding model, to implement Retrieval Augmented Generation (RAG) operations with advance Prompt Engineering. This approach significantly improved the quality and relevance of AI-generated responses. Students can easily upload lecture materials and benefit from personalized AI assistance, enhancing their overall learning experience.(Currently working on it)",
   github: "https://github.com/Siyamuddin",
   resume:
     "https://drive.google.com/file/d/1ImPFxowcX7W51WDQMCFLi3upFLDKjBi4/view?usp=drivesdk",

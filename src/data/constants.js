@@ -9,7 +9,7 @@ export const Bio = {
   "I'm a CS major at Sejong University, Seoul, with 2 years' experience specializing in Java and Spring Boot for AI-driven applications and microservices. I'm currently practicing DevOps and thrive in problem-solving and team collaboration to drive innovative solutions. My work spans multilingual environments, including Korean and other languages.",
   github: "https://github.com/Siyamuddin",
   resume:
-    "https://drive.google.com/file/d/1uqVJ3NkRjcTTUMNp8CNB3n8Z4CVHOtAU/view?usp=drive_link",
+    "https://www.canva.com/design/DAGjOASYqxE/qUSQ3o6JmmkfcNs0z6TDtw/view?utm_content=DAGjOASYqxE&utm_campaign=share_your_design&utm_medium=link2&utm_source=shareyourdesignpanel",
   aibuddy:"https://aibuddy.digital",
   linkedin: "https://www.linkedin.com/in/uddin-siyam-8953511ab/",
   twitter: "https://x.com/SiyamUddin12",

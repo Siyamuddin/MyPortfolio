@@ -1,7 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage -->
   <url>
     <loc>https://siyamuddin.xyz/</loc>
     <priority>1.00</priority>
+  </url>
+
+  <!-- About Me section -->
+  <url>
+    <loc>https://siyamuddin.xyz/#about</loc>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Skills -->
+  <url>
+    <loc>https://siyamuddin.xyz/#skills</loc>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Projects -->
+  <url>
+    <loc>https://siyamuddin.xyz/#projects</loc>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Experience -->
+  <url>
+    <loc>https://siyamuddin.xyz/#experience</loc>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- Education -->
+  <url>
+    <loc>https://siyamuddin.xyz/#education</loc>
+    <priority>0.70</priority>
+  </url>
+
+  <!-- Contact -->
+  <url>
+    <loc>https://siyamuddin.xyz/#contact</loc>
+    <priority>0.70</priority>
   </url>
 </urlset>

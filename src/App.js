@@ -1,5 +1,5 @@
 import { ThemeProvider } from "styled-components";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { darkTheme, lightTheme } from './utils/Themes.js'
 import Navbar from "./components/Navbar";
 import './App.css';
@@ -14,6 +14,7 @@ import Experience from "./components/Experience";
 import Education from "./components/Education";
 import ProjectDetails from "./components/ProjectDetails";
 import styled from "styled-components";
+import { Helmet } from 'react-helmet';
 
 const Body = styled.div`
   background-color: ${({ theme }) => theme.bg};
@@ -26,13 +27,28 @@ const Wrapper = styled.div`
   width: 100%;
   clip-path: polygon(0 0, 100% 0, 100% 100%,30% 98%, 0 100%);
 `
+
 function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [openModal, setOpenModal] = useState({ state: false, project: null });
-  console.log(openModal)
+
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-      <Router >
+      <Router>
+        <Helmet>
+          <title>Siyam Uddin – Java Backend Developer Portfolio</title>
+          <meta name="description" content="Hi, I'm Siyam – a Java Backend Developer skilled in Spring Boot, microservices, and AI-powered applications. Explore my portfolio and experience." />
+          <meta name="keywords" content="Siyam Uddin, Java Developer, Spring Boot, Backend Developer, AI, Microservices, Portfolio, siyamuddin.xyz,siyam,uddin, sejong university,uddin" />
+          <meta name="author" content="Siyam Uddin" />
+          <meta property="og:title" content="Siyam Uddin – Java Backend Developer" />
+          <meta property="og:description" content="Explore Siyam's backend development projects, skills, and experience." />
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content="https://siyamuddin.xyz" />
+          <meta property="og:image" content="https://siyamuddin.xyz/preview.jpg" />
+          <link rel="canonical" href="https://siyamuddin.xyz" />
+          <link rel="icon" href="/favicon.ico" />
+        </Helmet>
+
         <Navbar />
         <Body>
           <HeroSection />

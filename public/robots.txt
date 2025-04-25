@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://siyamuddin.xyz/sitemap.xml

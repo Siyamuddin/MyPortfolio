@@ -1,15 +1,13 @@
 export const Bio = {
-  name: "UDDIN SIYAM",
+  name: "SIYAM",
   roles: [
     "Backend Developer",
     "DevOps Engineer",
     "Software Engineer",
   ],
-  description:
-  "I'm a CS major at Sejong University, Seoul, with 2 years' experience specializing in Java and Spring Boot for AI-driven applications and microservices. I'm currently practicing DevOps and thrive in problem-solving and team collaboration to drive innovative solutions. My work spans multilingual environments, including Korean and other languages.",
+  description:"I am a Computer Science major with 2 years of experience in Java and Spring Boot, specializing in scalable AI-based applications. Learning microservice architecture to improve scalability and system efficiency. Proficient in cloud deployment and team collaboration.",
   github: "https://github.com/Siyamuddin",
-  resume:
-    "https://www.canva.com/design/DAGjOASYqxE/qUSQ3o6JmmkfcNs0z6TDtw/view?utm_content=DAGjOASYqxE&utm_campaign=share_your_design&utm_medium=link2&utm_source=shareyourdesignpanel",
+  resume: "https://www.canva.com/design/DAGjOASYqxE/qUSQ3o6JmmkfcNs0z6TDtw/view?utm_content=DAGjOASYqxE&utm_campaign=share_your_design&utm_medium=link2&utm_source=shareyourdesignpanel",
   aibuddy:"https://aibuddy.digital",
   linkedin: "https://www.linkedin.com/in/uddin-siyam-8953511ab/",
   twitter: "https://x.com/SiyamUddin12",
@@ -329,10 +327,4 @@ export const projects = [
   },
 ];
 
-export const TimeLineData = [
-  { year: 2017, text: "Started my journey" },
-  { year: 2018, text: "Worked as a freelance developer" },
-  { year: 2019, text: "Founded JavaScript Mastery" },
-  { year: 2020, text: "Shared my projects with the world" },
-  { year: 2021, text: "Started my own platform" },
-];
+

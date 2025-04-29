@@ -252,7 +252,9 @@ export const projects = [
     title: "NoorMart",
     date: "DEC 2023 - FEB 2024",
     description:
-    "This platform serves as a user-friendly semi ecommerce duty- free shop, allowing administrators to effortlessly manage products, payments, and sales history. Admins can seamlessly add, update, or remove products while tracking payments and accessing monthly and yearly sales data. Additionally, they have the capability to notify customers about new offers and deals via email",
+    "This platform serves as a user-friendly semi ecommerce duty- free shop, allowing administrators to effortlessly manage products, payments, and sales history."+
+    "Admins can seamlessly add, update, or remove products while tracking payments and accessing monthly and yearly sales data. Additionally, they have the capability to notify customers about new offers and deals via email."+
+    "I have secured this using Spring Security and JWT authentication.",
     image:
     "/masjidNoor.jpg",
     tags: ["Spring Boot", "Java", "MySql", "Redis", "Spring Security","Docker"],

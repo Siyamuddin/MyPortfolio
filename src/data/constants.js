@@ -8,7 +8,7 @@ export const Bio = {
   description:"I am a Computer Science major with 2 years of experience in Java and Spring Boot, specializing in scalable AI-based applications. Learning microservice architecture to improve scalability and system efficiency. Proficient in cloud deployment and team collaboration.",
   github: "https://github.com/Siyamuddin",
   resume: "https://www.canva.com/design/DAGjOASYqxE/qUSQ3o6JmmkfcNs0z6TDtw/view?utm_content=DAGjOASYqxE&utm_campaign=share_your_design&utm_medium=link2&utm_source=shareyourdesignpanel",
-  aibuddy:"https://aibuddy.digital",
+  aibuddy:"https://github.com/Siyamuddin/AiBuddy",
   linkedin: "https://www.linkedin.com/in/uddin-siyam-8953511ab/",
   twitter: "https://x.com/SiyamUddin12",
   insta: "https://www.instagram.com/siyam7_/",

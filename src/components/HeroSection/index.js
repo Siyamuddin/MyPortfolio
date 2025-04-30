@@ -1,7 +1,7 @@
 import React from 'react'
 import HeroBgAnimation from '../HeroBgAnimation'
 import { HeroContainer, HeroBg, HeroLeftContainer, Img, HeroRightContainer, HeroInnerContainer, TextLoop, Title, Span, SubTitle,SocialMediaIcons,SocialMediaIcon, ResumeButton } from './HeroStyle'
-import HeroImg from '../../images/HeroImage.jpg'
+import HeroImg from '../../images/HeroImage.webp'
 import Typewriter from 'typewriter-effect';
 import { Bio } from '../../data/constants';
 import { Padding } from '@mui/icons-material';
@@ -30,7 +30,7 @@ const HeroSection = () => {
                         </TextLoop>
                         <SubTitle>{Bio.description}</SubTitle>
                         <ResumeButton href={Bio.resume} target='display'>Check Resume</ResumeButton>
-                        <ResumeButton href={Bio.aibuddy} target='display' style={{ marginTop: "20px" }}>Use my product</ResumeButton>
+                        <ResumeButton href={Bio.aibuddy} target='display' style={{ marginTop: "20px" }}>Use my products</ResumeButton>
                     </HeroLeftContainer>
 
                     <HeroRightContainer id="Right">

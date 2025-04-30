@@ -123,47 +123,79 @@ const ContactButton = styled.input`
 
 
 const Contact = () => {
-
-  //hooks
   const [open, setOpen] = React.useState(false);
   const form = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    emailjs.sendForm('service_8nqpjku', 'template_qzsccvl', form.current, '4M2p1GILelfcPLWHd')
-      .then((result) => {
+
+    const email = form.current.from_email.value;
+    const name = form.current.from_name.value;
+    const subject = form.current.subject.value;
+    const message = form.current.message.value;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    if (!email || !name || !subject || !message) {
+      alert("All fields are required.");
+      return;
+    }
+
+    emailjs
+      .sendForm('service_8nqpjku', 'template_qzsccvl', form.current, '4M2p1GILelfcPLWHd')
+      .then(() => {
         setOpen(true);
         form.current.reset();
       }, (error) => {
         console.log(error.text);
       });
-  }
-
-
+  };
 
   return (
-    <Container>
+    <Container id="contact">
       <Wrapper>
         <Title>Contact</Title>
         <Desc>Feel free to reach out to me for any questions or opportunities!</Desc>
         <ContactForm ref={form} onSubmit={handleSubmit}>
           <ContactTitle>Email Me 🚀</ContactTitle>
-          <ContactInput placeholder="Your Email" name="from_email" />
-          <ContactInput placeholder="Your Name" name="from_name" />
-          <ContactInput placeholder="Subject" name="subject" />
-          <ContactInputMessage placeholder="Message" rows="4" name="message" />
+          <ContactInput
+            placeholder="Your Email"
+            name="from_email"
+            type="email"
+            required
+          />
+          <ContactInput
+            placeholder="Your Name"
+            name="from_name"
+            required
+          />
+          <ContactInput
+            placeholder="Subject"
+            name="subject"
+            required
+          />
+          <ContactInputMessage
+            placeholder="Message"
+            rows="4"
+            name="message"
+            required
+          />
           <ContactButton type="submit" value="Send" />
         </ContactForm>
         <Snackbar
           open={open}
           autoHideDuration={6000}
-          onClose={()=>setOpen(false)}
+          onClose={() => setOpen(false)}
           message="Email sent successfully!"
           severity="success"
         />
       </Wrapper>
     </Container>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;

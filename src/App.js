@@ -5,7 +5,6 @@ import Navbar from "./components/Navbar";
 import './App.css';
 import { BrowserRouter as Router } from 'react-router-dom';
 import HeroSection from "./components/HeroSection";
-import About from "./components/About";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
@@ -20,12 +19,30 @@ const Body = styled.div`
   background-color: ${({ theme }) => theme.bg};
   width: 100%;
   overflow-x: hidden;
+  transition: all 0.3s ease;
 `
 
 const Wrapper = styled.div`
   background: linear-gradient(38.73deg, rgba(204, 0, 187, 0.15) 0%, rgba(201, 32, 184, 0) 50%), linear-gradient(141.27deg, rgba(0, 70, 209, 0) 50%, rgba(0, 70, 209, 0.15) 100%);
   width: 100%;
   clip-path: polygon(0 0, 100% 0, 100% 100%,30% 98%, 0 100%);
+`
+
+const ThemeToggle = styled.button`
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  background: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.text_primary};
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  &:hover {
+    opacity: 0.8;
+  }
 `
 
 function App() {
@@ -48,6 +65,10 @@ function App() {
           <link rel="canonical" href="https://siyamuddin.xyz" />
           <link rel="icon" href="/favicon.ico" />
         </Helmet>
+
+        <ThemeToggle onClick={() => setDarkMode(!darkMode)}>
+          {darkMode ? '☀️ Light' : '🌙 Dark'}
+        </ThemeToggle>
 
         <Navbar />
         <Body>

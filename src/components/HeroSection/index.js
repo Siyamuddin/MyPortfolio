@@ -29,13 +29,19 @@ const HeroSection = () => {
                             </Span>
                         </TextLoop>
                         <SubTitle>{Bio.description}</SubTitle>
-                        <ResumeButton href={Bio.resume} target='display'>Check Resume</ResumeButton>
-                        <ResumeButton href={Bio.aibuddy} target='display' style={{ marginTop: "20px" }}>Use my products</ResumeButton>
+                        <ResumeButton href={Bio.resume} target='display' rel="noopener noreferrer">Check Resume</ResumeButton>
+                        <ResumeButton href={Bio.aibuddy} target='display' rel="noopener noreferrer" style={{ marginTop: "20px" }}>Check my works</ResumeButton>
                     </HeroLeftContainer>
 
                     <HeroRightContainer id="Right">
-
-                        <Img src={HeroImg} alt="hero-image" />
+                        <Img 
+                            src={HeroImg} 
+                            alt="Siyam Uddin - Java Backend Developer" 
+                            loading="eager" 
+                            fetchpriority="high"
+                            width="400"
+                            height="400"
+                        />
                     </HeroRightContainer>
                 </HeroInnerContainer>
 

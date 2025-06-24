@@ -4,53 +4,75 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/HeroImage.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
+    <meta name="theme-color" content="#854CE6" />
+    <meta name="description" content="Siyam Uddin - Java Backend Developer specializing in Spring Boot, Microservices, and AI applications. View my portfolio showcasing projects in backend development, DevOps, and cloud technologies." />
+    <meta name="keywords" content="Siyam Uddin, Java Developer, Spring Boot, Backend Developer, AI, Microservices, Portfolio, DevOps Engineer, Software Engineer, Seoul" />
+    <meta name="author" content="Siyam Uddin" />
+    <meta property="og:title" content="Siyam Uddin – Java Backend Developer Portfolio" />
+    <meta property="og:description" content="Explore Siyam's backend development projects, skills, and experience in Java, Spring Boot, and AI applications." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://siyamuddin.xyz" />
+    <meta property="og:image" content="https://siyamuddin.xyz/preview.jpg" />
+    <meta property="og:image:alt" content="Siyam Uddin - Portfolio Preview" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@SiyamUddin12" />
+    <meta name="robots" content="index, follow" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/HeroImage.jpg" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>UDDIN SIYAM</title>
+    <link rel="canonical" href="https://siyamuddin.xyz" />
+    <title>Siyam Uddin – Java Backend Developer | Spring Boot & AI Specialist</title>
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="%PUBLIC_URL%/HeroImage.webp" as="image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    <!-- Structured Data for Person -->
     <script type="application/ld+json">
-    {
+      {
         "@context": "https://schema.org",
-        "@type": "SoftWareService",
+        "@type": "Person",
         "name": "Siyam Uddin",
-        "description": "I am a CS major at Sejong University, Seoul. I have 2 years of experience and expertise in Java and Spring Boot frameworks for developing AI-powered applications and microservices architecture. I am also passionate about DevOps and enjoy problem-solving and collaborating with team members to find innovative solutions. I have experience working in multilingual environments, including Korean and other languages.",
+        "jobTitle": "Java Backend Developer",
         "url": "https://siyamuddin.xyz",
         "sameAs": [
-            "https://siyamuddin.xyz",
-            "https://www.linkedin.com/in/uddin-siyam-8953511ab/"
+          "https://github.com/Siyamuddin",
+          "https://www.linkedin.com/in/uddin-siyam-8953511ab/",
+          "https://x.com/SiyamUddin12"
+        ],
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "Sejong University",
+          "location": "Seoul, South Korea"
+        },
+        "knowsAbout": [
+          "Java",
+          "Spring Boot",
+          "Microservices",
+          "DevOps",
+          "AWS",
+          "AI Applications"
         ]
-    }
-</script>
+      }
+    </script>
+
+    <!-- Structured Data for Portfolio Website -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Siyam Uddin Portfolio",
+        "url": "https://siyamuddin.xyz",
+        "description": "Portfolio website of Siyam Uddin, a Java Backend Developer specializing in Spring Boot and AI applications",
+        "author": {
+          "@type": "Person",
+          "name": "Siyam Uddin"
+        }
+      }
+    </script>
   </body>
 </html>

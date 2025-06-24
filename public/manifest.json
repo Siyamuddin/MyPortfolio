@@ -1,0 +1,28 @@
+{
+  "short_name": "Siyam Portfolio",
+  "name": "Siyam Uddin - Java Backend Developer Portfolio",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "HeroImage.webp",
+      "type": "image/webp",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "HeroImage.webp",
+      "type": "image/webp",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#854CE6",
+  "background_color": "#1C1C27",
+  "description": "Portfolio website of Siyam Uddin, showcasing backend development projects and skills"
+} 

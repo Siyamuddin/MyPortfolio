@@ -44,6 +44,7 @@ const Image = styled.img`
     background-color: ${({ theme }) => theme.white};
     border-radius: 10px;
     box-shadow: 0 0 16px 2px rgba(0,0,0,0.3);
+    object-fit: cover;
 `
 
 const Tags = styled.div`
@@ -125,10 +126,20 @@ const Avatar = styled.img`
 const ProjectCards = ({project,setOpenModal}) => {
     return (
         <Card onClick={() => setOpenModal({state: true, project: project})}>
-            <Image src={project.image}/>
+            <Image 
+                src={project.image} 
+                alt={project.title}
+                loading="lazy"
+                width="330"
+                height="180"
+                onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/fallback-image.png'; // Add a fallback image
+                }}
+            />
             <Tags>
                 {project.tags?.map((tag, index) => (
-                <Tag>{tag}</Tag>
+                    <Tag key={index}>{tag}</Tag>
                 ))}
             </Tags>
             <Details>
@@ -136,11 +147,13 @@ const ProjectCards = ({project,setOpenModal}) => {
                 <Date>{project.date}</Date>
                 <Description>{project.description}</Description>
             </Details>
-            <Members>
-                {project.member?.map((member) => (
-                    <Avatar src={member.img}/>
-                ))}
-            </Members>
+            {project.member && (
+                <Members>
+                    {project.member?.map((member, index) => (
+                        <Avatar key={index} src={member.img} alt={member.name} loading="lazy" />
+                    ))}
+                </Members>
+            )}
             {/* <Button>View Project</Button> */}
         </Card>
     )

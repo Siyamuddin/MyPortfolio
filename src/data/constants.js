@@ -222,8 +222,27 @@ export const education = [
 ];
 
 export const projects = [
+    {
+    id: 0,
+    title: "Lecture2Notebook",
+    date: "MAR 2025 - JUNE 2025",
+    description:"This an web aplication for Sejong University students where they use this to convert any type of Python lectures video into notebook file with code. ",
+    image:"/Lecture2Notebook.png",
+    tags: ["Python, FastAPI,Lama3.2,wispher,Javascript", "React.js", "HTML", "CSS"],
+    category: "web app",
+    github: "https://github.com/Siyamuddin/Lecture2Notebook",
+    webapp: "https://lecture2-notebook-frontend.vercel.app/",
+    // member: [
+    //   {
+    //     name: "SIYAM UDDIN",
+    //     img: "https://avatars.githubusercontent.com/u/64485885?v=4",
+    //     linkedin: "https://www.linkedin.com/in/rishav-chanda-b89a791b3/",
+    //     github: "https://github.com/rishavchanda/",
+    //   },
+    // ],
+  },
   {
-    id: 9,
+    id: 1,
     title: "AiBuddy",
     date: "SEPT 2024 - present",
     description:
@@ -248,7 +267,7 @@ export const projects = [
     webapp: "https://aibuddy.digital",
   },
   {
-    id: 0,
+    id: 2,
     title: "NoorMart",
     date: "DEC 2023 - FEB 2024",
     description:
@@ -271,7 +290,7 @@ export const projects = [
     // ],
   },
   {
-    id: 1,
+    id: 3,
     title: "ChatBees",
     date: "OCT 2023 - DEC 2023",
     description:
@@ -288,7 +307,7 @@ export const projects = [
     // webapp: "https://vexa-app.netlify.app/",
   },
   {
-    id: 2,
+    id: 4,
     title: "Smart Task-Manager",
     date: "JAN 2023 - MAR 2023",
     description:
@@ -309,7 +328,7 @@ export const projects = [
     // ],
   },
   {
-    id: 3,
+    id: 5,
     title: "Portfolio",
     date: "FEB 2024 - MAR 2024",
     description:" This my portfolio website, you find all my lates skills and projects here. It is user friendly and responsive. It also has dynamic featuers like email response and etc. ",
@@ -326,7 +345,7 @@ export const projects = [
     //     github: "https://github.com/rishavchanda/",
     //   },
     // ],
-  },
+  }
 ];
 
 

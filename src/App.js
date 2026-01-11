@@ -18,7 +18,6 @@ import Education from "./components/Education";
 import ScrollProgress from "./components/ScrollProgress";
 import SocialProof from "./components/SocialProof";
 import Learning from "./components/Learning";
-import CustomCursor from "./components/CustomCursor";
 import ParticleBackground from "./components/ParticleBackground";
 import QuickJump from "./components/QuickJump";
 import FAQ, { faqData } from "./components/FAQ";
@@ -258,7 +257,6 @@ function App() {
           />
 
           <ScrollProgress />
-          <CustomCursor />
           <ParticleBackground />
           <QuickJump />
           <LanguageSwitcher />

@@ -224,7 +224,7 @@ function App() {
             <link rel="alternate" hrefLang="en" href="https://siyamuddin.xyz" />
             <link rel="alternate" hrefLang="ko" href="https://siyamuddin.xyz/ko" />
             <link rel="alternate" hrefLang="x-default" href="https://siyamuddin.xyz" />
-            <link rel="icon" href="/favicon.ico" />
+            <link rel="icon" type="image/webp" href="/HeroImage.webp" />
             
             {/* Preconnect for performance */}
             <link rel="preconnect" href="https://www.google-analytics.com" />

@@ -3,11 +3,6 @@
   "name": "Siyam Uddin - Java Backend Developer Portfolio",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
       "src": "HeroImage.webp",
       "type": "image/webp",
       "sizes": "192x192",
@@ -18,6 +13,30 @@
       "type": "image/webp",
       "sizes": "512x512",
       "purpose": "any maskable"
+    },
+    {
+      "src": "HeroImage.webp",
+      "type": "image/webp",
+      "sizes": "144x144",
+      "purpose": "any"
+    },
+    {
+      "src": "HeroImage.webp",
+      "type": "image/webp",
+      "sizes": "96x96",
+      "purpose": "any"
+    },
+    {
+      "src": "HeroImage.webp",
+      "type": "image/webp",
+      "sizes": "72x72",
+      "purpose": "any"
+    },
+    {
+      "src": "HeroImage.webp",
+      "type": "image/webp",
+      "sizes": "48x48",
+      "purpose": "any"
     }
   ],
   "start_url": ".",

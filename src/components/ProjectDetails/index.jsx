@@ -184,7 +184,7 @@ const Button = styled.a`
 `;
 
 
-const index = ({ openModal, setOpenModal }) => {
+const ProjectDetails = ({ openModal, setOpenModal }) => {
     const project = openModal?.project;
     const wrapperRef = useRef(null);
 
@@ -301,4 +301,4 @@ const index = ({ openModal, setOpenModal }) => {
     )
 }
 
-export default index
+export default ProjectDetails

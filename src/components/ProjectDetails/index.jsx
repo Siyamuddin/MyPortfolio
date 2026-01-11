@@ -156,6 +156,31 @@ const ButtonGroup = styled.div`
     gap: 12px;
 `;
 
+const TechStackContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 6px;
+`;
+
+const TechStackItem = styled.div`
+    font-size: 13px;
+    font-weight: 500;
+    color: ${({ theme }) => theme.primary};
+    background: ${({ theme }) => theme.primary + '15'};
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid ${({ theme }) => theme.primary + '30'};
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    
+    &::before {
+        content: '▹';
+        color: ${({ theme }) => theme.primary};
+    }
+`;
+
 const Button = styled.a`
     width: 100%;
     text-align: center;
@@ -270,6 +295,20 @@ const ProjectDetails = ({ openModal, setOpenModal }) => {
                         ))}
                     </Tags>
                     <Desc>{project?.description}</Desc>
+                    
+                    {project?.tags && project.tags.length > 0 && (
+                        <>
+                            <Label>Technology Stack</Label>
+                            <TechStackContainer>
+                                {project.tags.map((tag, index) => (
+                                    <TechStackItem key={index}>
+                                        {tag}
+                                    </TechStackItem>
+                                ))}
+                            </TechStackContainer>
+                        </>
+                    )}
+                    
                     {project.member && (
                         <>
                             <Label>Members</Label>

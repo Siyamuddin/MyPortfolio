@@ -14,6 +14,11 @@ import Footer from "./components/Footer";
 import Experience from "./components/Experience";
 import Education from "./components/Education";
 import ScrollProgress from "./components/ScrollProgress";
+import SocialProof from "./components/SocialProof";
+import Learning from "./components/Learning";
+import CustomCursor from "./components/CustomCursor";
+import ParticleBackground from "./components/ParticleBackground";
+import QuickJump from "./components/QuickJump";
 import './App.css';
 
 const ProjectDetails = lazy(() => import("./components/ProjectDetails"));
@@ -170,6 +175,9 @@ function App() {
           />
 
           <ScrollProgress />
+          <CustomCursor />
+          <ParticleBackground />
+          <QuickJump />
 
           <a href="#about" className="skip-to-content" aria-label="Skip to main content">
             Skip to Content
@@ -198,8 +206,10 @@ function App() {
             <Experience />
           </Wrapper>
           <Projects openModal={openModal} setOpenModal={setOpenModal} />
+          <SocialProof />
           <Wrapper>
             <Education />
+            <Learning />
             <Contact />
           </Wrapper>
           <Footer />

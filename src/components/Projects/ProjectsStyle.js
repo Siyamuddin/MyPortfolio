@@ -92,14 +92,98 @@ export const CardContainer = styled.div`
     align-items: center;
     gap: 28px;
     flex-wrap: wrap;
-    // display: grid;
-    // grid-template-columns: repeat(3, 1fr);
-    // grid-gap: 32px;
-    // grid-auto-rows: minmax(100px, auto);
-    // @media (max-width: 960px) {
-    //     grid-template-columns: repeat(2, 1fr);
-    // }
-    // @media (max-width: 640px) {
-    //     grid-template-columns: repeat(1, 1fr);
-    // }
+`;
+
+export const SearchContainer = styled.div`
+    width: 100%;
+    max-width: 600px;
+    margin: 20px 0;
+    position: relative;
+`;
+
+export const SearchInput = styled.input`
+    width: 100%;
+    padding: 12px 16px 12px 48px;
+    border: 2px solid ${({ theme }) => theme.primary + '40'};
+    border-radius: 12px;
+    background: ${({ theme }) => theme.card};
+    color: ${({ theme }) => theme.text_primary};
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+    
+    &:focus {
+        border-color: ${({ theme }) => theme.primary};
+        box-shadow: 0 0 0 3px ${({ theme }) => theme.primary + '20'};
+    }
+    
+    &::placeholder {
+        color: ${({ theme }) => theme.text_secondary};
+    }
+`;
+
+export const SearchIcon = styled.div`
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: ${({ theme }) => theme.text_secondary};
+    font-size: 18px;
+`;
+
+export const TechFilterContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin: 20px 0;
+    max-width: 800px;
+`;
+
+export const TechTag = styled.button`
+    padding: 6px 14px;
+    border: 1px solid ${({ theme, active }) => active ? theme.primary : theme.text_secondary + '40'};
+    border-radius: 20px;
+    background: ${({ theme, active }) => active ? theme.primary + '20' : 'transparent'};
+    color: ${({ theme, active }) => active ? theme.primary : theme.text_secondary};
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: ${({ active }) => active ? '600' : '400'};
+    
+    &:hover {
+        border-color: ${({ theme }) => theme.primary};
+        background: ${({ theme }) => theme.primary + '10'};
+    }
+`;
+
+export const ProjectStats = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+`;
+
+export const StatItem = styled.div`
+    text-align: center;
+    padding: 12px 20px;
+    background: ${({ theme }) => theme.card};
+    border: 1px solid ${({ theme }) => theme.primary + '30'};
+    border-radius: 12px;
+    min-width: 100px;
+`;
+
+export const StatValue = styled.div`
+    font-size: 24px;
+    font-weight: 700;
+    color: ${({ theme }) => theme.primary};
+    margin-bottom: 4px;
+`;
+
+export const StatLabel = styled.div`
+    font-size: 12px;
+    color: ${({ theme }) => theme.text_secondary};
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 `;

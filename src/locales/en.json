@@ -1,0 +1,67 @@
+{
+  "nav": {
+    "about": "About",
+    "skills": "Skills",
+    "experience": "Experience",
+    "projects": "Projects",
+    "education": "Education",
+    "contact": "Contact",
+    "blog": "Blog"
+  },
+  "hero": {
+    "greeting": "Hi, I am",
+    "name": "SIYAM",
+    "roles": "Backend Developer, DevOps Engineer, Software Engineer",
+    "description": "I am a Computer Science major with 2 years of experience in Java and Spring Boot, specializing in scalable AI-based applications.",
+    "resume": "Check Resume"
+  },
+  "skills": {
+    "title": "Skills",
+    "description": "Here are some of my skills on which I have been working on for the past 2 years."
+  },
+  "experience": {
+    "title": "Experience",
+    "description": "Here is a quick summary of my most recent experiences:"
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "I have worked on a wide range of projects. Mostly Backend Applications. Here are some of my projects.",
+    "viewCode": "View Code",
+    "viewLive": "View Live App"
+  },
+  "education": {
+    "title": "Education",
+    "description": "Here is a quick summary of my education:"
+  },
+  "contact": {
+    "title": "Contact",
+    "description": "Feel free to reach out to me for any questions or opportunities!",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send",
+    "sending": "Sending...",
+    "success": "Message sent successfully! I'll get back to you soon.",
+    "error": "Failed to send message. Please try again."
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "description": "Have questions? Here are some common questions about my work, experience, and availability."
+  },
+  "blog": {
+    "title": "Blog & Articles",
+    "description": "Insights, tutorials, and thoughts on backend development, AI applications, and software engineering."
+  },
+  "social": {
+    "title": "Social Proof",
+    "description": "Here's a glimpse of my online presence and community engagement."
+  },
+  "learning": {
+    "title": "Learning & Growth",
+    "description": "My journey of continuous learning and skill development."
+  }
+}
+

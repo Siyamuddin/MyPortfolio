@@ -6,6 +6,7 @@ import HeroImg from '../../images/HeroImage.webp'
 import Typewriter from 'typewriter-effect';
 import { Bio } from '../../data/constants';
 import { fadeInUp, slideInLeft, slideInRight, staggerContainer, staggerItem } from '../../utils/animations';
+import { trackResumeDownload } from '../../utils/analytics';
 import { 
   FaGithub, 
   FaLinkedin, 
@@ -68,6 +69,7 @@ const HeroSection = () => {
                                 target='_blank' 
                                 rel="noopener noreferrer"
                                 aria-label="View Resume"
+                                onClick={() => trackResumeDownload()}
                             >
                                 Check Resume
                             </ResumeButton>
@@ -120,6 +122,7 @@ const HeroSection = () => {
                                 fetchpriority="high"
                                 width="400"
                                 height="400"
+                                style={{ aspectRatio: '1/1' }}
                             />
                         </motion.div>
                     </HeroRightContainer>

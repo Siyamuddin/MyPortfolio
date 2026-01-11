@@ -1,0 +1,67 @@
+{
+  "nav": {
+    "about": "소개",
+    "skills": "기술",
+    "experience": "경력",
+    "projects": "프로젝트",
+    "education": "학력",
+    "contact": "연락처",
+    "blog": "블로그"
+  },
+  "hero": {
+    "greeting": "안녕하세요, 저는",
+    "name": "시얌",
+    "roles": "백엔드 개발자, DevOps 엔지니어, 소프트웨어 엔지니어",
+    "description": "Java와 Spring Boot에서 2년의 경험을 가진 컴퓨터 과학 전공자로, 확장 가능한 AI 기반 애플리케이션을 전문으로 합니다.",
+    "resume": "이력서 보기"
+  },
+  "skills": {
+    "title": "기술",
+    "description": "지난 2년 동안 작업해 온 기술들입니다."
+  },
+  "experience": {
+    "title": "경력",
+    "description": "최근 경력에 대한 간단한 요약입니다:"
+  },
+  "projects": {
+    "title": "프로젝트",
+    "description": "다양한 프로젝트를 작업했습니다. 주로 백엔드 애플리케이션입니다. 제 프로젝트 중 일부입니다.",
+    "viewCode": "코드 보기",
+    "viewLive": "라이브 앱 보기"
+  },
+  "education": {
+    "title": "학력",
+    "description": "학력에 대한 간단한 요약입니다:"
+  },
+  "contact": {
+    "title": "연락처",
+    "description": "질문이나 기회가 있으시면 언제든지 연락주세요!",
+    "name": "이름",
+    "email": "이메일",
+    "message": "메시지",
+    "send": "보내기",
+    "sending": "전송 중...",
+    "success": "메시지가 성공적으로 전송되었습니다! 곧 연락드리겠습니다.",
+    "error": "메시지 전송에 실패했습니다. 다시 시도해주세요."
+  },
+  "footer": {
+    "rights": "모든 권리 보유."
+  },
+  "faq": {
+    "title": "자주 묻는 질문",
+    "description": "궁금한 점이 있으신가요? 제 작업, 경력 및 가용성에 대한 일반적인 질문들입니다."
+  },
+  "blog": {
+    "title": "블로그 및 기사",
+    "description": "백엔드 개발, AI 애플리케이션 및 소프트웨어 엔지니어링에 대한 인사이트, 튜토리얼 및 생각들입니다."
+  },
+  "social": {
+    "title": "소셜 증명",
+    "description": "제 온라인 존재와 커뮤니티 참여를 엿볼 수 있습니다."
+  },
+  "learning": {
+    "title": "학습 및 성장",
+    "description": "지속적인 학습과 기술 개발의 여정입니다."
+  }
+}
+

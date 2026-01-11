@@ -4,6 +4,8 @@ import React, { useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import styled from 'styled-components'
 import { modalAnimation } from '../../utils/animations'
+import ShareButtons from '../ShareButtons'
+import { trackProjectView } from '../../utils/analytics'
 
 const Container = styled.div`
 width: 100%;
@@ -221,7 +223,7 @@ const ProjectDetails = ({ openModal, setOpenModal }) => {
             }
         };
 
-        if (openModal.state) {
+        if (openModal.state && project) {
             document.addEventListener('keydown', handleEscape);
             // Focus trap - focus the wrapper
             if (wrapperRef.current) {
@@ -229,13 +231,15 @@ const ProjectDetails = ({ openModal, setOpenModal }) => {
             }
             // Prevent body scroll
             document.body.style.overflow = 'hidden';
+            // Track project view
+            trackProjectView(project.title);
         }
 
         return () => {
             document.removeEventListener('keydown', handleEscape);
             document.body.style.overflow = 'unset';
         };
-    }, [openModal.state, setOpenModal]);
+    }, [openModal.state, setOpenModal, project]);
 
     return (
         <Modal 
@@ -330,8 +334,17 @@ const ProjectDetails = ({ openModal, setOpenModal }) => {
                     )}
                     <ButtonGroup>
                         <Button dull href={project?.github} target='_blank' rel="noopener noreferrer" aria-label={`View ${project?.title} source code`}>View Code</Button>
-                        <Button href={project?.webapp} target='_blank' rel="noopener noreferrer" aria-label={`View ${project?.title} live application`}>View Live App</Button>
+                        {project?.webapp && (
+                            <Button href={project?.webapp} target='_blank' rel="noopener noreferrer" aria-label={`View ${project?.title} live application`}>View Live App</Button>
+                        )}
                     </ButtonGroup>
+                    
+                    <ShareButtons 
+                        title={project?.title}
+                        description={project?.description}
+                        url={project?.webapp || project?.github || window.location.href}
+                        type="project"
+                    />
                 </Wrapper>
             </Container>
             )}

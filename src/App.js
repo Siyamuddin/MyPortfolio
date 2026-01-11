@@ -1,9 +1,11 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { ThemeProvider } from "styled-components";
 import styled from "styled-components";
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
+import { initGA, trackPageView, trackScrollDepth, trackTimeOnPage } from './utils/analytics';
+import { initPerformanceOptimizations, measureWebVitals } from './utils/performance';
 import { darkTheme, lightTheme } from './utils/Themes.js'
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
@@ -19,6 +21,11 @@ import Learning from "./components/Learning";
 import CustomCursor from "./components/CustomCursor";
 import ParticleBackground from "./components/ParticleBackground";
 import QuickJump from "./components/QuickJump";
+import FAQ, { faqData } from "./components/FAQ";
+import StructuredData from "./components/SEO/StructuredData";
+import Blog from "./components/Blog";
+import ViralHooks from "./components/ViralHooks";
+import LanguageSwitcher from "./components/LanguageSwitcher";
 import './App.css';
 
 const ProjectDetails = lazy(() => import("./components/ProjectDetails"));
@@ -128,6 +135,49 @@ function App() {
     };
   }, []);
 
+  // Initialize Analytics and Performance
+  useEffect(() => {
+    initGA();
+    trackPageView(window.location.pathname + window.location.search);
+    initPerformanceOptimizations();
+    measureWebVitals();
+  }, []);
+
+  // Track scroll depth
+  useEffect(() => {
+    let scrollDepthTracked = [0, 25, 50, 75, 100];
+    let trackedDepths = new Set();
+
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrollPercent = Math.round((scrollTop / scrollHeight) * 100);
+
+      scrollDepthTracked.forEach(depth => {
+        if (scrollPercent >= depth && !trackedDepths.has(depth)) {
+          trackedDepths.add(depth);
+          trackScrollDepth(depth);
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Track time on page
+  useEffect(() => {
+    const startTime = Date.now();
+    const interval = setInterval(() => {
+      const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+      if (timeSpent % 30 === 0 && timeSpent > 0) {
+        trackTimeOnPage(timeSpent);
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const toggleTheme = () => {
     setDarkMode(!darkMode);
   };
@@ -137,18 +187,51 @@ function App() {
       <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
         <Router>
           <Helmet>
-            <title>Siyam Uddin – Java Backend Developer Portfolio</title>
-            <meta name="description" content="Hi, I'm Siyam – a Java Backend Developer skilled in Spring Boot, microservices, and AI-powered applications. Explore my portfolio and experience." />
-            <meta name="keywords" content="Siyam Uddin, Java Developer, Spring Boot, Backend Developer, AI, Microservices, Portfolio, siyamuddin.xyz,siyam,uddin, sejong university,uddin" />
+            <html lang="en" />
+            <title>Siyam Uddin – Java Backend Developer Portfolio | Spring Boot & AI Specialist</title>
+            <meta name="description" content="Hi, I'm Siyam – a Java Backend Developer skilled in Spring Boot, microservices, and AI-powered applications. Based in Seoul, South Korea. Explore my portfolio, projects, and experience." />
+            <meta name="keywords" content="Siyam Uddin, Java Developer, Spring Boot, Backend Developer, AI, Microservices, Portfolio, DevOps Engineer, Software Engineer, Seoul, South Korea, Java Backend Developer Seoul, Spring Boot Developer Korea, AI Application Developer, Microservices Developer" />
             <meta name="author" content="Siyam Uddin" />
-            <meta property="og:title" content="Siyam Uddin – Java Backend Developer" />
-            <meta property="og:description" content="Explore Siyam's backend development projects, skills, and experience." />
+            <meta name="geo.region" content="KR-11" />
+            <meta name="geo.placename" content="Seoul" />
+            <meta name="geo.position" content="37.5665;126.9780" />
+            <meta name="ICBM" content="37.5665, 126.9780" />
+            
+            {/* Open Graph */}
+            <meta property="og:title" content="Siyam Uddin – Java Backend Developer Portfolio" />
+            <meta property="og:description" content="Explore Siyam's backend development projects, skills, and experience in Java, Spring Boot, and AI applications. Based in Seoul, South Korea." />
             <meta property="og:type" content="website" />
             <meta property="og:url" content="https://siyamuddin.xyz" />
-            <meta property="og:image" content="https://siyamuddin.xyz/preview.jpg" />
+            <meta property="og:image" content="https://siyamuddin.xyz/HeroImage.webp" />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+            <meta property="og:image:alt" content="Siyam Uddin - Java Backend Developer Portfolio" />
+            <meta property="og:site_name" content="Siyam Uddin Portfolio" />
+            <meta property="og:locale" content="en_US" />
+            <meta property="og:locale:alternate" content="ko_KR" />
+            
+            {/* Twitter Card */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:creator" content="@SiyamUddin12" />
+            <meta name="twitter:title" content="Siyam Uddin – Java Backend Developer Portfolio" />
+            <meta name="twitter:description" content="Java Backend Developer specializing in Spring Boot, Microservices, and AI applications. Based in Seoul, South Korea." />
+            <meta name="twitter:image" content="https://siyamuddin.xyz/HeroImage.webp" />
+            
+            {/* Additional Meta */}
+            <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+            <meta name="googlebot" content="index, follow" />
             <link rel="canonical" href="https://siyamuddin.xyz" />
+            <link rel="alternate" hrefLang="en" href="https://siyamuddin.xyz" />
+            <link rel="alternate" hrefLang="ko" href="https://siyamuddin.xyz/ko" />
+            <link rel="alternate" hrefLang="x-default" href="https://siyamuddin.xyz" />
             <link rel="icon" href="/favicon.ico" />
+            
+            {/* Preconnect for performance */}
+            <link rel="preconnect" href="https://www.google-analytics.com" />
+            <link rel="dns-prefetch" href="https://www.google-analytics.com" />
           </Helmet>
+
+          <StructuredData currentPage="Portfolio" faqs={faqData} />
 
           <Toaster
             position="top-right"
@@ -178,6 +261,7 @@ function App() {
           <CustomCursor />
           <ParticleBackground />
           <QuickJump />
+          <LanguageSwitcher />
 
           <a href="#about" className="skip-to-content" aria-label="Skip to main content">
             Skip to Content
@@ -207,9 +291,12 @@ function App() {
           </Wrapper>
           <Projects openModal={openModal} setOpenModal={setOpenModal} />
           <SocialProof />
+          <Blog />
+          <ViralHooks />
           <Wrapper>
             <Education />
             <Learning />
+            <FAQ />
             <Contact />
           </Wrapper>
           <Footer />

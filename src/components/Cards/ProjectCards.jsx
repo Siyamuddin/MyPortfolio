@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { memo } from 'react'
+import { optimizeImageAttributes } from '../../utils/imageOptimization'
 
 
 const Button = styled.button`
@@ -194,11 +195,7 @@ const ProjectCards = memo(({project, setOpenModal}) => {
             }
         }} aria-label={`View ${project.title} project details`}>
             <Image 
-                src={project.image} 
-                alt={project.title}
-                loading="lazy"
-                width="330"
-                height="180"
+                {...optimizeImageAttributes(project.image, project.title, 330, 180)}
                 onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = '/fallback-image.png';

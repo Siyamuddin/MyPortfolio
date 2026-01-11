@@ -1,6 +1,7 @@
 # Allow all web crawlers
 User-agent: *
 Allow: /
+Crawl-delay: 1
 
 # Sitemap location
 Sitemap: https://siyamuddin.xyz/sitemap.xml
@@ -9,3 +10,22 @@ Sitemap: https://siyamuddin.xyz/sitemap.xml
 Disallow: /api/
 Disallow: /admin/
 Disallow: /private/
+Disallow: /*.json$
+
+# Allow important files
+Allow: /sitemap.xml
+Allow: /robots.txt
+Allow: /rss.xml
+
+# Specific bot rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2

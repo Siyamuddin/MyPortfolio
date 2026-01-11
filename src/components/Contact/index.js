@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
 import { fadeInUp } from '../../utils/animations';
+import { trackContactFormSubmit } from '../../utils/analytics';
 
 const Container = styled.div`
 display: flex;
@@ -192,6 +193,7 @@ const Contact = () => {
       
       toast.dismiss(loadingToast);
       toast.success('Message sent successfully! I\'ll get back to you soon.');
+      trackContactFormSubmit();
       form.current.reset();
     } catch (error) {
       toast.dismiss(loadingToast);

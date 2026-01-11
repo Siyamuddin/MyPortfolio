@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Siyam Uddin - Blog</title>
+    <link>https://siyamuddin.xyz</link>
+    <description>Blog posts about backend development, AI applications, and software engineering by Siyam Uddin</description>
+    <language>en-us</language>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+    <atom:link href="https://siyamuddin.xyz/rss.xml" rel="self" type="application/rss+xml"/>
+    <author>Siyam Uddin</author>
+    
+    <item>
+      <title>Building Scalable AI Applications with LangChain4j and Spring Boot</title>
+      <link>https://siyamuddin.xyz/blog/building-scalable-ai-applications-langchain4j-spring-boot</link>
+      <description>Learn how I built AiBuddy, an AI-powered student support application that improved response relevance by 30% using LangChain4j, Llama3, and Redis caching.</description>
+      <pubDate>Mon, 01 Dec 2024 00:00:00 GMT</pubDate>
+      <guid>https://siyamuddin.xyz/blog/building-scalable-ai-applications-langchain4j-spring-boot</guid>
+      <author>Siyam Uddin</author>
+    </item>
+    
+    <item>
+      <title>Microservices Architecture: Lessons Learned from Production</title>
+      <link>https://siyamuddin.xyz/blog/microservices-architecture-lessons-learned</link>
+      <description>Key insights from building and deploying microservices in production, including challenges, solutions, and best practices.</description>
+      <pubDate>Fri, 15 Nov 2024 00:00:00 GMT</pubDate>
+      <guid>https://siyamuddin.xyz/blog/microservices-architecture-lessons-learned</guid>
+      <author>Siyam Uddin</author>
+    </item>
+    
+    <item>
+      <title>Optimizing Spring Boot Applications: Performance Tips and Tricks</title>
+      <link>https://siyamuddin.xyz/blog/optimizing-spring-boot-applications-performance</link>
+      <description>Practical strategies for improving Spring Boot application performance, including caching, database optimization, and monitoring.</description>
+      <pubDate>Fri, 01 Nov 2024 00:00:00 GMT</pubDate>
+      <guid>https://siyamuddin.xyz/blog/optimizing-spring-boot-applications-performance</guid>
+      <author>Siyam Uddin</author>
+    </item>
+  </channel>
+</rss>
+

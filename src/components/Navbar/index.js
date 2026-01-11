@@ -30,7 +30,7 @@ const Navbar = () => {
           <NavLink href='#contact'>Contact</NavLink>
         </NavItems>
         <ButtonContainer>
-          <GitHubButton href={Bio.github} target="_blank" rel="noopener noreferrer">Github Profile</GitHubButton>
+          <GitHubButton href={Bio.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">Github Profile</GitHubButton>
         </ButtonContainer>
         {
           isOpen &&
@@ -58,6 +58,7 @@ const Navbar = () => {
               href={Bio.github} 
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="GitHub Profile"
             >
               Github Profile
             </GitHubButton>

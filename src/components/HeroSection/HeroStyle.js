@@ -201,3 +201,38 @@ export const ResumeButton = styled.a`
     } 
 
 `;
+
+export const SocialMediaIcons = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  @media (max-width: 960px) {
+    justify-content: center;
+  }
+`;
+
+export const SocialMediaIcon = styled.a`
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.text_secondary + 20};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: ${({ theme }) => theme.text_primary};
+  font-size: 20px;
+  
+  &:hover {
+    transform: translateY(-4px);
+    background-color: ${({ theme }) => theme.primary};
+    box-shadow: 0 6px 20px rgba(133, 76, 230, 0.4);
+  }
+  
+  @media (max-width: 640px) {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+`;

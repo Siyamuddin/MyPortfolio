@@ -1,9 +1,10 @@
 import { ThemeProvider } from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { darkTheme, lightTheme } from './utils/Themes.js'
 import Navbar from "./components/Navbar";
 import './App.css';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import HeroSection from "./components/HeroSection";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
@@ -11,9 +12,12 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Experience from "./components/Experience";
 import Education from "./components/Education";
-import ProjectDetails from "./components/ProjectDetails";
+import ScrollProgress from "./components/ScrollProgress";
+
+const ProjectDetails = lazy(() => import("./components/ProjectDetails"));
 import styled from "styled-components";
-import { Helmet } from 'react-helmet';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
+import { Toaster } from 'react-hot-toast';
 
 const Body = styled.div`
   background-color: ${({ theme }) => theme.bg};
@@ -34,41 +38,158 @@ const ThemeToggle = styled.button`
   top: 20px;
   background: ${({ theme }) => theme.primary};
   color: ${({ theme }) => theme.text_primary};
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 2px solid ${({ theme }) => theme.primary};
   cursor: pointer;
   z-index: 1000;
   transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  
   &:hover {
-    opacity: 0.8;
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  &:focus {
+    outline: 2px solid ${({ theme }) => theme.primary};
+    outline-offset: 2px;
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  @media (max-width: 768px) {
+    right: 16px;
+    top: 16px;
+    padding: 8px 12px;
+    font-size: 14px;
   }
 `
 
 function App() {
-  const [darkMode, setDarkMode] = useState(true);
+  // Load theme preference from localStorage or detect system preference
+  const getInitialTheme = () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      return savedTheme === 'dark';
+    }
+    // Check system preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return true;
+    }
+    return true; // Default to dark
+  };
+
+  const [darkMode, setDarkMode] = useState(getInitialTheme);
   const [openModal, setOpenModal] = useState({ state: false, project: null });
 
-  return (
-    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-      <Router>
-        <Helmet>
-          <title>Siyam Uddin – Java Backend Developer Portfolio</title>
-          <meta name="description" content="Hi, I'm Siyam – a Java Backend Developer skilled in Spring Boot, microservices, and AI-powered applications. Explore my portfolio and experience." />
-          <meta name="keywords" content="Siyam Uddin, Java Developer, Spring Boot, Backend Developer, AI, Microservices, Portfolio, siyamuddin.xyz,siyam,uddin, sejong university,uddin" />
-          <meta name="author" content="Siyam Uddin" />
-          <meta property="og:title" content="Siyam Uddin – Java Backend Developer" />
-          <meta property="og:description" content="Explore Siyam's backend development projects, skills, and experience." />
-          <meta property="og:type" content="website" />
-          <meta property="og:url" content="https://siyamuddin.xyz" />
-          <meta property="og:image" content="https://siyamuddin.xyz/preview.jpg" />
-          <link rel="canonical" href="https://siyamuddin.xyz" />
-          <link rel="icon" href="/favicon.ico" />
-        </Helmet>
+  // Save theme preference to localStorage
+  useEffect(() => {
+    localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+    // Add smooth transition class to body
+    document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+  }, [darkMode]);
 
-        <ThemeToggle onClick={() => setDarkMode(!darkMode)}>
-          {darkMode ? '☀️ Light' : '🌙 Dark'}
-        </ThemeToggle>
+  // Listen for system theme changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e) => {
+      // Only update if user hasn't manually set a preference
+      if (!localStorage.getItem('theme')) {
+        setDarkMode(e.matches);
+      }
+    };
+    
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+    } else {
+      // Fallback for older browsers
+      mediaQuery.addListener(handleChange);
+    }
+
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', handleChange);
+      } else {
+        mediaQuery.removeListener(handleChange);
+      }
+    };
+  }, []);
+
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
+
+  return (
+    <HelmetProvider>
+      <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+        <Router>
+          <Helmet>
+            <title>Siyam Uddin – Java Backend Developer Portfolio</title>
+            <meta name="description" content="Hi, I'm Siyam – a Java Backend Developer skilled in Spring Boot, microservices, and AI-powered applications. Explore my portfolio and experience." />
+            <meta name="keywords" content="Siyam Uddin, Java Developer, Spring Boot, Backend Developer, AI, Microservices, Portfolio, siyamuddin.xyz,siyam,uddin, sejong university,uddin" />
+            <meta name="author" content="Siyam Uddin" />
+            <meta property="og:title" content="Siyam Uddin – Java Backend Developer" />
+            <meta property="og:description" content="Explore Siyam's backend development projects, skills, and experience." />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content="https://siyamuddin.xyz" />
+            <meta property="og:image" content="https://siyamuddin.xyz/preview.jpg" />
+            <link rel="canonical" href="https://siyamuddin.xyz" />
+            <link rel="icon" href="/favicon.ico" />
+          </Helmet>
+
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: darkMode ? darkTheme.card : lightTheme.card,
+                color: darkMode ? darkTheme.text_primary : lightTheme.text_primary,
+                border: `1px solid ${darkMode ? darkTheme.primary : lightTheme.primary}`,
+              },
+              success: {
+                iconTheme: {
+                  primary: darkMode ? darkTheme.primary : lightTheme.primary,
+                  secondary: darkMode ? darkTheme.text_primary : lightTheme.text_primary,
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: '#f44336',
+                  secondary: '#fff',
+                },
+              },
+            }}
+          />
+
+          <ScrollProgress />
+
+          <a href="#about" className="skip-to-content" aria-label="Skip to main content">
+            Skip to Content
+          </a>
+
+          <ThemeToggle 
+            onClick={toggleTheme}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleTheme();
+              }
+            }}
+            aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-pressed={darkMode}
+            role="switch"
+          >
+            {darkMode ? '☀️ Light' : '🌙 Dark'}
+          </ThemeToggle>
 
         <Navbar />
         <Body>
@@ -83,12 +204,41 @@ function App() {
             <Contact />
           </Wrapper>
           <Footer />
-          {openModal.state &&
-            <ProjectDetails openModal={openModal} setOpenModal={setOpenModal} />
-          }
+          {openModal.state && (
+            <Suspense fallback={
+              <div style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'rgba(0, 0, 0, 0.8)',
+                zIndex: 9999,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#fff',
+                flexDirection: 'column',
+                gap: '20px'
+              }}>
+                <div style={{
+                  width: '50px',
+                  height: '50px',
+                  border: `4px solid ${darkMode ? darkTheme.primary + '30' : lightTheme.primary + '30'}`,
+                  borderTop: `4px solid ${darkMode ? darkTheme.primary : lightTheme.primary}`,
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite'
+                }} />
+                <div style={{ fontSize: '18px' }}>Loading project details...</div>
+              </div>
+            }>
+              <ProjectDetails openModal={openModal} setOpenModal={setOpenModal} />
+            </Suspense>
+          )}
         </Body>
       </Router>
     </ThemeProvider>
+    </HelmetProvider>
   );
 }
 

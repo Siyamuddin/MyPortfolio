@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import styled from 'styled-components'
 
 const Document = styled.img`
@@ -128,11 +128,11 @@ const Grade = styled.div`
 
 
 
-const EducationCard = ({ education }) => {
+const EducationCard = memo(({ education }) => {
     return (
         <Card>
             <Top>
-                <Image src={education.img} />
+                <Image src={education.img} alt={education.school || 'School logo'} loading="lazy" />
                 <Body>
                     <Name>{education.school}</Name>
                     <Degree>{education.degree}</Degree>
@@ -144,7 +144,9 @@ const EducationCard = ({ education }) => {
                 <Span>{education.desc}</Span>
             </Description>
         </Card>
-    )
-}
+    );
+});
+
+EducationCard.displayName = 'EducationCard';
 
 export default EducationCard

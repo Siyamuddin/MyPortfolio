@@ -1,7 +1,9 @@
 import { CloseRounded, GitHub, LinkedIn } from '@mui/icons-material';
 import { Modal } from '@mui/material';
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import styled from 'styled-components'
+import { modalAnimation } from '../../utils/animations'
 
 const Container = styled.div`
 width: 100%;
@@ -184,10 +186,63 @@ const Button = styled.a`
 
 const index = ({ openModal, setOpenModal }) => {
     const project = openModal?.project;
+    const wrapperRef = useRef(null);
+
+    // Handle ESC key and focus trap
+    useEffect(() => {
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                setOpenModal({ state: false, project: null });
+            }
+        };
+
+        if (openModal.state) {
+            document.addEventListener('keydown', handleEscape);
+            // Focus trap - focus the wrapper
+            if (wrapperRef.current) {
+                wrapperRef.current.focus();
+            }
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+            document.body.style.overflow = 'unset';
+        };
+    }, [openModal.state, setOpenModal]);
+
     return (
-        <Modal open={true} onClose={() => setOpenModal({ state: false, project: null })}>
-            <Container>
-                <Wrapper>
+        <Modal 
+            open={openModal.state} 
+            onClose={() => setOpenModal({ state: false, project: null })}
+            closeAfterTransition
+        >
+            <AnimatePresence>
+                {openModal.state && (
+                    <Container
+                        as={motion.div}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={(e) => {
+                            if (e.target === e.currentTarget) {
+                                setOpenModal({ state: false, project: null });
+                            }
+                        }}
+                    >
+                        <Wrapper
+                            ref={wrapperRef}
+                            as={motion.div}
+                            variants={modalAnimation}
+                            initial="initial"
+                            animate="animate"
+                            exit="exit"
+                            tabIndex={-1}
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="project-title"
+                        >
                     <CloseRounded
                         style={{
                             position: "absolute",
@@ -196,13 +251,22 @@ const index = ({ openModal, setOpenModal }) => {
                             cursor: "pointer",
                         }}
                         onClick={() => setOpenModal({ state: false, project: null })}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                setOpenModal({ state: false, project: null });
+                            }
+                        }}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Close modal"
                     />
-                    <Image src={project?.image} />
-                    <Title>{project?.title}</Title>
+                    <Image src={project?.image} alt={project?.title || 'Project image'} loading="lazy" />
+                    <Title id="project-title">{project?.title}</Title>
                     <Date>{project.date}</Date>
                     <Tags>
-                        {project?.tags.map((tag) => (
-                            <Tag>{tag}</Tag>
+                        {project?.tags.map((tag, index) => (
+                            <Tag key={index}>{tag}</Tag>
                         ))}
                     </Tags>
                     <Desc>{project?.description}</Desc>
@@ -210,14 +274,14 @@ const index = ({ openModal, setOpenModal }) => {
                         <>
                             <Label>Members</Label>
                             <Members>
-                                {project?.member.map((member) => (
-                                    <Member>
-                                        <MemberImage src={member.img} />
+                                {project?.member.map((member, index) => (
+                                    <Member key={member.name || index}>
+                                        <MemberImage src={member.img} alt={member.name} />
                                         <MemberName>{member.name}</MemberName>
-                                        <a href={member.github} target="new" style={{textDecoration: 'none', color: 'inherit'}}>
+                                        <a href={member.github} target="new" rel="noopener noreferrer" style={{textDecoration: 'none', color: 'inherit'}} aria-label={`${member.name}'s GitHub`}>
                                             <GitHub />
                                         </a>
-                                        <a href={member.linkedin} target="new" style={{textDecoration: 'none', color: 'inherit'}}>
+                                        <a href={member.linkedin} target="new" rel="noopener noreferrer" style={{textDecoration: 'none', color: 'inherit'}} aria-label={`${member.name}'s LinkedIn`}>
                                             <LinkedIn />
                                         </a>
                                     </Member>
@@ -226,12 +290,13 @@ const index = ({ openModal, setOpenModal }) => {
                         </>
                     )}
                     <ButtonGroup>
-                        <Button dull href={project?.github} target='new'>View Code</Button>
-                        <Button href={project?.webapp} target='new'>View Live App</Button>
+                        <Button dull href={project?.github} target='_blank' rel="noopener noreferrer" aria-label={`View ${project?.title} source code`}>View Code</Button>
+                        <Button href={project?.webapp} target='_blank' rel="noopener noreferrer" aria-label={`View ${project?.title} live application`}>View Live App</Button>
                     </ButtonGroup>
                 </Wrapper>
             </Container>
-
+            )}
+        </AnimatePresence>
         </Modal>
     )
 }

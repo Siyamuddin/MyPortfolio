@@ -98,11 +98,11 @@ function Footer() {
           <NavLink href="#education">Education</NavLink>
         </Nav>
         <SocialMediaIcons>
-          <SocialMediaIcon href={Bio.facebook} target="display"><FacebookIcon /></SocialMediaIcon>
-          <SocialMediaIcon href={Bio.twitter} target="display"><TwitterIcon /></SocialMediaIcon>
-          <SocialMediaIcon href={Bio.linkedin} target="display"><LinkedInIcon /></SocialMediaIcon>
-          <SocialMediaIcon href={Bio.insta} target="display"><InstagramIcon /></SocialMediaIcon>
-          <SocialMediaIcon href={Bio.youtube} target="display"><YouTubeIcon /></SocialMediaIcon>
+          <SocialMediaIcon href={Bio.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook Profile"><FacebookIcon /></SocialMediaIcon>
+          <SocialMediaIcon href={Bio.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter Profile"><TwitterIcon /></SocialMediaIcon>
+          <SocialMediaIcon href={Bio.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile"><LinkedInIcon /></SocialMediaIcon>
+          <SocialMediaIcon href={Bio.insta} target="_blank" rel="noopener noreferrer" aria-label="Instagram Profile"><InstagramIcon /></SocialMediaIcon>
+          <SocialMediaIcon href={Bio.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube Channel"><YouTubeIcon /></SocialMediaIcon>
         </SocialMediaIcons>
         <Copyright>
           &copy; 2024 SIYAM UDDIN. All rights reserved.

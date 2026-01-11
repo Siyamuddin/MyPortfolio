@@ -1,6 +1,8 @@
 import React from 'react'
+import { motion } from 'framer-motion'
 import styled from 'styled-components'
 import { skills } from '../../data/constants'
+import { fadeInUp, staggerContainer, staggerItem } from '../../utils/animations'
 
 const Container = styled.div`
 display: flex;
@@ -123,24 +125,59 @@ const Skills = () => {
   return (
     <Container id="skills">
       <Wrapper>
-        <Title>Skills</Title>
-        <Desc>Here are some of my skills on which I have been working on for the past 2 years.
-        </Desc>
-        <SkillsContainer>
-          {skills.map((skill) => (
-            <Skill>
+        <motion.div
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={fadeInUp}
+        >
+          <Title>Skills</Title>
+        </motion.div>
+        <motion.div
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={fadeInUp}
+          transition={{ delay: 0.1 }}
+        >
+          <Desc>Here are some of my skills on which I have been working on for the past 2 years.
+          </Desc>
+        </motion.div>
+        <SkillsContainer
+          as={motion.div}
+          variants={staggerContainer}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          {skills.map((skill, skillIndex) => (
+            <Skill 
+              key={skill.title || skillIndex}
+              as={motion.div}
+              variants={staggerItem}
+              whileHover={{ scale: 1.02, y: -5 }}
+              transition={{ duration: 0.3 }}
+            >
               <SkillTitle>{skill.title}</SkillTitle>
-              <SkillList>
-                {skill.skills.map((item) => (
-                  <SkillItem>
-                    <SkillImage src={item.image}/>
+              <SkillList
+                as={motion.div}
+                variants={staggerContainer}
+              >
+                {skill.skills.map((item, itemIndex) => (
+                  <SkillItem 
+                    key={item.name || itemIndex}
+                    as={motion.div}
+                    variants={staggerItem}
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <SkillImage src={item.image} alt={item.name} loading="lazy"/>
                     {item.name}
                   </SkillItem>
                 ))}
               </SkillList>
             </Skill>
           ))}
-
         </SkillsContainer>
       </Wrapper>
     </Container>

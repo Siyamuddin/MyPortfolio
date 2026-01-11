@@ -1,8 +1,10 @@
 import React from 'react'
+import { motion } from 'framer-motion'
 import styled from 'styled-components'
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
-import { Snackbar } from '@mui/material';
+import toast from 'react-hot-toast';
+import { fadeInUp } from '../../utils/animations';
 
 const Container = styled.div`
 display: flex;
@@ -118,49 +120,116 @@ const ContactButton = styled.input`
   color: ${({ theme }) => theme.text_primary};
   font-size: 18px;
   font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(133, 76, 230, 0.4);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 11px 14px;
+    font-size: 16px;
+  }
 `
 
 
 
 const Contact = () => {
-  const [open, setOpen] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useRef();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const email = form.current.from_email.value;
-    const name = form.current.from_name.value;
-    const subject = form.current.subject.value;
-    const message = form.current.message.value;
+    const email = form.current.from_email.value.trim();
+    const name = form.current.from_name.value.trim();
+    const subject = form.current.subject.value.trim();
+    const message = form.current.message.value.trim();
+
+    // Validation
+    if (!email || !name || !subject || !message) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address.");
+      toast.error("Please enter a valid email address.");
       return;
     }
 
-    if (!email || !name || !subject || !message) {
-      alert("All fields are required.");
+    if (name.length < 2) {
+      toast.error("Name must be at least 2 characters long.");
       return;
     }
 
-    emailjs
-      .sendForm('service_8nqpjku', 'template_qzsccvl', form.current, '4M2p1GILelfcPLWHd')
-      .then(() => {
-        setOpen(true);
-        form.current.reset();
-      }, (error) => {
-        console.log(error.text);
-      });
+    if (message.length < 10) {
+      toast.error("Message must be at least 10 characters long.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const loadingToast = toast.loading('Sending message...');
+
+    try {
+      await emailjs.sendForm(
+        'service_8nqpjku',
+        'template_qzsccvl',
+        form.current,
+        '4M2p1GILelfcPLWHd'
+      );
+      
+      toast.dismiss(loadingToast);
+      toast.success('Message sent successfully! I\'ll get back to you soon.');
+      form.current.reset();
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error('Failed to send message. Please try again later.');
+      console.error('EmailJS Error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <Container id="contact">
       <Wrapper>
-        <Title>Contact</Title>
-        <Desc>Feel free to reach out to me for any questions or opportunities!</Desc>
-        <ContactForm ref={form} onSubmit={handleSubmit}>
+        <motion.div
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={fadeInUp}
+        >
+          <Title>Contact</Title>
+        </motion.div>
+        <motion.div
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={fadeInUp}
+          transition={{ delay: 0.1 }}
+        >
+          <Desc>Feel free to reach out to me for any questions or opportunities!</Desc>
+        </motion.div>
+        <motion.div
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={fadeInUp}
+          transition={{ delay: 0.2 }}
+        >
+          <ContactForm ref={form} onSubmit={handleSubmit}>
           <ContactTitle>Email Me 🚀</ContactTitle>
           <ContactInput
             placeholder="Your Email"
@@ -184,15 +253,9 @@ const Contact = () => {
             name="message"
             required
           />
-          <ContactButton type="submit" value="Send" />
+          <ContactButton type="submit" value={isSubmitting ? "Sending..." : "Send"} disabled={isSubmitting} />
         </ContactForm>
-        <Snackbar
-          open={open}
-          autoHideDuration={6000}
-          onClose={() => setOpen(false)}
-          message="Email sent successfully!"
-          severity="success"
-        />
+        </motion.div>
       </Wrapper>
     </Container>
   );

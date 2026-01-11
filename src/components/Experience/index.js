@@ -1,5 +1,6 @@
 
 import React from 'react'
+import { motion } from 'framer-motion'
 import styled from 'styled-components'
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
@@ -9,6 +10,7 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import ExperienceCard from '../Cards/ExperienceCard';
 import { experiences } from '../../data/constants';
+import { fadeInUp, staggerContainer, staggerItem } from '../../utils/animations';
 
 const Container = styled.div`
     display: flex;
@@ -78,20 +80,43 @@ const index = () => {
     return (
         <Container id="experience">
             <Wrapper>
-                <Title>Experience</Title>
-                <Desc>
-                    My work experiences as a software engineer
-                </Desc>
-                <TimelineSection>
+                <motion.div
+                    initial="initial"
+                    whileInView="animate"
+                    viewport={{ once: true, margin: "-100px" }}
+                    variants={fadeInUp}
+                >
+                    <Title>Experience</Title>
+                </motion.div>
+                <motion.div
+                    initial="initial"
+                    whileInView="animate"
+                    viewport={{ once: true, margin: "-100px" }}
+                    variants={fadeInUp}
+                    transition={{ delay: 0.1 }}
+                >
+                    <Desc>
+                        My work experiences as a software engineer
+                    </Desc>
+                </motion.div>
+                <TimelineSection
+                    as={motion.div}
+                    variants={staggerContainer}
+                    initial="initial"
+                    whileInView="animate"
+                    viewport={{ once: true, margin: "-100px" }}
+                >
                     <Timeline>
                         {experiences.map((experience,index) => (
-                            <TimelineItem>
+                            <TimelineItem key={experience.id || index}>
                                 <TimelineSeparator>
                                     <TimelineDot variant="outlined" color="secondary" />
                                     {index !== experiences.length - 1 && <TimelineConnector style={{ background: '#854CE6' }} />}
                                 </TimelineSeparator>
                                 <TimelineContent sx={{ py: '12px', px: 2 }}>
-                                    <ExperienceCard experience={experience}/>
+                                    <motion.div variants={staggerItem}>
+                                        <ExperienceCard experience={experience}/>
+                                    </motion.div>
                                 </TimelineContent>
                             </TimelineItem>
                         ))}

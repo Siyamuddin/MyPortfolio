@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import styled from 'styled-components'
 
 const Document = styled.img`
@@ -144,11 +144,11 @@ const Skill = styled.div`
 
 
 
-const ExperienceCard = ({ experience }) => {
+const ExperienceCard = memo(({ experience }) => {
     return (
         <Card>
             <Top>
-                <Image src={experience.img} />
+                <Image src={experience.img} alt={experience.company || 'Company logo'} loading="lazy" />
                 <Body>
                     <Role>{experience.role}</Role>
                     <Company>{experience.company}</Company>
@@ -167,7 +167,7 @@ const ExperienceCard = ({ experience }) => {
                             <b>Skills:</b>
                             <ItemWrapper>
                                 {experience?.skills?.map((skill, index) => (
-                                    <Skill>• {skill}</Skill>
+                                    <Skill key={index}>• {skill}</Skill>
                                 ))}
                             </ItemWrapper>
                         </Skills>
@@ -175,12 +175,14 @@ const ExperienceCard = ({ experience }) => {
                 }
             </Description>
             {experience.doc &&
-                <a href={experience.doc} target="new">
-                    <Document src={experience.doc} />
+                <a href={experience.doc} target="new" rel="noopener noreferrer" aria-label="View experience document">
+                    <Document src={experience.doc} alt="Experience document" />
                 </a>
             }
         </Card>
-    )
-}
+    );
+});
+
+ExperienceCard.displayName = 'ExperienceCard';
 
 export default ExperienceCard

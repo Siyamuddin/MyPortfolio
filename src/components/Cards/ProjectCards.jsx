@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { memo } from 'react'
 
 
 const Button = styled.button`
@@ -18,23 +19,62 @@ const Button = styled.button`
 const Card = styled.div`
     width: 330px;
     height: 490px;
-    background-color: ${({ theme }) => theme.card};
+    background: ${({ theme }) => theme.card};
+    background: ${({ theme }) => 
+      theme.card === '#171721' 
+        ? 'linear-gradient(135deg, rgba(23, 23, 33, 0.9) 0%, rgba(25, 25, 36, 0.9) 100%)'
+        : `linear-gradient(135deg, ${theme.card} 0%, ${theme.card} 100%)`
+    };
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid ${({ theme }) => theme.primary + '30'};
     cursor: pointer;
-    border-radius: 10px;
-    box-shadow: 0 0 12px 4px rgba(0,0,0,0.4);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
     overflow: hidden;
     padding: 26px 20px;
     display: flex;
     flex-direction: column;
     gap: 14px;
-    transition: all 0.5s ease-in-out;
-    &:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 0 50px 4px rgba(0,0,0,0.6);
-        filter: brightness(1.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, 
+            ${({ theme }) => theme.primary} 0%,
+            ${({ theme }) => theme.primary + '80'} 50%,
+            ${({ theme }) => theme.primary} 100%
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
     }
+    
+    &:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 0 16px 48px rgba(133, 76, 230, 0.4),
+                    0 4px 16px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        border-color: ${({ theme }) => theme.primary + '60'};
+        
+        &::before {
+            opacity: 1;
+        }
+    }
+    
     &:hover ${Button} {
         display: block;
+    }
+    
+    @media (max-width: 768px) {
+        width: 100%;
+        max-width: 330px;
     }
 `
 
@@ -42,9 +82,14 @@ const Image = styled.img`
     width: 100%;
     height: 180px;
     background-color: ${({ theme }) => theme.white};
-    border-radius: 10px;
-    box-shadow: 0 0 16px 2px rgba(0,0,0,0.3);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     object-fit: cover;
+    transition: transform 0.4s ease;
+    
+    ${Card}:hover & {
+        transform: scale(1.05);
+    }
 `
 
 const Tags = styled.div`
@@ -58,11 +103,24 @@ const Tags = styled.div`
 
 const Tag = styled.span`
     font-size: 12px;
-    font-weight: 400;
+    font-weight: 500;
     color: ${({ theme }) => theme.primary};
-    background-color: ${({ theme }) => theme.primary + 15};
-    padding: 2px 8px;
-    border-radius: 10px;
+    background: ${({ theme }) => 
+      `linear-gradient(135deg, ${theme.primary}20 0%, ${theme.primary}10 100%)`
+    };
+    backdrop-filter: blur(10px);
+    border: 1px solid ${({ theme }) => theme.primary + '30'};
+    padding: 4px 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    
+    ${Card}:hover & {
+        background: ${({ theme }) => 
+          `linear-gradient(135deg, ${theme.primary}30 0%, ${theme.primary}20 100%)`
+        };
+        border-color: ${({ theme }) => theme.primary + '50'};
+        transform: translateY(-2px);
+    }
 `
 
 const Details = styled.div`
@@ -123,9 +181,18 @@ const Avatar = styled.img`
     border: 3px solid ${({ theme }) => theme.card};
 `
 
-const ProjectCards = ({project,setOpenModal}) => {
+const ProjectCards = memo(({project, setOpenModal}) => {
+    const handleClick = () => {
+        setOpenModal({state: true, project: project});
+    };
+
     return (
-        <Card onClick={() => setOpenModal({state: true, project: project})}>
+        <Card onClick={handleClick} role="button" tabIndex={0} onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleClick();
+            }
+        }} aria-label={`View ${project.title} project details`}>
             <Image 
                 src={project.image} 
                 alt={project.title}
@@ -134,7 +201,7 @@ const ProjectCards = ({project,setOpenModal}) => {
                 height="180"
                 onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = '/fallback-image.png'; // Add a fallback image
+                    e.target.src = '/fallback-image.png';
                 }}
             />
             <Tags>
@@ -154,9 +221,10 @@ const ProjectCards = ({project,setOpenModal}) => {
                     ))}
                 </Members>
             )}
-            {/* <Button>View Project</Button> */}
         </Card>
-    )
-}
+    );
+});
+
+ProjectCards.displayName = 'ProjectCards';
 
 export default ProjectCards

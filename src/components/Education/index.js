@@ -1,5 +1,6 @@
 
 import React from 'react'
+import { motion } from 'framer-motion'
 import styled from 'styled-components'
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
@@ -7,8 +8,9 @@ import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
-import { education, experiences } from '../../data/constants';
+import { education } from '../../data/constants';
 import EducationCard from '../Cards/EducationCard';
+import { fadeInUp, staggerContainer, staggerItem } from '../../utils/animations';
 
 const Container = styled.div`
     display: flex;
@@ -81,20 +83,43 @@ const index = () => {
     return (
         <Container id="education">
             <Wrapper>
-                <Title>Education</Title>
-                <Desc>
-                    My education has been a journey of self-discovery and growth. My educational details are as follows.
-                </Desc>
-                <TimelineSection>
+                <motion.div
+                    initial="initial"
+                    whileInView="animate"
+                    viewport={{ once: true, margin: "-100px" }}
+                    variants={fadeInUp}
+                >
+                    <Title>Education</Title>
+                </motion.div>
+                <motion.div
+                    initial="initial"
+                    whileInView="animate"
+                    viewport={{ once: true, margin: "-100px" }}
+                    variants={fadeInUp}
+                    transition={{ delay: 0.1 }}
+                >
+                    <Desc>
+                        My education has been a journey of self-discovery and growth. My educational details are as follows.
+                    </Desc>
+                </motion.div>
+                <TimelineSection
+                    as={motion.div}
+                    variants={staggerContainer}
+                    initial="initial"
+                    whileInView="animate"
+                    viewport={{ once: true, margin: "-100px" }}
+                >
                     <Timeline>
-                        {education.map((education,index) => (
-                            <TimelineItem >
+                        {education.map((educationItem,index) => (
+                            <TimelineItem key={educationItem.id || index}>
                                 <TimelineContent sx={{ py: '12px', px: 2 }}>
-                                    <EducationCard education={education}/>
+                                    <motion.div variants={staggerItem}>
+                                        <EducationCard education={educationItem}/>
+                                    </motion.div>
                                 </TimelineContent>
                                 <TimelineSeparator>
                                     <TimelineDot variant="outlined" color="secondary" />
-                                    {index !== experiences.length  && <TimelineConnector style={{ background: '#854CE6' }} />}
+                                    {index !== education.length - 1 && <TimelineConnector style={{ background: '#854CE6' }} />}
                                 </TimelineSeparator>
                             </TimelineItem>
                         ))}

@@ -6,7 +6,7 @@ import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
 import { initGA, trackPageView, trackScrollDepth, trackTimeOnPage } from './utils/analytics';
 import { initPerformanceOptimizations, measureWebVitals } from './utils/performance';
-import { darkTheme, lightTheme } from './utils/Themes.js'
+import { darkTheme, lightTheme } from './utils/Themes'
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
 import Skills from "./components/Skills";
@@ -16,18 +16,24 @@ import Footer from "./components/Footer";
 import Experience from "./components/Experience";
 import Education from "./components/Education";
 import ScrollProgress from "./components/ScrollProgress";
-import SocialProof from "./components/SocialProof";
-import Learning from "./components/Learning";
 import ParticleBackground from "./components/ParticleBackground";
 import QuickJump from "./components/QuickJump";
-import FAQ, { faqData } from "./components/FAQ";
 import StructuredData from "./components/SEO/StructuredData";
-import Blog from "./components/Blog";
-import ViralHooks from "./components/ViralHooks";
 import LanguageSwitcher from "./components/LanguageSwitcher";
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import './App.css';
 
+// Lazy load below-the-fold components for better performance
 const ProjectDetails = lazy(() => import("./components/ProjectDetails"));
+const SocialProof = lazy(() => import("./components/SocialProof"));
+const Learning = lazy(() => import("./components/Learning"));
+const FAQComponent = lazy(() => import("./components/FAQ").then(module => ({ default: module.default })));
+const Blog = lazy(() => import("./components/Blog"));
+const ViralHooks = lazy(() => import("./components/ViralHooks"));
+
+// Import faqData separately (not lazy) since it's needed for StructuredData
+// We'll import it synchronously for StructuredData, but lazy load the component
+import { faqData } from "./components/FAQ";
 
 const Body = styled.div`
   background-color: ${({ theme }) => theme.bg};
@@ -182,9 +188,10 @@ function App() {
   };
 
   return (
-    <HelmetProvider>
-      <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-        <Router>
+    <ErrorBoundary>
+      <HelmetProvider>
+        <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+          <Router>
           <Helmet>
             <html lang="en" />
             <title>Siyam Uddin – Java Backend Developer Portfolio | Spring Boot & AI Specialist</title>
@@ -264,6 +271,9 @@ function App() {
           <a href="#about" className="skip-to-content" aria-label="Skip to main content">
             Skip to Content
           </a>
+          
+          {/* Live region for screen reader announcements */}
+          <div role="status" aria-live="polite" aria-atomic="true" className="live-region" id="live-region" />
 
           <ThemeToggle 
             onClick={toggleTheme}
@@ -288,13 +298,23 @@ function App() {
             <Experience />
           </Wrapper>
           <Projects openModal={openModal} setOpenModal={setOpenModal} />
-          <SocialProof />
-          <Blog />
-          <ViralHooks />
+          <Suspense fallback={<div style={{ minHeight: '200px' }} />}>
+            <SocialProof />
+          </Suspense>
+          <Suspense fallback={<div style={{ minHeight: '200px' }} />}>
+            <Blog />
+          </Suspense>
+          <Suspense fallback={<div style={{ minHeight: '200px' }} />}>
+            <ViralHooks />
+          </Suspense>
           <Wrapper>
             <Education />
-            <Learning />
-            <FAQ />
+            <Suspense fallback={<div style={{ minHeight: '200px' }} />}>
+              <Learning />
+            </Suspense>
+            <Suspense fallback={<div style={{ minHeight: '200px' }} />}>
+              <FAQComponent />
+            </Suspense>
             <Contact />
           </Wrapper>
           <Footer />
@@ -333,6 +353,7 @@ function App() {
       </Router>
     </ThemeProvider>
     </HelmetProvider>
+    </ErrorBoundary>
   );
 }
 

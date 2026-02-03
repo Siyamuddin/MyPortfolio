@@ -3,7 +3,36 @@
  * Generates structured data (JSON-LD) for various content types
  */
 
-export const generatePersonSchema = (bio) => ({
+import { Bio, Project } from '../types/data';
+
+interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+interface FAQ {
+  question: string;
+  answer: string;
+}
+
+interface Article {
+  title: string;
+  description: string;
+  image: string;
+  datePublished: string;
+  dateModified?: string;
+  url: string;
+}
+
+interface Course {
+  name: string;
+  description: string;
+  provider?: string;
+  code?: string;
+  credential?: string;
+}
+
+export const generatePersonSchema = (bio: Bio) => ({
   "@context": "https://schema.org",
   "@type": "Person",
   "name": bio.name,
@@ -42,7 +71,7 @@ export const generatePersonSchema = (bio) => ({
   }
 });
 
-export const generateProjectSchema = (project, index) => ({
+export const generateProjectSchema = (project: Project, index: number) => ({
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": project.title,
@@ -68,7 +97,7 @@ export const generateProjectSchema = (project, index) => ({
   "keywords": project.tags?.join(", ") || ""
 });
 
-export const generateBreadcrumbSchema = (items) => ({
+export const generateBreadcrumbSchema = (items: BreadcrumbItem[]) => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": items.map((item, index) => ({
@@ -79,7 +108,7 @@ export const generateBreadcrumbSchema = (items) => ({
   }))
 });
 
-export const generateFAQSchema = (faqs) => ({
+export const generateFAQSchema = (faqs: FAQ[]) => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": faqs.map(faq => ({
@@ -130,7 +159,7 @@ export const generateWebSiteSchema = () => ({
   }
 });
 
-export const generateArticleSchema = (article) => ({
+export const generateArticleSchema = (article: Article) => ({
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": article.title,
@@ -157,7 +186,7 @@ export const generateArticleSchema = (article) => ({
   }
 });
 
-export const generateCourseSchema = (course) => ({
+export const generateCourseSchema = (course: Course) => ({
   "@context": "https://schema.org",
   "@type": "Course",
   "name": course.name,
@@ -169,4 +198,3 @@ export const generateCourseSchema = (course) => ({
   "courseCode": course.code,
   "educationalCredentialAwarded": course.credential
 });
-

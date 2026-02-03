@@ -4,7 +4,7 @@
  */
 
 // Optimize Largest Contentful Paint (LCP)
-export const optimizeLCP = () => {
+export const optimizeLCP = (): void => {
   // Preload critical resources
   const criticalResources = [
     '/HeroImage.webp',
@@ -21,7 +21,7 @@ export const optimizeLCP = () => {
 };
 
 // Prevent Cumulative Layout Shift (CLS)
-export const preventCLS = () => {
+export const preventCLS = (): void => {
   // Add width and height to images
   const images = document.querySelectorAll('img');
   images.forEach(img => {
@@ -45,7 +45,7 @@ export const preventCLS = () => {
 };
 
 // Optimize First Input Delay (FID)
-export const optimizeFID = () => {
+export const optimizeFID = (): void => {
   // Defer non-critical JavaScript
   const scripts = document.querySelectorAll('script[data-defer]');
   scripts.forEach(script => {
@@ -54,12 +54,12 @@ export const optimizeFID = () => {
 
   // Use requestIdleCallback for non-critical tasks
   if ('requestIdleCallback' in window) {
-    requestIdleCallback(() => {
+    window.requestIdleCallback(() => {
       // Load non-critical resources
       const nonCriticalResources = document.querySelectorAll('[data-non-critical]');
       nonCriticalResources.forEach(resource => {
         if (resource.tagName === 'IMG') {
-          resource.loading = 'lazy';
+          (resource as HTMLImageElement).loading = 'lazy';
         }
       });
     });
@@ -67,7 +67,7 @@ export const optimizeFID = () => {
 };
 
 // Initialize all optimizations
-export const initPerformanceOptimizations = () => {
+export const initPerformanceOptimizations = (): void => {
   if (typeof window !== 'undefined') {
     optimizeLCP();
     preventCLS();
@@ -76,13 +76,13 @@ export const initPerformanceOptimizations = () => {
 };
 
 // Measure and report Core Web Vitals
-export const measureWebVitals = () => {
+export const measureWebVitals = (): void => {
   if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
     // Measure LCP
     try {
       const lcpObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
-        const lastEntry = entries[entries.length - 1];
+        const lastEntry = entries[entries.length - 1] as PerformanceEntry & { renderTime?: number; loadTime?: number };
         console.log('LCP:', lastEntry.renderTime || lastEntry.loadTime);
       });
       lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
@@ -95,8 +95,9 @@ export const measureWebVitals = () => {
       let clsValue = 0;
       const clsObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          if (!entry.hadRecentInput) {
-            clsValue += entry.value;
+          const layoutShiftEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number };
+          if (!layoutShiftEntry.hadRecentInput && layoutShiftEntry.value) {
+            clsValue += layoutShiftEntry.value;
           }
         }
         console.log('CLS:', clsValue);
@@ -110,7 +111,10 @@ export const measureWebVitals = () => {
     try {
       const fidObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          console.log('FID:', entry.processingStart - entry.startTime);
+          const fidEntry = entry as PerformanceEntry & { processingStart?: number; startTime?: number };
+          if (fidEntry.processingStart && fidEntry.startTime) {
+            console.log('FID:', fidEntry.processingStart - fidEntry.startTime);
+          }
         }
       });
       fidObserver.observe({ entryTypes: ['first-input'] });
@@ -119,4 +123,3 @@ export const measureWebVitals = () => {
     }
   }
 };
-

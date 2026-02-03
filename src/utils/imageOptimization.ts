@@ -3,7 +3,7 @@
  * Handles responsive images, WebP support, and lazy loading
  */
 
-export const generateImageSrcSet = (basePath, sizes = [400, 800, 1200]) => {
+export const generateImageSrcSet = (basePath: string, sizes: number[] = [400, 800, 1200]): string => {
   // If it's already a full URL, return as is
   if (basePath.startsWith('http')) {
     return basePath;
@@ -13,11 +13,11 @@ export const generateImageSrcSet = (basePath, sizes = [400, 800, 1200]) => {
   return sizes.map(size => `${basePath}?w=${size} ${size}w`).join(', ');
 };
 
-export const getImageSrc = (imagePath, fallback = '/fallback-image.png') => {
+export const getImageSrc = (imagePath: string, fallback: string = '/fallback-image.png'): string => {
   if (!imagePath) return fallback;
   
   // Check if WebP is supported
-  const supportsWebP = () => {
+  const supportsWebP = (): boolean => {
     const canvas = document.createElement('canvas');
     return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
   };
@@ -36,16 +36,27 @@ export const getImageSrc = (imagePath, fallback = '/fallback-image.png') => {
   return imagePath;
 };
 
-export const preloadImage = (src) => {
+export const preloadImage = (src: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.onload = resolve;
-    img.onerror = reject;
+    img.onload = () => resolve();
+    img.onerror = () => reject();
     img.src = src;
   });
 };
 
-export const optimizeImageAttributes = (imagePath, alt, width, height) => {
+interface ImageAttributes {
+  src: string;
+  srcSet: string;
+  alt: string;
+  width: number;
+  height: number;
+  loading: 'lazy' | 'eager';
+  decoding: 'async' | 'sync' | 'auto';
+  fetchpriority: 'high' | 'low' | 'auto';
+}
+
+export const optimizeImageAttributes = (imagePath: string, alt: string, width: number, height: number): ImageAttributes => {
   return {
     src: getImageSrc(imagePath),
     srcSet: generateImageSrcSet(imagePath),
@@ -57,4 +68,3 @@ export const optimizeImageAttributes = (imagePath, alt, width, height) => {
     fetchpriority: width > 800 ? 'high' : 'low'
   };
 };
-

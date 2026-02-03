@@ -82,3 +82,62 @@ html {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Enhanced Focus Indicators for Accessibility */
+*:focus-visible {
+  outline: 3px solid #854CE6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove default focus outline for mouse users, keep for keyboard */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Live region for announcements */
+.live-region {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Improved button focus states */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid #854CE6;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 2px rgba(133, 76, 230, 0.3);
+}
+
+/* Form input focus states */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #854CE6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(133, 76, 230, 0.2);
+}

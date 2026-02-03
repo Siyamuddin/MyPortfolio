@@ -9,7 +9,23 @@ import {
 } from '../../utils/seo';
 import { Bio, projects } from '../../data/constants';
 
-export const StructuredData = ({ currentPage, breadcrumbs, faqs }) => {
+interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+interface FAQ {
+  question: string;
+  answer: string;
+}
+
+interface StructuredDataProps {
+  currentPage?: string;
+  breadcrumbs?: BreadcrumbItem[];
+  faqs?: FAQ[];
+}
+
+export const StructuredData = ({ currentPage, breadcrumbs, faqs }: StructuredDataProps) => {
   const baseUrl = 'https://siyamuddin.xyz';
   
   // Default breadcrumbs if not provided
@@ -53,9 +69,25 @@ export const StructuredData = ({ currentPage, breadcrumbs, faqs }) => {
           {JSON.stringify(generateFAQSchema(faqs))}
         </script>
       )}
+
+      {/* Additional SEO Meta Tags */}
+      <meta name="application-name" content="Siyam Uddin Portfolio" />
+      <meta name="apple-mobile-web-app-title" content="Siyam Portfolio" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      <meta name="format-detection" content="telephone=no" />
+      <meta name="mobile-web-app-capable" content="yes" />
+      <meta name="msapplication-TileColor" content="#854CE6" />
+      <meta name="msapplication-config" content="/browserconfig.xml" />
+      
+      {/* Enhanced Open Graph */}
+      <meta property="og:updated_time" content={new Date().toISOString()} />
+      
+      {/* Enhanced Twitter Card */}
+      <meta name="twitter:site" content="@SiyamUddin12" />
+      <meta name="twitter:domain" content="siyamuddin.xyz" />
     </Helmet>
   );
 };
 
 export default StructuredData;
-

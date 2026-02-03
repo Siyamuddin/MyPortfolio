@@ -41,7 +41,40 @@
   ],
   "start_url": ".",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "theme_color": "#854CE6",
   "background_color": "#1C1C27",
-  "description": "Portfolio website of Siyam Uddin, showcasing backend development projects and skills"
+  "description": "Portfolio website of Siyam Uddin, showcasing backend development projects and skills",
+  "categories": ["portfolio", "developer", "technology"],
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false,
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Projects",
+      "short_name": "Projects",
+      "description": "View my projects",
+      "url": "/#projects",
+      "icons": [
+        {
+          "src": "HeroImage.webp",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Contact",
+      "short_name": "Contact",
+      "description": "Get in touch",
+      "url": "/#contact",
+      "icons": [
+        {
+          "src": "HeroImage.webp",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
 } 

@@ -1,4 +1,6 @@
-export const darkTheme = {
+import { Theme } from '../types/theme';
+
+export const darkTheme: Theme = {
     bg:"#1C1C27",
     bgLight: "#1C1E27",
     primary:"#854CE6",
@@ -11,7 +13,7 @@ export const darkTheme = {
     black:"#000000",
 }
 
-export const lightTheme = {
+export const lightTheme: Theme = {
     bg:"#FFFFFF",
     bgLight: "#f0f0f0",
     primary:"#be1adb",

@@ -13,6 +13,12 @@ export const metadata: Metadata = {
   description:
     "Software Developer specializing in full-stack development, AI/ML integration, and automation solutions. Based in Seoul, South Korea.",
   metadataBase: new URL("https://siyamuddin.xyz"),
+  icons: [
+    { rel: "icon", url: "/favicon-48.webp", type: "image/webp" },
+    { rel: "icon", url: "/HeroImage.webp", sizes: "48x48" },
+    { rel: "apple-touch-icon", url: "/favicon-48.webp" },
+    { rel: "shortcut icon", url: "/favicon-48.webp" },
+  ],
   openGraph: {
     title: "Siyam Uddin — Portfolio",
     description:
@@ -21,6 +27,21 @@ export const metadata: Metadata = {
     siteName: "Siyam Uddin",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "https://siyamuddin.xyz/og-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "Siyam Uddin - Software Developer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Siyam Uddin — Portfolio",
+    description:
+      "Software Developer specializing in full-stack development, AI/ML integration, and automation solutions.",
+    images: ["https://siyamuddin.xyz/og-image.webp"],
   },
 }
 

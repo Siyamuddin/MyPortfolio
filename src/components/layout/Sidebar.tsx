@@ -42,11 +42,6 @@ const XIcon = ({ className }: { className?: string }) => (
 
 export const Sidebar = () => {
   const { isExpanded, handleToggle, label } = useSidebarToggle()
-  const initials = profile.name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
 
   return (
     <aside
@@ -58,9 +53,14 @@ export const Sidebar = () => {
       data-sidebar
     >
       <div className="relative flex items-center justify-start gap-4 min-[580px]:gap-6 min-[1250px]:flex-col">
-        <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-[20px] bg-gradient-to-br from-[#3d3d40] to-[#303030] text-4xl text-gold min-[580px]:h-[120px] min-[580px]:w-[120px] min-[580px]:rounded-[30px] min-[580px]:text-5xl min-[1250px]:h-[150px] min-[1250px]:w-[150px] min-[1250px]:text-6xl">
-          <span aria-hidden="true">{initials}</span>
-          <span className="sr-only">{profile.name}</span>
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-[20px] bg-gradient-to-br from-[#3d3d40] to-[#303030] min-[580px]:h-[120px] min-[580px]:w-[120px] min-[580px]:rounded-[30px] min-[1250px]:h-[150px] min-[1250px]:w-[150px]">
+          <img
+            src="/HeroImage.webp"
+            alt={profile.name}
+            className="h-full w-full object-cover"
+            loading="eager"
+            fetchPriority="high"
+          />
         </div>
 
         <div className="min-[1250px]:text-center">

@@ -55,9 +55,9 @@ export const Sidebar = () => {
       <div className="relative flex items-center justify-start gap-4 min-[580px]:gap-6 min-[1250px]:flex-col">
         <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-[20px] bg-gradient-to-br from-[#3d3d40] to-[#303030] min-[580px]:h-[120px] min-[580px]:w-[120px] min-[580px]:rounded-[30px] min-[1250px]:h-[150px] min-[1250px]:w-[150px]">
           <img
-            src="/HeroImage.webp"
+            src="/SiyamImage.webp"
             alt={profile.name}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover object-top"
             loading="eager"
             fetchPriority="high"
           />

@@ -5,7 +5,7 @@ import { TimelineItem } from "@/components/ui/TimelineItem"
 import { IconBox } from "@/components/ui/IconBox"
 
 export const ResumePage = () => {
-  const resumeHref = profile.resumeUrl ?? "/resumes/siyam-uddin-resume-en.pdf"
+  const resumeHref = profile.resumeUrl ?? "/resume.pdf"
 
   return (
     <article

@@ -1,0 +1,26 @@
+{
+  "name": "Siyam Uddin — Full-Stack Software Engineer",
+  "short_name": "Siyam Uddin",
+  "description": "Full-Stack Software Engineer | Java Spring Boot · React · DevOps · AI/ML",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#854CE6",
+  "icons": [
+    {
+      "src": "/favicon-48.webp",
+      "sizes": "48x48",
+      "type": "image/webp"
+    },
+    {
+      "src": "/HeroImage.webp",
+      "sizes": "192x192",
+      "type": "image/webp"
+    },
+    {
+      "src": "/og-image.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}

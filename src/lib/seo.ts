@@ -4,9 +4,10 @@ import type { NavPage } from "@/lib/types"
 export const SITE_URL = "https://siyamuddin.com"
 export const SITE_NAME = "Siyam Uddin Portfolio"
 export const OG_IMAGE = {
-  url: `${SITE_URL}/og-image.webp`,
+  url: `${SITE_URL}/og-image.jpg`,
   width: 1200,
   height: 630,
+  type: "image/jpeg",
   alt: "Siyam Uddin - Full-Stack Software Engineer Portfolio",
 }
 

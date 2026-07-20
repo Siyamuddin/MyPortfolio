@@ -38,12 +38,15 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: [
-    { rel: "icon", url: "/favicon-48.webp", type: "image/webp" },
-    { rel: "icon", url: "/favicon-48.webp", sizes: "48x48", type: "image/webp" },
-    { rel: "apple-touch-icon", url: "/favicon-48.webp", sizes: "48x48" },
-    { rel: "shortcut icon", url: "/favicon-48.webp" },
-  ],
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-48.webp", type: "image/webp", sizes: "48x48" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: "/favicon.ico",
+  },
   manifest: "/site.webmanifest",
   openGraph: {
     title: "Siyam Uddin — Full-Stack Software Engineer",
@@ -56,9 +59,17 @@ export const metadata: Metadata = {
     countryName: "South Korea",
     images: [
       {
+        url: `${SITE_URL}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        type: "image/jpeg",
+        alt: "Siyam Uddin - Full-Stack Software Engineer Portfolio",
+      },
+      {
         url: `${SITE_URL}/og-image.webp`,
         width: 1200,
         height: 630,
+        type: "image/webp",
         alt: "Siyam Uddin - Full-Stack Software Engineer Portfolio",
       },
     ],
@@ -68,7 +79,7 @@ export const metadata: Metadata = {
     title: "Siyam Uddin — Full-Stack Software Engineer",
     description:
       "Full-Stack Software Engineer | Java Spring Boot · React · DevOps · AI/ML. Building production systems in Seoul.",
-    images: [`${SITE_URL}/og-image.webp`],
+    images: [`${SITE_URL}/og-image.jpg`],
     creator: "@SiyamUddin12",
   },
   alternates: {

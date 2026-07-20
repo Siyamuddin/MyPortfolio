@@ -15,7 +15,7 @@ export const profile: Profile = {
     linkedin: "https://linkedin.com/in/uddin-siyam-8953511ab",
     twitter: "https://x.com/siyamuddin",
   },
-  avatar: "/images/avatar.jpg",
+  avatar: "/SiyamImage.webp",
   resumeUrl: "/resume.pdf",
 };
 
@@ -132,14 +132,14 @@ export const projects: Project[] = [
     title: "Automation Tools",
     category: "Automation",
     image: "/images/projects/ai-agent.jpg",
-    url: "#",
+    url: "",
     description: "Agentic automation with FastAPI, Whisper ASR, RAG pipelines, and LLM integration — 100+ real users",
   },
   {
     title: "Spring Boot API Service",
     category: "Applications",
     image: "/images/projects/spring.jpg",
-    url: "#",
+    url: "",
     description: "RESTful API service with Spring Boot, JPA, MySQL, Redis caching, and Docker containerization",
   },
   {
@@ -156,25 +156,28 @@ export const blogPosts: BlogPost[] = [
     title: "Agentic AI in Industrial IoT Security",
     category: "Research",
     date: "Mar 2026",
+    dateTime: "2026-03",
     excerpt: "Exploring how autonomous AI agents can transform security monitoring and threat response in Industrial IoT environments.",
     image: "/images/blog/agentic-ai.jpg",
-    url: "#",
+    url: "",
   },
   {
     title: "Integrating AI into Spring Boot with Spring AI",
     category: "Tutorial",
     date: "Feb 2026",
+    dateTime: "2026-02",
     excerpt: "A practical guide to using Spring AI starter for adding LLM capabilities to your Java backend applications.",
     image: "/images/blog/spring-ai.jpg",
-    url: "#",
+    url: "",
   },
   {
     title: "Building Production Automation Pipelines with n8n",
     category: "Automation",
     date: "Jan 2026",
+    dateTime: "2026-01",
     excerpt: "How I built a scalable automation infrastructure using n8n, Docker, and Cloudflare Tunnel.",
     image: "/images/blog/n8n.jpg",
-    url: "#",
+    url: "",
   },
 ];
 

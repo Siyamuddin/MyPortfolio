@@ -24,49 +24,67 @@ export const BlogPage = () => {
             const imageSrc = post.image.startsWith("http")
               ? post.image
               : placeholderSrc(post.title)
-            const isExternal = post.url.startsWith("http")
+            const hasUrl = post.url.startsWith("http")
+
+            const content = (
+              <>
+                <figure className="h-[200px] w-full overflow-hidden rounded-xl min-[580px]:rounded-2xl min-[1024px]:h-[230px]">
+                  <Image
+                    src={imageSrc}
+                    alt={post.title}
+                    width={800}
+                    height={460}
+                    className="h-full w-full object-cover transition-transform duration-250 group-hover:scale-110"
+                    unoptimized={imageSrc.includes("placehold.co")}
+                  />
+                </figure>
+                <div className="p-4 min-[580px]:p-[25px]">
+                  <div className="mb-2.5 flex items-center justify-start gap-1.5">
+                    <p className="text-sm font-light text-light-gray-70 min-[580px]:text-[15px]">
+                      {post.category}
+                    </p>
+                    <span className="h-1 w-1 rounded-full bg-light-gray-70" />
+                    <time
+                      dateTime={post.dateTime}
+                      className="text-sm font-light text-light-gray-70 min-[580px]:text-[15px]"
+                    >
+                      {post.date}
+                    </time>
+                  </div>
+                  <h3 className="mb-2.5 line-clamp-2 text-lg leading-snug text-white-2 transition-colors group-hover:text-gold">
+                    {post.title}
+                  </h3>
+                  <p className="line-clamp-3 text-sm font-light leading-relaxed text-light-gray min-[580px]:text-[15px]">
+                    {post.excerpt}
+                  </p>
+                </div>
+              </>
+            )
+
+            const shellClassName =
+              "group relative z-[1] block h-full rounded-2xl bg-gradient-to-br from-[#38383d] to-transparent shadow-[var(--shadow-4)] before:absolute before:inset-px before:-z-[1] before:rounded-[inherit] before:bg-eerie-black-1"
 
             return (
               <li key={post.title}>
-                <a
-                  href={post.url}
-                  target={isExternal ? "_blank" : undefined}
-                  rel={isExternal ? "noopener noreferrer" : undefined}
-                  className="group relative z-[1] block h-full rounded-2xl bg-gradient-to-br from-[#38383d] to-transparent shadow-[var(--shadow-4)] before:absolute before:inset-px before:-z-[1] before:rounded-[inherit] before:bg-eerie-black-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-                  tabIndex={0}
-                  aria-label={`Read blog post: ${post.title}`}
-                  onClick={(event) => {
-                    if (post.url === "#") event.preventDefault()
-                  }}
-                >
-                  <figure className="h-[200px] w-full overflow-hidden rounded-xl min-[580px]:rounded-2xl min-[1024px]:h-[230px]">
-                    <Image
-                      src={imageSrc}
-                      alt={post.title}
-                      width={800}
-                      height={460}
-                      className="h-full w-full object-cover transition-transform duration-250 group-hover:scale-110"
-                      unoptimized={imageSrc.includes("placehold.co")}
-                    />
-                  </figure>
-                  <div className="p-4 min-[580px]:p-[25px]">
-                    <div className="mb-2.5 flex items-center justify-start gap-1.5">
-                      <p className="text-sm font-light text-light-gray-70 min-[580px]:text-[15px]">
-                        {post.category}
-                      </p>
-                      <span className="h-1 w-1 rounded-full bg-light-gray-70" />
-                      <time className="text-sm font-light text-light-gray-70 min-[580px]:text-[15px]">
-                        {post.date}
-                      </time>
-                    </div>
-                    <h3 className="mb-2.5 line-clamp-2 text-lg leading-snug text-white-2 transition-colors group-hover:text-gold">
-                      {post.title}
-                    </h3>
-                    <p className="line-clamp-3 text-sm font-light leading-relaxed text-light-gray min-[580px]:text-[15px]">
-                      {post.excerpt}
-                    </p>
-                  </div>
-                </a>
+                {hasUrl ? (
+                  <a
+                    href={post.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${shellClassName} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold`}
+                    tabIndex={0}
+                    aria-label={`Read blog post: ${post.title}`}
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  <article
+                    className={shellClassName}
+                    aria-label={post.title}
+                  >
+                    {content}
+                  </article>
+                )}
               </li>
             )
           })}

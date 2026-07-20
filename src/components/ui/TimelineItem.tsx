@@ -10,7 +10,7 @@ export const TimelineItem = ({ title, period, children }: TimelineItemProps) => 
       <h4 className="mb-1.5 text-sm leading-snug text-white-2 min-[580px]:text-[15px]">
         {title}
       </h4>
-      <span className="font-normal leading-relaxed text-gold">{period}</span>
+      <time className="font-normal leading-relaxed text-gold">{period}</time>
       {children ? (
         <div className="mt-1 font-light leading-relaxed text-light-gray min-[1250px]:max-w-[700px]">
           {children}

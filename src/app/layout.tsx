@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Poppins } from "next/font/google"
+import { SITE_URL } from "@/lib/seo"
 import "./globals.css"
 
 const poppins = Poppins({
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   },
   description:
     "Full-Stack Software Engineer with 3+ years of experience in Java Spring Boot, React, TypeScript, AWS, Docker, and AI/ML. Based in Seoul, South Korea. Building production-grade systems serving 50K+ req/hr.",
-  metadataBase: new URL("https://siyamuddin.com"),
+  metadataBase: new URL(SITE_URL),
   keywords: [
     "Siyam Uddin", "Java Developer", "Spring Boot", "Full-Stack Engineer",
     "React Developer", "Backend Developer", "AI/ML Engineer", "DevOps",
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
     "LangChain", "Microservices", "AWS", "Docker", "TypeScript",
     "Java Backend Developer Seoul", "Spring Boot Developer Korea",
   ],
-  authors: [{ name: "Siyam Uddin", url: "https://siyamuddin.com" }],
+  authors: [{ name: "Siyam Uddin", url: SITE_URL }],
   creator: "Siyam Uddin",
   publisher: "Siyam Uddin",
   robots: {
@@ -39,8 +40,8 @@ export const metadata: Metadata = {
   },
   icons: [
     { rel: "icon", url: "/favicon-48.webp", type: "image/webp" },
-    { rel: "icon", url: "/HeroImage.webp", sizes: "48x48" },
-    { rel: "apple-touch-icon", url: "/favicon-48.webp", sizes: "180x180" },
+    { rel: "icon", url: "/favicon-48.webp", sizes: "48x48", type: "image/webp" },
+    { rel: "apple-touch-icon", url: "/favicon-48.webp", sizes: "48x48" },
     { rel: "shortcut icon", url: "/favicon-48.webp" },
   ],
   manifest: "/site.webmanifest",
@@ -48,14 +49,14 @@ export const metadata: Metadata = {
     title: "Siyam Uddin — Full-Stack Software Engineer",
     description:
       "Full-Stack Software Engineer specializing in Java Spring Boot, React, TypeScript, AWS, Docker, and AI/ML integration. 3+ years of production experience.",
-    url: "https://siyamuddin.com",
+    url: SITE_URL,
     siteName: "Siyam Uddin Portfolio",
     locale: "en_US",
     type: "website",
     countryName: "South Korea",
     images: [
       {
-        url: "https://siyamuddin.com/og-image.webp",
+        url: `${SITE_URL}/og-image.webp`,
         width: 1200,
         height: 630,
         alt: "Siyam Uddin - Full-Stack Software Engineer Portfolio",
@@ -67,14 +68,13 @@ export const metadata: Metadata = {
     title: "Siyam Uddin — Full-Stack Software Engineer",
     description:
       "Full-Stack Software Engineer | Java Spring Boot · React · DevOps · AI/ML. Building production systems in Seoul.",
-    images: ["https://siyamuddin.com/og-image.webp"],
+    images: [`${SITE_URL}/og-image.webp`],
     creator: "@SiyamUddin12",
   },
   alternates: {
-    canonical: "https://siyamuddin.com",
+    canonical: SITE_URL,
     languages: {
-      "en": "https://siyamuddin.com",
-      "ko": "https://siyamuddin.com/ko",
+      en: SITE_URL,
     },
   },
   category: "technology",
@@ -94,29 +94,46 @@ export default function RootLayout({
 }>) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Siyam Uddin",
-    jobTitle: "Full-Stack Software Engineer",
-    url: "https://siyamuddin.com",
-    sameAs: [
-      "https://github.com/Siyamuddin",
-      "https://linkedin.com/in/uddin-siyam-8953511ab",
-      "https://x.com/siyamuddin",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": `${SITE_URL}/#person`,
+        name: "Siyam Uddin",
+        jobTitle: "Full-Stack Software Engineer",
+        url: SITE_URL,
+        sameAs: [
+          "https://github.com/Siyamuddin",
+          "https://linkedin.com/in/uddin-siyam-8953511ab",
+          "https://x.com/siyamuddin",
+        ],
+        email: "siyamuddin177@gmail.com",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Seoul",
+          addressCountry: "South Korea",
+        },
+        knowsAbout: [
+          "Java", "Spring Boot", "React", "TypeScript", "Python",
+          "AWS", "Docker", "Microservices", "AI/ML", "DevOps",
+        ],
+        alumniOf: {
+          "@type": "CollegeOrUniversity",
+          name: "Sejong University",
+        },
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#website`,
+        name: "Siyam Uddin Portfolio",
+        url: SITE_URL,
+        description:
+          "Portfolio of Siyam Uddin, Full-Stack Software Engineer specializing in Java Spring Boot, React, and AI/ML.",
+        inLanguage: "en",
+        publisher: {
+          "@id": `${SITE_URL}/#person`,
+        },
+      },
     ],
-    email: "siyamuddin177@gmail.com",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Seoul",
-      addressCountry: "South Korea",
-    },
-    knowsAbout: [
-      "Java", "Spring Boot", "React", "TypeScript", "Python",
-      "AWS", "Docker", "Microservices", "AI/ML", "DevOps",
-    ],
-    alumniOf: {
-      "@type": "CollegeOrUniversity",
-      name: "Sejong University",
-    },
   }
 
   return (

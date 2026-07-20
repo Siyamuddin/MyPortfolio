@@ -1,24 +1,15 @@
 "use client"
 
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { navPages } from "@/data/portfolio"
+import { pagePaths, pathToNavPage } from "@/lib/seo"
 import type { NavPage } from "@/lib/types"
 import { cn } from "@/lib/cn"
 
-type NavbarProps = {
-  activePage: NavPage
-  onNavigate: (page: NavPage) => void
-}
-
-export const Navbar = ({ activePage, onNavigate }: NavbarProps) => {
-  const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLButtonElement>,
-    page: NavPage
-  ) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault()
-      onNavigate(page)
-    }
-  }
+export const Navbar = () => {
+  const pathname = usePathname()
+  const activePage = pathToNavPage(pathname)
 
   return (
     <nav
@@ -28,24 +19,23 @@ export const Navbar = ({ activePage, onNavigate }: NavbarProps) => {
       <ul className="flex flex-wrap items-center justify-center px-2.5 min-[580px]:gap-5 min-[1024px]:gap-[30px] min-[1024px]:px-5">
         {navPages.map((page) => {
           const id = page.id as NavPage
+          const href = pagePaths[id]
           const isActive = activePage === id
 
           return (
             <li key={page.id}>
-              <button
-                type="button"
+              <Link
+                href={href}
                 className={cn(
-                  "px-[7px] py-5 text-[11px] text-light-gray transition-colors duration-250 hover:text-light-gray-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold min-[580px]:text-sm min-[768px]:text-[15px] min-[1024px]:font-medium",
+                  "block px-[7px] py-5 text-[11px] text-light-gray transition-colors duration-250 hover:text-light-gray-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold min-[580px]:text-sm min-[768px]:text-[15px] min-[1024px]:font-medium",
                   isActive && "text-gold"
                 )}
-                onClick={() => onNavigate(id)}
-                onKeyDown={(event) => handleKeyDown(event, id)}
                 aria-current={isActive ? "page" : undefined}
-                aria-controls={`${id}-panel`}
+                aria-label={`Navigate to ${page.label}`}
                 tabIndex={0}
               >
                 {page.label}
-              </button>
+              </Link>
             </li>
           )
         })}

@@ -37,6 +37,7 @@ export interface BlogPost {
   title: string;
   category: string;
   date: string;
+  dateTime: string;
   excerpt: string;
   image: string;
   url: string;

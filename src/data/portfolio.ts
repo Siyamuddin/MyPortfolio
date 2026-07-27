@@ -2,12 +2,12 @@ import { Profile, Service, Skill, Education, Experience, Project, BlogPost } fro
 
 export const profile: Profile = {
   name: "Siyam Uddin",
-  title: "Full-Stack Software Engineer",
+  title: "Software Engineer",
   email: "siyamuddin177@gmail.com",
   location: "Seoul, South Korea",
   bio: [
-    "Results-driven Full-Stack Software Engineer with 3+ years of hands-on experience designing and operating large-scale production systems using Java Spring Boot, React, and TypeScript. Proven track record of end-to-end delivery across AWS deployments, CI/CD automation, Redis caching, real-time WebSocket architecture, and JWT/OAuth2 security. Experienced integrating AI/ML technologies — including LangChain, RAG pipelines, and Whisper ASR — directly into production services.",
-    "Currently completing a B.Eng. in Computer Science & Engineering at Sejong University (graduating August 2026). Researching Agentic AI in Industrial IoT Security for Q1 journal publication.",
+    "Results-driven Software Engineer with 3+ years of hands-on experience designing and operating large-scale production systems using Python, FastAPI, Java Spring Boot, React, and TypeScript. Proven track record of end-to-end delivery across AWS deployments, CI/CD automation, Redis caching, real-time WebSocket architecture, and JWT/OAuth2 security. Experienced integrating AI/ML technologies — including LangChain, RAG pipelines, and Whisper ASR — directly into production services.",
+    "Currently completing a B.Eng. in Computer Science & Engineering at Sejong University (graduating August 2026). Researching Agentic AI in Industrial IoT Security.",
   ],
   bioHighlight: "Agentic AI in Industrial IoT Security",
   socials: {
@@ -77,9 +77,9 @@ export const education: Education[] = [
 
 export const experience: Experience[] = [
   {
-    role: "Full-Stack Engineer (AirSeoul)",
+    role: "Full-Stack Engineer (Sellerket)",
     company: "Sellerket LTD",
-    period: "2024 — Present",
+    period: "2024 — 2026",
     location: "Seoul, South Korea",
     highlights: [
       "Led zero-downtime migration of legacy platform to modern full-stack architecture using React 19 and Java Spring Boot",
@@ -93,9 +93,9 @@ export const experience: Experience[] = [
   },
   {
     role: "Full-Stack Developer",
-    company: "Self-Employed / Freelance",
-    period: "2023 — Present",
-    location: "Remote",
+    company: "Sellerket LTD",
+    period: "2024 — 2026",
+    location: "Seoul, South Korea",
     highlights: [
       "Built GlobalSellerket (brand-influencer e-commerce) and SetlOne (social networking + fintech) platforms deployed to AWS production",
       "Transformed legacy PHP 7 codebase to modern Java, Spring Boot, React, TypeScript monolithic architecture",

@@ -13,9 +13,9 @@ export const profile: Profile = {
   socials: {
     github: "https://github.com/Siyamuddin",
     linkedin: "https://www.linkedin.com/in/siyam-uddin-8953511ab/",
-    googlescholar:"https://scholar.google.com/citations?user=_wYEtSgAAAAJ&hl=en",
-    facebook:"https://www.facebook.com/siyam.mizi.94",
-    youtube:"https://www.youtube.com/@siyamuddin",
+    googlescholar: "https://scholar.google.com/citations?user=_wYEtSgAAAAJ&hl=en",
+    facebook: "https://www.facebook.com/siyam.mizi.94",
+    youtube: "https://www.youtube.com/@siyamuddin",
     twitter: "https://x.com/siyamuddin",
   },
   avatar: "/SiyamImage.webp",

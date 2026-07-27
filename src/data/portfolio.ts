@@ -20,24 +20,24 @@ export const profile: Profile = {
 };
 
 export const services: Service[] = [
+    {
+    title: "AI/ML Solutions",
+    description: "Intelligent automation, Building Scalable AI agents, LLM integration/Tuning, and workflow automation with n8n,Open-claw, Hermes.",
+    icon: "Sparkles",
+  },
   {
     title: "Mobile Apps",
-    description: "Professional development of applications for Android and iOS using React Native and Flutter.",
+    description: "Professional development of applications for Android and iOS using Flutter, Capacitor for rapid web to app conversion.",
     icon: "Smartphone",
   },
   {
     title: "Web Development",
-    description: "High-quality development of full-stack web applications with React, Spring Boot, and modern frameworks.",
+    description: "High-quality scalable development of full-stack web applications with modern tools and frameworks.",
     icon: "Code2",
   },
   {
-    title: "AI/ML Solutions",
-    description: "Intelligent automation, AI agents, LLM integration, and workflow automation with n8n and LangChain.",
-    icon: "Sparkles",
-  },
-  {
     title: "Backend Development",
-    description: "High-performance backend services with Spring Boot, FastAPI, MySQL, Redis, and Docker.",
+    description: "High-performance backend services with reliable deployment on AWS, GCP.",
     icon: "Server",
   },
 ];

@@ -1,21 +1,25 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { projects } from "@/data/portfolio"
 import { SectionTitle } from "@/components/ui/SectionTitle"
 import { ProjectCard } from "@/components/portfolio/ProjectCard"
 import {
   ProjectFilter,
   type ProjectFilterValue,
 } from "@/components/portfolio/ProjectFilter"
+import type { Project } from "@/lib/types"
 
-export const PortfolioPage = () => {
+type PortfolioPageProps = {
+  projects: Project[]
+}
+
+export const PortfolioPage = ({ projects }: PortfolioPageProps) => {
   const [filter, setFilter] = useState<ProjectFilterValue>("All")
 
   const filteredProjects = useMemo(() => {
     if (filter === "All") return projects
     return projects.filter((project) => project.category === filter)
-  }, [filter])
+  }, [filter, projects])
 
   return (
     <article

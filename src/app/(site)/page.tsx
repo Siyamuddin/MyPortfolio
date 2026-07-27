@@ -1,18 +1,21 @@
 import type { Metadata } from "next"
 import { AboutPage } from "@/components/pages/AboutPage"
+import { getPortfolio } from "@/lib/portfolio/repository"
 import { pageSeo, SITE_URL } from "@/lib/seo"
 
 export const metadata: Metadata = pageSeo.about
 
-export default function HomePage() {
+export default async function HomePage() {
+  const portfolio = await getPortfolio()
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
-    name: "Siyam Uddin — Full-Stack Software Engineer",
+    name: `${portfolio.profile.name} — ${portfolio.profile.title}`,
     url: SITE_URL,
     mainEntity: {
       "@type": "Person",
-      name: "Siyam Uddin",
+      name: portfolio.profile.name,
       url: SITE_URL,
     },
   }
@@ -23,7 +26,11 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <AboutPage />
+      <AboutPage
+        profile={portfolio.profile}
+        services={portfolio.services}
+        skills={portfolio.skills}
+      />
     </>
   )
 }

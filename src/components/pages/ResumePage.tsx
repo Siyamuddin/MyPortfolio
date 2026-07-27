@@ -1,10 +1,20 @@
 import { BookOpen, Briefcase, Download } from "lucide-react"
-import { education, experience, profile } from "@/data/portfolio"
 import { SectionTitle } from "@/components/ui/SectionTitle"
 import { TimelineItem } from "@/components/ui/TimelineItem"
 import { IconBox } from "@/components/ui/IconBox"
+import type { Education, Experience, Profile } from "@/lib/types"
 
-export const ResumePage = () => {
+type ResumePageProps = {
+  profile: Profile
+  education: Education[]
+  experience: Experience[]
+}
+
+export const ResumePage = ({
+  profile,
+  education,
+  experience,
+}: ResumePageProps) => {
   const resumeHref = profile.resumeUrl ?? "/resume.pdf"
 
   return (
@@ -29,7 +39,7 @@ export const ResumePage = () => {
         <ol className="ml-[45px] text-sm min-[580px]:ml-[65px] min-[580px]:text-[15px]">
           {education.map((item) => (
             <TimelineItem
-              key={item.school}
+              key={`${item.school}-${item.degree}`}
               title={`${item.school} — ${item.degree}`}
               period={item.period}
             >

@@ -1,11 +1,14 @@
 import type { Metadata } from "next"
 import { PortfolioPage } from "@/components/pages/PortfolioPage"
-import { projects } from "@/data/portfolio"
+import { getPortfolio } from "@/lib/portfolio/repository"
 import { pageSeo, SITE_URL } from "@/lib/seo"
 
 export const metadata: Metadata = pageSeo.portfolio
 
-export default function PortfolioRoute() {
+export default async function PortfolioRoute() {
+  const portfolio = await getPortfolio()
+  const { projects } = portfolio
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -27,7 +30,7 @@ export default function PortfolioRoute() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <PortfolioPage />
+      <PortfolioPage projects={projects} />
     </>
   )
 }

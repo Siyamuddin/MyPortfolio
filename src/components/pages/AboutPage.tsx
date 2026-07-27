@@ -1,7 +1,7 @@
 import { Code2, Server, Smartphone, Sparkles } from "lucide-react"
-import { profile, services, skills } from "@/data/portfolio"
 import { SectionTitle } from "@/components/ui/SectionTitle"
 import { SkillChip } from "@/components/ui/SkillChip"
+import type { Profile, Service, Skill } from "@/lib/types"
 
 const serviceIcons = {
   Smartphone,
@@ -10,7 +10,13 @@ const serviceIcons = {
   Server,
 } as const
 
-export const AboutPage = () => {
+type AboutPageProps = {
+  profile: Profile
+  services: Service[]
+  skills: Skill[]
+}
+
+export const AboutPage = ({ profile, services, skills }: AboutPageProps) => {
   return (
     <article
       id="about-panel"

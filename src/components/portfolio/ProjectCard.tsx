@@ -14,9 +14,10 @@ const placeholderSrc = (title: string) =>
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
   const hasUrl = project.url.startsWith("http")
-  const imageSrc = project.image.startsWith("http")
-    ? project.image
-    : placeholderSrc(project.title)
+  const imageSrc =
+    project.image.startsWith("http") || project.image.startsWith("/")
+      ? project.image
+      : placeholderSrc(project.title)
 
   const media = (
     <>

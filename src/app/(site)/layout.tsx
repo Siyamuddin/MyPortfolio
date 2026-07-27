@@ -1,9 +1,12 @@
 import { MainShell } from "@/components/layout/MainShell"
+import { getPortfolio } from "@/lib/portfolio/repository"
 
-export default function SiteLayout({
+export default async function SiteLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <MainShell>{children}</MainShell>
+  const portfolio = await getPortfolio()
+
+  return <MainShell profile={portfolio.profile}>{children}</MainShell>
 }

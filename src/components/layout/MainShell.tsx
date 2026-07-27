@@ -5,12 +5,14 @@ import { usePathname } from "next/navigation"
 import { Sidebar } from "@/components/layout/Sidebar"
 import { Navbar } from "@/components/layout/Navbar"
 import { FadeIn } from "@/components/ui/FadeIn"
+import type { Profile } from "@/lib/types"
 
 type MainShellProps = {
   children: React.ReactNode
+  profile: Profile
 }
 
-export const MainShell = ({ children }: MainShellProps) => {
+export const MainShell = ({ children, profile }: MainShellProps) => {
   const pathname = usePathname()
 
   useEffect(() => {
@@ -19,7 +21,7 @@ export const MainShell = ({ children }: MainShellProps) => {
 
   return (
     <main className="mx-3 mb-[75px] mt-[15px] min-w-[259px] min-[580px]:mb-[60px] min-[1024px]:mb-[60px] min-[1250px]:mx-auto min-[1250px]:flex min-[1250px]:max-w-[1200px] min-[1250px]:items-stretch min-[1250px]:justify-center min-[1250px]:gap-[25px]">
-      <Sidebar />
+      <Sidebar profile={profile} />
 
       <div className="relative min-[1024px]:mx-auto min-[1024px]:w-max min-[1250px]:m-0 min-[1250px]:min-w-[75%] min-[1250px]:w-[75%]">
         <Navbar />

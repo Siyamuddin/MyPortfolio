@@ -1,7 +1,10 @@
 import { cn } from "@/lib/cn"
 import type { Skill } from "@/lib/types"
 
-const getSkillIconSrc = (icon: string) => `/images/skills/${icon}.svg`
+const getSkillIconSrc = (icon: string) => {
+  if (icon.startsWith("http") || icon.startsWith("/")) return icon
+  return `/images/skills/${icon}.svg`
+}
 
 type SkillChipProps = {
   skill: Skill

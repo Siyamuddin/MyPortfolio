@@ -1,11 +1,15 @@
 import Image from "next/image"
-import { blogPosts } from "@/data/portfolio"
 import { SectionTitle } from "@/components/ui/SectionTitle"
+import type { BlogPost } from "@/lib/types"
 
 const placeholderSrc = (title: string) =>
   `https://placehold.co/800x460/1a1a1e/ffdb70?text=${encodeURIComponent(title.slice(0, 20))}`
 
-export const BlogPage = () => {
+type BlogPageProps = {
+  blogPosts: BlogPost[]
+}
+
+export const BlogPage = ({ blogPosts }: BlogPageProps) => {
   return (
     <article
       id="blog-panel"
@@ -21,9 +25,10 @@ export const BlogPage = () => {
       <section className="mb-2.5">
         <ul className="grid grid-cols-1 gap-5 min-[580px]:gap-[30px] min-[768px]:grid-cols-2">
           {blogPosts.map((post) => {
-            const imageSrc = post.image.startsWith("http")
-              ? post.image
-              : placeholderSrc(post.title)
+            const imageSrc =
+              post.image.startsWith("http") || post.image.startsWith("/")
+                ? post.image
+                : placeholderSrc(post.title)
             const hasUrl = post.url.startsWith("http")
 
             const content = (

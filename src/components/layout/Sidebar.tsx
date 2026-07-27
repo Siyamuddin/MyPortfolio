@@ -2,11 +2,11 @@
 
 import Image from "next/image"
 import { ChevronDown, Mail, MapPin } from "lucide-react"
-import { profile } from "@/data/portfolio"
 import { IconBox } from "@/components/ui/IconBox"
 import { Separator } from "@/components/ui/Separator"
 import { useSidebarToggle } from "@/hooks/useSidebarToggle"
 import { cn } from "@/lib/cn"
+import type { Profile } from "@/lib/types"
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg
@@ -41,7 +41,77 @@ const XIcon = ({ className }: { className?: string }) => (
   </svg>
 )
 
-export const Sidebar = () => {
+const GoogleScholarIcon = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    <path d="M12 24a7 7 0 110-14 7 7 0 010 14zm0-24L0 9.5l4.838 3.94A8 8 0 0112 9a8 8 0 017.162 4.44L24 9.5 12 0z" />
+  </svg>
+)
+
+const FacebookIcon = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" />
+  </svg>
+)
+
+const YoutubeIcon = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    <path d="M23.498 6.186a2.995 2.995 0 00-2.11-2.12C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.388.521A2.995 2.995 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a2.995 2.995 0 002.11 2.12c1.883.521 9.388.521 9.388.521s7.505 0 9.388-.521a2.995 2.995 0 002.11-2.12C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+  </svg>
+)
+
+const socialLinks = [
+  {
+    key: "github" as const,
+    label: "GitHub profile",
+    Icon: GithubIcon,
+  },
+  {
+    key: "linkedin" as const,
+    label: "LinkedIn profile",
+    Icon: LinkedinIcon,
+  },
+  {
+    key: "googlescholar" as const,
+    label: "Google Scholar profile",
+    Icon: GoogleScholarIcon,
+  },
+  {
+    key: "facebook" as const,
+    label: "Facebook profile",
+    Icon: FacebookIcon,
+  },
+  {
+    key: "youtube" as const,
+    label: "YouTube channel",
+    Icon: YoutubeIcon,
+  },
+  {
+    key: "twitter" as const,
+    label: "X (Twitter) profile",
+    Icon: XIcon,
+  },
+]
+
+type SidebarProps = {
+  profile: Profile
+}
+
+export const Sidebar = ({ profile }: SidebarProps) => {
   const { isExpanded, handleToggle, label } = useSidebarToggle()
 
   return (
@@ -141,43 +211,21 @@ export const Sidebar = () => {
 
         <Separator className="min-[1250px]:opacity-0" />
 
-        <ul className="flex items-center justify-start gap-4 pb-1 pl-1.5 min-[1250px]:justify-center">
-          <li>
-            <a
-              href={profile.socials.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block text-lg text-light-gray-70 transition-colors hover:text-light-gray focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-              tabIndex={0}
-              aria-label="GitHub profile"
-            >
-              <GithubIcon className="h-5 w-5" />
-            </a>
-          </li>
-          <li>
-            <a
-              href={profile.socials.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block text-lg text-light-gray-70 transition-colors hover:text-light-gray focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-              tabIndex={0}
-              aria-label="LinkedIn profile"
-            >
-              <LinkedinIcon className="h-5 w-5" />
-            </a>
-          </li>
-          <li>
-            <a
-              href={profile.socials.twitter}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block text-lg text-light-gray-70 transition-colors hover:text-light-gray focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-              tabIndex={0}
-              aria-label="X (Twitter) profile"
-            >
-              <XIcon className="h-5 w-5" />
-            </a>
-          </li>
+        <ul className="flex flex-wrap items-center justify-start gap-4 pb-1 pl-1.5 min-[1250px]:justify-center">
+          {socialLinks.map(({ key, label, Icon }) => (
+            <li key={key}>
+              <a
+                href={profile.socials[key]}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-lg text-light-gray-70 transition-colors hover:text-light-gray focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                tabIndex={0}
+                aria-label={label}
+              >
+                <Icon className="h-5 w-5" />
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     </aside>

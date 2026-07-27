@@ -55,6 +55,9 @@ export interface Profile {
   socials: {
     github: string;
     linkedin: string;
+    googlescholar: string;
+    facebook: string;
+    youtube: string;
     twitter: string;
   };
   avatar: string;

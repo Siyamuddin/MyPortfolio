@@ -3,7 +3,7 @@ import { Profile, Service, Skill, Education, Experience, Project, BlogPost } fro
 export const profile: Profile = {
   name: "Siyam Uddin",
   title: "Software Engineer",
-  email: "siyamuddin177@gmail.com",
+  email: "business@siyamuddin.com",
   location: "Seoul, South Korea",
   bio: [
     "Results-driven Software Engineer with 3+ years of hands-on experience designing and operating large-scale production systems using Python, FastAPI, Java Spring Boot, React, and TypeScript. Proven track record of end-to-end delivery across AWS deployments, CI/CD automation, Redis caching, real-time WebSocket architecture, and JWT/OAuth2 security. Experienced integrating AI/ML technologies — including LangChain, RAG pipelines, and Whisper ASR — directly into production services.",
@@ -12,7 +12,10 @@ export const profile: Profile = {
   bioHighlight: "Agentic AI in Industrial IoT Security",
   socials: {
     github: "https://github.com/Siyamuddin",
-    linkedin: "https://linkedin.com/in/uddin-siyam-8953511ab",
+    linkedin: "https://www.linkedin.com/in/siyam-uddin-8953511ab/",
+    googlescholar:"https://scholar.google.com/citations?user=_wYEtSgAAAAJ&hl=en",
+    facebook:"https://www.facebook.com/siyam.mizi.94",
+    youtube:"https://www.youtube.com/@siyamuddin",
     twitter: "https://x.com/siyamuddin",
   },
   avatar: "/SiyamImage.webp",

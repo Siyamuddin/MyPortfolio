@@ -1,5 +1,7 @@
 import Image from "next/image"
+import Link from "next/link"
 import { SectionTitle } from "@/components/ui/SectionTitle"
+import { getBlogPostHref } from "@/lib/portfolio/blog"
 import type { BlogPost } from "@/lib/types"
 
 const placeholderSrc = (title: string) =>
@@ -29,7 +31,8 @@ export const BlogPage = ({ blogPosts }: BlogPageProps) => {
               post.image.startsWith("http") || post.image.startsWith("/")
                 ? post.image
                 : placeholderSrc(post.title)
-            const hasUrl = post.url.startsWith("http")
+            const href = getBlogPostHref(post)
+            const isExternal = Boolean(href?.startsWith("http"))
 
             const content = (
               <>
@@ -39,6 +42,7 @@ export const BlogPage = ({ blogPosts }: BlogPageProps) => {
                     alt={post.title}
                     width={800}
                     height={460}
+                    sizes="(min-width:768px) 50vw, 100vw"
                     className="h-full w-full object-cover transition-transform duration-250 group-hover:scale-110"
                     unoptimized={imageSrc.includes("placehold.co")}
                   />
@@ -70,10 +74,10 @@ export const BlogPage = ({ blogPosts }: BlogPageProps) => {
               "group relative z-[1] block h-full rounded-2xl bg-gradient-to-br from-[#38383d] to-transparent shadow-[var(--shadow-4)] before:absolute before:inset-px before:-z-[1] before:rounded-[inherit] before:bg-eerie-black-1"
 
             return (
-              <li key={post.title}>
-                {hasUrl ? (
+              <li key={post.slug || post.title}>
+                {href && isExternal ? (
                   <a
-                    href={post.url}
+                    href={href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`${shellClassName} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold`}
@@ -82,11 +86,17 @@ export const BlogPage = ({ blogPosts }: BlogPageProps) => {
                   >
                     {content}
                   </a>
-                ) : (
-                  <article
-                    className={shellClassName}
-                    aria-label={post.title}
+                ) : href ? (
+                  <Link
+                    href={href}
+                    className={`${shellClassName} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold`}
+                    tabIndex={0}
+                    aria-label={`Read blog post: ${post.title}`}
                   >
+                    {content}
+                  </Link>
+                ) : (
+                  <article className={shellClassName} aria-label={post.title}>
                     {content}
                   </article>
                 )}

@@ -6,7 +6,8 @@ import "./globals.css"
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -65,13 +66,6 @@ export const metadata: Metadata = {
         type: "image/jpeg",
         alt: "Siyam Uddin - Full-Stack Software Engineer Portfolio",
       },
-      {
-        url: `${SITE_URL}/og-image.webp`,
-        width: 1200,
-        height: 630,
-        type: "image/webp",
-        alt: "Siyam Uddin - Full-Stack Software Engineer Portfolio",
-      },
     ],
   },
   twitter: {
@@ -80,22 +74,25 @@ export const metadata: Metadata = {
     description:
       "Full-Stack Software Engineer | Java Spring Boot · React · DevOps · AI/ML. Building production systems in Seoul.",
     images: [`${SITE_URL}/og-image.jpg`],
-    creator: "@SiyamUddin12",
+    creator: "@siyamuddin",
   },
   alternates: {
     canonical: SITE_URL,
-    languages: {
-      en: SITE_URL,
-    },
   },
   category: "technology",
   classification: "Portfolio",
   referrer: "origin-when-cross-origin",
   formatDetection: {
-    telephone: true,
-    email: true,
-    address: true,
+    telephone: false,
+    email: false,
+    address: false,
   },
+}
+
+export const viewport = {
+  themeColor: "#0a0a0b",
+  width: "device-width",
+  initialScale: 1,
 }
 
 export default function RootLayout({
@@ -103,57 +100,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Person",
-        "@id": `${SITE_URL}/#person`,
-        name: "Siyam Uddin",
-        jobTitle: "Full-Stack Software Engineer",
-        url: SITE_URL,
-        sameAs: [
-          "https://github.com/Siyamuddin",
-          "https://linkedin.com/in/uddin-siyam-8953511ab",
-          "https://x.com/siyamuddin",
-        ],
-        email: "siyamuddin177@gmail.com",
-        address: {
-          "@type": "PostalAddress",
-          addressLocality: "Seoul",
-          addressCountry: "South Korea",
-        },
-        knowsAbout: [
-          "Java", "Spring Boot", "React", "TypeScript", "Python",
-          "AWS", "Docker", "Microservices", "AI/ML", "DevOps",
-        ],
-        alumniOf: {
-          "@type": "CollegeOrUniversity",
-          name: "Sejong University",
-        },
-      },
-      {
-        "@type": "WebSite",
-        "@id": `${SITE_URL}/#website`,
-        name: "Siyam Uddin Portfolio",
-        url: SITE_URL,
-        description:
-          "Portfolio of Siyam Uddin, Full-Stack Software Engineer specializing in Java Spring Boot, React, and AI/ML.",
-        inLanguage: "en",
-        publisher: {
-          "@id": `${SITE_URL}/#person`,
-        },
-      },
-    ],
-  }
-
   return (
     <html lang="en">
       <body className={`${poppins.variable} font-sans antialiased`}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
         {children}
       </body>
     </html>

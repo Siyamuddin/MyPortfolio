@@ -1,16 +1,20 @@
 import type {
+  BlogComment,
   BlogPost,
   Education,
   Experience,
+  Faq,
   Profile,
   Project,
   Service,
   Skill,
 } from "@/lib/types"
 import type {
+  BlogCommentRow,
   BlogPostRow,
   EducationRow,
   ExperienceRow,
+  FaqRow,
   ProfileRow,
   ProjectRow,
   ServiceRow,
@@ -72,6 +76,7 @@ export const mapProject = (row: ProjectRow): Project => ({
 })
 
 export const mapBlogPost = (row: BlogPostRow): BlogPost => ({
+  id: row.id,
   title: row.title,
   category: row.category,
   date: row.date,
@@ -79,4 +84,24 @@ export const mapBlogPost = (row: BlogPostRow): BlogPost => ({
   excerpt: row.excerpt,
   image: row.image,
   url: row.url ?? "",
+  slug: row.slug,
+  body: row.body ?? "",
+  status: row.status === "published" ? "published" : "draft",
+})
+
+export const mapFaq = (row: FaqRow): Faq => ({
+  id: row.id,
+  question: row.question,
+  answer: row.answer,
+  sortOrder: row.sort_order,
+})
+
+export const mapBlogComment = (row: BlogCommentRow): BlogComment => ({
+  id: row.id,
+  postId: row.post_id,
+  authorName: row.author_name,
+  authorEmail: row.author_email,
+  body: row.body,
+  status: row.status,
+  createdAt: row.created_at,
 })

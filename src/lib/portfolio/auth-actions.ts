@@ -1,7 +1,8 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
+import { PORTFOLIO_CACHE_TAG } from "@/lib/portfolio/repository"
 import { createClient } from "@/lib/supabase/server"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
@@ -65,6 +66,7 @@ export const logoutAction = async () => {
 }
 
 export const revalidatePortfolio = async () => {
+  revalidateTag(PORTFOLIO_CACHE_TAG)
   revalidatePath("/", "layout")
   revalidatePath("/admin", "layout")
 }

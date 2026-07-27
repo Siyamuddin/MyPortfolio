@@ -7,6 +7,7 @@ import {
   type ActionResult,
 } from "@/lib/portfolio/auth-actions"
 import { createServiceClient } from "@/lib/supabase/admin"
+import { blogPosts as staticBlogPosts, faqs as staticFaqs } from "@/data/portfolio"
 import { getStaticPortfolio } from "@/lib/portfolio/static"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
@@ -86,8 +87,20 @@ const blogSchema = z.object({
   excerpt: z.string(),
   image: z.string(),
   url: z.string(),
+  slug: z.string().min(1),
+  body: z.string(),
+  status: z.enum(["draft", "published"]),
   sort_order: z.coerce.number().int(),
 })
+
+const faqSchema = z.object({
+  id: z.string().uuid().optional(),
+  question: z.string().min(1),
+  answer: z.string().min(1),
+  sort_order: z.coerce.number().int(),
+})
+
+const commentStatusSchema = z.enum(["pending", "approved", "rejected"])
 
 const parseJson = <T>(value: FormDataEntryValue | null, fallback: T): T => {
   if (typeof value !== "string" || !value) return fallback
@@ -215,6 +228,50 @@ export const upsertProjectAction = async (formData: FormData) =>
 export const upsertBlogAction = async (formData: FormData) =>
   upsertListItem("blog_posts", formData, blogSchema, (d) => d)
 
+export const upsertFaqAction = async (formData: FormData) =>
+  upsertListItem("faqs", formData, faqSchema, (d) => d)
+
+export const updateCommentStatusAction = async (
+  id: string,
+  status: "pending" | "approved" | "rejected"
+): Promise<ActionResult> => {
+  try {
+    const { supabase } = await requireAdmin()
+    const parsedStatus = commentStatusSchema.parse(status)
+    const { error } = await supabase
+      .from("blog_comments")
+      .update({
+        status: parsedStatus,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+
+    if (error) return { ok: false, error: error.message }
+    await revalidatePortfolio()
+    return { ok: true }
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "Failed to update comment",
+    }
+  }
+}
+
+export const deleteCommentAction = async (id: string): Promise<ActionResult> => {
+  try {
+    const { supabase } = await requireAdmin()
+    const { error } = await supabase.from("blog_comments").delete().eq("id", id)
+    if (error) return { ok: false, error: error.message }
+    await revalidatePortfolio()
+    return { ok: true }
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "Failed to delete comment",
+    }
+  }
+}
+
 export const deleteItemAction = async (
   table: string,
   id: string
@@ -228,6 +285,7 @@ export const deleteItemAction = async (
       "experience",
       "projects",
       "blog_posts",
+      "faqs",
     ]
     if (!allowed.includes(table)) {
       return { ok: false, error: "Invalid table" }
@@ -294,6 +352,8 @@ export const seedFromStaticAction = async (): Promise<ActionResult> => {
     const staticData = getStaticPortfolio()
 
     await Promise.all([
+      admin.from("blog_comments").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
+      admin.from("faqs").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
       admin.from("services").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
       admin.from("skills").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
       admin.from("education").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
@@ -372,7 +432,7 @@ export const seedFromStaticAction = async (): Promise<ActionResult> => {
     if (projectsError) return { ok: false, error: projectsError.message }
 
     const { error: blogError } = await admin.from("blog_posts").insert(
-      staticData.blogPosts.map((item, index) => ({
+      staticBlogPosts.map((item, index) => ({
         title: item.title,
         category: item.category,
         date: item.date,
@@ -380,10 +440,22 @@ export const seedFromStaticAction = async (): Promise<ActionResult> => {
         excerpt: item.excerpt,
         image: item.image,
         url: item.url,
+        slug: item.slug,
+        body: item.body,
+        status: item.status,
         sort_order: index,
       }))
     )
     if (blogError) return { ok: false, error: blogError.message }
+
+    const { error: faqsError } = await admin.from("faqs").insert(
+      staticFaqs.map((item, index) => ({
+        question: item.question,
+        answer: item.answer,
+        sort_order: index,
+      }))
+    )
+    if (faqsError) return { ok: false, error: faqsError.message }
 
     await revalidatePortfolio()
     return { ok: true }

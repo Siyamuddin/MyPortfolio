@@ -181,7 +181,14 @@ body {
 }
 
 .fade-in {
-  animation: fadeIn 0.5s ease backwards;
+  animation: fadeIn 0.45s ease backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .scale-up {
+    animation: none !important;
+  }
 }
 
 .scale-up {

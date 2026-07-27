@@ -1,4 +1,4 @@
-import { Profile, Service, Skill, Education, Experience, Project, BlogPost } from "@/lib/types";
+import { Profile, Service, Skill, Education, Experience, Project, BlogPost, Faq } from "@/lib/types"
 
 export const profile: Profile = {
   name: "Siyam Uddin",
@@ -160,29 +160,119 @@ export const blogPosts: BlogPost[] = [
     category: "Research",
     date: "Mar 2026",
     dateTime: "2026-03",
-    excerpt: "Exploring how autonomous AI agents can transform security monitoring and threat response in Industrial IoT environments.",
+    excerpt:
+      "Exploring how autonomous AI agents can transform security monitoring and threat response in Industrial IoT environments.",
     image: "/images/blog/agentic-ai.jpg",
     url: "",
+    slug: "agentic-ai-in-industrial-iot-security",
+    status: "published",
+    body: `## Why agentic AI matters for IIoT
+
+Industrial IoT environments generate continuous telemetry. Traditional alert rules struggle when signals are noisy, delayed, or incomplete.
+
+<Callout type="info" title="Key idea">
+Autonomous agents can triage alerts, correlate events across sites, and propose containment steps — with a human still in the loop.
+</Callout>
+
+### Practical pattern
+
+1. Ingest sensor + network events
+2. Rank risk with a retrieval-backed model
+3. Open a ticket with evidence and recommended actions
+
+\`\`\`ts
+const agent = createSecurityAgent({
+  tools: ["queryLogs", "isolateHost", "notifyOnCall"],
+})
+await agent.run(alert)
+\`\`\`
+
+Use agents for **triage and recommendation**, not silent destructive actions, until trust is proven.
+`,
   },
   {
     title: "Integrating AI into Spring Boot with Spring AI",
     category: "Tutorial",
     date: "Feb 2026",
     dateTime: "2026-02",
-    excerpt: "A practical guide to using Spring AI starter for adding LLM capabilities to your Java backend applications.",
+    excerpt:
+      "A practical guide to using Spring AI starter for adding LLM capabilities to your Java backend applications.",
     image: "/images/blog/spring-ai.jpg",
     url: "",
+    slug: "integrating-ai-into-spring-boot-with-spring-ai",
+    status: "published",
+    body: `## Spring AI in production backends
+
+Spring AI gives you a familiar Spring Boot surface for chat models, embeddings, and vector stores.
+
+### Starter checklist
+
+- Add the Spring AI starter for your provider
+- Externalize model credentials
+- Keep prompts versioned next to the feature that owns them
+
+<Callout type="warn" title="Guardrails">
+Never send secrets or PII into prompts. Redact upstream and log only hashed identifiers.
+</Callout>
+
+### Minimal chat client
+
+Wire a \`ChatClient\` bean, inject it into a service, and expose a narrow API that validates inputs before calling the model.
+
+MDX components like \`YouTube\` work here too when you register them in the app registry.
+`,
   },
   {
     title: "Building Production Automation Pipelines with n8n",
     category: "Automation",
     date: "Jan 2026",
     dateTime: "2026-01",
-    excerpt: "How I built a scalable automation infrastructure using n8n, Docker, and Cloudflare Tunnel.",
+    excerpt:
+      "How I built a scalable automation infrastructure using n8n, Docker, and Cloudflare Tunnel.",
     image: "/images/blog/n8n.jpg",
     url: "",
+    slug: "building-production-automation-pipelines-with-n8n",
+    status: "published",
+    body: `## n8n + Docker + Tunnel
+
+For internal ops workflows, n8n is a strong fit when you need visual pipelines without building a custom orchestrator.
+
+### Stack
+
+- **n8n** for workflow logic
+- **Docker Compose** for packaging
+- **Cloudflare Tunnel** for private inbound webhooks
+
+<Callout type="tip" title="Ops tip">
+Treat credentials as secrets, pin image tags, and add healthchecks before exposing any webhook path.
+</Callout>
+
+### Reliability habits
+
+- Idempotent webhook handlers
+- Dead-letter queues for failed steps
+- Alerting when a critical workflow stalls
+`,
   },
-];
+]
+
+export const faqs: Faq[] = [
+  {
+    question: "What kind of work do you take on?",
+    answer:
+      "Full-stack web apps, Spring Boot APIs, automation with n8n, and applied AI/IoT security projects — from prototypes to production hardening.",
+  },
+  {
+    question: "Are you available for freelance or consulting?",
+    answer:
+      "Yes for scoped engagements. Use the contact form with a short brief, timeline, and stack preferences so I can respond quickly.",
+  },
+  {
+    question: "Where can I read more of your writing?",
+    answer:
+      "Published articles live under Blog. Drafts stay private in the admin CMS until they are ready.",
+  },
+]
 
 export const navPages: { id: string; label: string }[] = [
   { id: "about", label: "About" },
@@ -190,4 +280,4 @@ export const navPages: { id: string; label: string }[] = [
   { id: "portfolio", label: "Portfolio" },
   { id: "blog", label: "Blog" },
   { id: "contact", label: "Contact" },
-];
+]

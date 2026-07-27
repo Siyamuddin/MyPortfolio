@@ -2,6 +2,7 @@ import type {
   BlogPost,
   Education,
   Experience,
+  Faq,
   NavPage,
   Profile,
   Project,
@@ -17,6 +18,7 @@ export type PortfolioData = {
   experience: Experience[]
   projects: Project[]
   blogPosts: BlogPost[]
+  faqs: Faq[]
   navPages: { id: NavPage | string; label: string }[]
   source: "supabase" | "static"
 }
@@ -88,5 +90,26 @@ export type BlogPostRow = {
   excerpt: string
   image: string
   url: string
+  slug: string
+  body: string
+  status: "draft" | "published"
   sort_order: number
+  updated_at?: string
+}
+
+export type FaqRow = {
+  id: string
+  question: string
+  answer: string
+  sort_order: number
+}
+
+export type BlogCommentRow = {
+  id: string
+  post_id: string
+  author_name: string
+  author_email: string
+  body: string
+  status: "pending" | "approved" | "rejected"
+  created_at: string
 }

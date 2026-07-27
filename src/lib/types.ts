@@ -34,16 +34,37 @@ export interface Project {
 }
 
 export interface BlogPost {
-  title: string;
-  category: string;
-  date: string;
-  dateTime: string;
-  excerpt: string;
-  image: string;
-  url: string;
+  id?: string
+  title: string
+  category: string
+  date: string
+  dateTime: string
+  excerpt: string
+  image: string
+  url: string
+  slug: string
+  body: string
+  status: "draft" | "published"
 }
 
-export type NavPage = "about" | "resume" | "portfolio" | "blog" | "contact";
+export interface Faq {
+  id?: string
+  question: string
+  answer: string
+  sortOrder?: number
+}
+
+export interface BlogComment {
+  id: string
+  postId: string
+  authorName: string
+  authorEmail: string
+  body: string
+  status: "pending" | "approved" | "rejected"
+  createdAt: string
+}
+
+export type NavPage = "about" | "resume" | "portfolio" | "blog" | "contact"
 
 export interface Profile {
   name: string;

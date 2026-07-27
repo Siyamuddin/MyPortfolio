@@ -14,6 +14,7 @@ import {
   upsertBlogAction,
   upsertEducationAction,
   upsertExperienceAction,
+  upsertFaqAction,
   upsertProjectAction,
   upsertServiceAction,
   upsertSkillAction,
@@ -22,6 +23,7 @@ import type {
   BlogPostRow,
   EducationRow,
   ExperienceRow,
+  FaqRow,
   ProjectRow,
   ServiceRow,
   SkillRow,
@@ -290,12 +292,27 @@ export const BlogAdmin = ({ items }: { items: BlogPostRow[] }) => {
     <div className="space-y-6">
       <AdminForm title="Add blog post" action={upsertBlogAction} onSuccess={refresh}>
         <Field label="Title" name="title" required />
+        <Field label="Slug" name="slug" required />
         <Field label="Category" name="category" />
         <Field label="Date label" name="date" defaultValue="Mar 2026" />
         <Field label="Date time (YYYY-MM)" name="date_time" defaultValue="2026-03" />
         <TextArea label="Excerpt" name="excerpt" />
+        <TextArea label="Body (MDX)" name="body" rows={16} />
+        <label className="block text-sm text-light-gray-70">
+          Status
+          <select
+            name="status"
+            defaultValue="draft"
+            className={fieldClassName}
+            aria-label="Status"
+            tabIndex={0}
+          >
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+        </label>
         <FileUploadField name="image" label="Image" folder="blog" />
-        <Field label="URL" name="url" defaultValue="" />
+        <Field label="External URL (optional)" name="url" defaultValue="" />
         <Field label="Sort order" name="sort_order" type="number" defaultValue={items.length} />
       </AdminForm>
 
@@ -304,17 +321,65 @@ export const BlogAdmin = ({ items }: { items: BlogPostRow[] }) => {
           <AdminForm title={`Edit: ${item.title}`} action={upsertBlogAction} onSuccess={refresh}>
             <input type="hidden" name="id" value={item.id} />
             <Field label="Title" name="title" defaultValue={item.title} required />
+            <Field label="Slug" name="slug" defaultValue={item.slug} required />
             <Field label="Category" name="category" defaultValue={item.category} />
             <Field label="Date label" name="date" defaultValue={item.date} />
             <Field label="Date time" name="date_time" defaultValue={item.date_time} />
             <TextArea label="Excerpt" name="excerpt" defaultValue={item.excerpt} />
+            <TextArea label="Body (MDX)" name="body" defaultValue={item.body ?? ""} rows={16} />
+            <label className="block text-sm text-light-gray-70">
+              Status
+              <select
+                name="status"
+                defaultValue={item.status ?? "draft"}
+                className={fieldClassName}
+                aria-label="Status"
+                tabIndex={0}
+              >
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+              </select>
+            </label>
             <FileUploadField name="image" label="Image" folder="blog" defaultValue={item.image} />
-            <Field label="URL" name="url" defaultValue={item.url} />
+            <Field label="External URL (optional)" name="url" defaultValue={item.url} />
             <Field label="Sort order" name="sort_order" type="number" defaultValue={item.sort_order} />
           </AdminForm>
           <DeleteButton
             onDelete={async () => {
               const result = await deleteItemAction("blog_posts", item.id)
+              if (result.ok) refresh()
+              return result
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export const FaqAdmin = ({ items }: { items: FaqRow[] }) => {
+  const router = useRouter()
+  const refresh = () => router.refresh()
+
+  return (
+    <div className="space-y-6">
+      <AdminForm title="Add FAQ" action={upsertFaqAction} onSuccess={refresh}>
+        <Field label="Question" name="question" required />
+        <TextArea label="Answer" name="answer" rows={5} />
+        <Field label="Sort order" name="sort_order" type="number" defaultValue={items.length} />
+      </AdminForm>
+
+      {items.map((item) => (
+        <div key={item.id} className="space-y-2">
+          <AdminForm title={`Edit FAQ`} action={upsertFaqAction} onSuccess={refresh}>
+            <input type="hidden" name="id" value={item.id} />
+            <Field label="Question" name="question" defaultValue={item.question} required />
+            <TextArea label="Answer" name="answer" defaultValue={item.answer} rows={5} />
+            <Field label="Sort order" name="sort_order" type="number" defaultValue={item.sort_order} />
+          </AdminForm>
+          <DeleteButton
+            onDelete={async () => {
+              const result = await deleteItemAction("faqs", item.id)
               if (result.ok) refresh()
               return result
             }}

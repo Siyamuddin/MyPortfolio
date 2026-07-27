@@ -130,6 +130,7 @@ export const Sidebar = ({ profile }: SidebarProps) => {
             alt={profile.name}
             width={150}
             height={150}
+            sizes="(min-width:1250px) 150px, (min-width:580px) 120px, 80px"
             className="h-full w-full object-cover object-top"
             priority
           />

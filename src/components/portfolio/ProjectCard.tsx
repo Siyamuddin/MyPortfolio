@@ -1,5 +1,3 @@
-"use client"
-
 import { Eye } from "lucide-react"
 import Image from "next/image"
 import type { Project } from "@/lib/types"
@@ -32,6 +30,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           alt={project.title}
           width={600}
           height={400}
+          sizes="(min-width:1024px) 33vw, (min-width:768px) 50vw, 100vw"
           className="h-full w-full object-cover transition-transform duration-250 group-hover:scale-110"
           unoptimized={imageSrc.includes("placehold.co")}
         />

@@ -1,7 +1,8 @@
 import { Code2, Server, Smartphone, Sparkles } from "lucide-react"
+import { FaqAccordion } from "@/components/pages/FaqAccordion"
 import { SectionTitle } from "@/components/ui/SectionTitle"
 import { SkillChip } from "@/components/ui/SkillChip"
-import type { Profile, Service, Skill } from "@/lib/types"
+import type { Faq, Profile, Service, Skill } from "@/lib/types"
 
 const serviceIcons = {
   Smartphone,
@@ -14,9 +15,15 @@ type AboutPageProps = {
   profile: Profile
   services: Service[]
   skills: Skill[]
+  faqs?: Faq[]
 }
 
-export const AboutPage = ({ profile, services, skills }: AboutPageProps) => {
+export const AboutPage = ({
+  profile,
+  services,
+  skills,
+  faqs = [],
+}: AboutPageProps) => {
   return (
     <article
       id="about-panel"
@@ -55,7 +62,10 @@ export const AboutPage = ({ profile, services, skills }: AboutPageProps) => {
               serviceIcons[service.icon as keyof typeof serviceIcons] ?? Code2
 
             return (
-              <li key={service.title} className="gradient-border-card p-5 shadow-[var(--shadow-2)] min-[580px]:flex min-[580px]:items-start min-[580px]:justify-start min-[580px]:gap-[18px] min-[580px]:p-[30px]">
+              <li
+                key={service.title}
+                className="gradient-border-card p-5 shadow-[var(--shadow-2)] min-[580px]:flex min-[580px]:items-start min-[580px]:justify-start min-[580px]:gap-[18px] min-[580px]:p-[30px]"
+              >
                 <div className="mb-2.5 flex h-12 w-12 items-center justify-center text-2xl text-gold min-[580px]:mb-0 min-[580px]:mt-1">
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </div>
@@ -81,6 +91,8 @@ export const AboutPage = ({ profile, services, skills }: AboutPageProps) => {
           ))}
         </ul>
       </section>
+
+      <FaqAccordion faqs={faqs} />
     </article>
   )
 }

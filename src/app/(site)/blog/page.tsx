@@ -1,36 +1,34 @@
 import type { Metadata } from "next"
 import { BlogPage } from "@/components/pages/BlogPage"
+import { getBlogPostHref } from "@/lib/portfolio/blog"
 import { getPortfolio } from "@/lib/portfolio/repository"
-import { pageSeo, SITE_URL } from "@/lib/seo"
+import { buildProfileAwarePageSeo } from "@/lib/seo"
+import {
+  buildBlogItemListJsonLd,
+  buildBreadcrumbJsonLd,
+  JsonLdScript,
+} from "@/lib/seo/jsonld"
 
-export const metadata: Metadata = pageSeo.blog
+export const generateMetadata = async (): Promise<Metadata> => {
+  const portfolio = await getPortfolio()
+  return buildProfileAwarePageSeo(portfolio.profile, "blog")
+}
 
 export default async function BlogRoute() {
   const portfolio = await getPortfolio()
   const { blogPosts } = portfolio
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "Siyam Uddin Blog Posts",
-    url: `${SITE_URL}/blog`,
-    numberOfItems: blogPosts.length,
-    itemListElement: blogPosts.map((post, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: post.title,
-      description: post.excerpt,
-      ...(post.dateTime ? { datePublished: post.dateTime } : {}),
-      ...(post.url.startsWith("http") ? { url: post.url } : {}),
-    })),
-  }
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      <JsonLdScript
+        data={buildBlogItemListJsonLd(
+          blogPosts.map((post) => ({
+            ...post,
+            href: getBlogPostHref(post),
+          }))
+        )}
       />
+      <JsonLdScript data={buildBreadcrumbJsonLd("Blog", "/blog")} />
       <BlogPage blogPosts={blogPosts} />
     </>
   )

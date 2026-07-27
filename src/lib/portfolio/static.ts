@@ -2,6 +2,7 @@ import {
   blogPosts,
   education,
   experience,
+  faqs,
   navPages,
   profile,
   projects,
@@ -17,7 +18,13 @@ export const getStaticPortfolio = (): PortfolioData => ({
   education,
   experience,
   projects,
-  blogPosts,
+  blogPosts: blogPosts.filter((post) => post.status === "published"),
+  faqs,
   navPages,
   source: "static",
 })
+
+export const getStaticBlogPostBySlug = (slug: string) =>
+  blogPosts.find(
+    (post) => post.slug === slug && post.status === "published"
+  ) ?? null

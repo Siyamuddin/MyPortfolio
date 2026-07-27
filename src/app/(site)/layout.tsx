@@ -1,3 +1,4 @@
+import { AnalyticsBeacon } from "@/components/analytics/AnalyticsBeacon"
 import { MainShell } from "@/components/layout/MainShell"
 import { getPortfolio } from "@/lib/portfolio/repository"
 import { buildSiteGraph, JsonLdScript } from "@/lib/seo/jsonld"
@@ -17,6 +18,7 @@ export default async function SiteLayout({
   return (
     <>
       <JsonLdScript data={jsonLd} />
+      <AnalyticsBeacon />
       <MainShell profile={portfolio.profile}>{children}</MainShell>
     </>
   )

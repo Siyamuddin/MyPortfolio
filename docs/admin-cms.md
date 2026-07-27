@@ -19,10 +19,13 @@ Run these in the Supabase SQL Editor (in order):
 
 1. [`supabase/migrations/001_portfolio.sql`](../supabase/migrations/001_portfolio.sql)
 2. [`supabase/migrations/002_content_cms.sql`](../supabase/migrations/002_content_cms.sql)
+3. [`supabase/migrations/003_analytics.sql`](../supabase/migrations/003_analytics.sql)
 
 `001` creates profile, services, skills, education, experience, projects, blog_posts, RLS, and the `portfolio` storage bucket.
 
 `002` adds blog `slug` / `body` (MDX) / `status`, plus `faqs` and moderated `blog_comments`.
+
+`003` adds first-party visitor analytics (`analytics_events` + `get_analytics_summary()`).
 
 ## 3. Create the admin user
 
@@ -47,6 +50,9 @@ NEXT_PUBLIC_GISCUS_REPO=owner/repo
 NEXT_PUBLIC_GISCUS_REPO_ID=
 NEXT_PUBLIC_GISCUS_CATEGORY=Announcements
 NEXT_PUBLIC_GISCUS_CATEGORY_ID=
+
+# Long random string — used to hash IP + User-Agent (raw IP is never stored)
+ANALYTICS_SALT=replace-with-a-long-random-secret
 ```
 
 Add the same values in Vercel → Project → Settings → Environment Variables.
@@ -75,12 +81,24 @@ Use `/admin` sections:
 - **Blog** — slug, MDX body, draft/published
 - **FAQ** — About page accordion + FAQPage schema
 - **Comments** — approve/reject native comments
+- **Dashboard → Visitors** — page views + unique visitors by day / month / year
 
 Uploads go to the `portfolio` Storage bucket (`avatars/`, `projects/`, `blog/`, `skills/`, `resume/`).
 
 Published posts with a body are available at `/blog/{slug}`. List cards prefer the article route, then an external `url`, otherwise a non-clickable card.
 
-## 7. Extending MDX with a new npm package
+## 7. Visitor analytics
+
+Privacy-friendly first-party tracking (no third-party cookies):
+
+1. Public pages send a beacon to `/api/analytics/collect` on each navigation
+2. The API stores `path` + a SHA-256 `visitor_hash` of `ANALYTICS_SALT + IP + User-Agent` (never the raw IP)
+3. `/admin` and `/api` paths are ignored; obvious bots are skipped
+4. Admin dashboard shows today / this month / this year summaries, plus tables by day (30d), month (12m), and year
+
+Unique visitors for a month or year use `COUNT(DISTINCT visitor_hash)` over that period (not a sum of daily uniques).
+
+## 8. Extending MDX with a new npm package
 
 CMS MDX cannot `import` arbitrary packages at runtime (unsafe). Use the code registry:
 
@@ -97,3 +115,4 @@ Built-ins: `Callout`, `YouTube`, `CodeBlock`, plus styled GFM elements.
 - Without Supabase env vars the site keeps working from static data
 - Contact form and pending-comment alerts use Resend (`RESEND_API_KEY` / `CONTACT_TO_EMAIL`)
 - Comment alerts soft-fail (comment still saves) if Resend is not configured
+- Analytics soft-fail if Supabase / service role is missing

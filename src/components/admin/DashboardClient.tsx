@@ -1,10 +1,12 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { AnalyticsPanel } from "@/components/admin/AnalyticsPanel"
 import {
   seedFromStaticAction,
 } from "@/lib/portfolio/admin-actions"
 import type { ActionResult } from "@/lib/portfolio/auth-actions"
+import type { AnalyticsSummary } from "@/lib/analytics/stats"
 
 type DashboardClientProps = {
   source: "supabase" | "static"
@@ -19,6 +21,7 @@ type DashboardClientProps = {
     blogPosts: number
   }
   errors: string[]
+  analytics: AnalyticsSummary
 }
 
 export const DashboardClient = ({
@@ -27,6 +30,7 @@ export const DashboardClient = ({
   hasProfile,
   counts,
   errors,
+  analytics,
 }: DashboardClientProps) => {
   const [message, setMessage] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
@@ -81,6 +85,8 @@ export const DashboardClient = ({
           </div>
         ))}
       </section>
+
+      <AnalyticsPanel analytics={analytics} />
 
       <section className="rounded-2xl border border-jet bg-eerie-black-2 p-6">
         <h3 className="mb-2 text-lg text-white-2">Import from static</h3>

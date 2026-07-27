@@ -1,4 +1,8 @@
 import { DashboardClient } from "@/components/admin/DashboardClient"
+import {
+  emptyAnalyticsSummary,
+  getAnalyticsSummary,
+} from "@/lib/analytics/stats"
 import { getAdminRows } from "@/lib/portfolio/admin-data"
 import { getPortfolio } from "@/lib/portfolio/repository"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
@@ -7,6 +11,9 @@ export default async function AdminDashboardPage() {
   const configured = isSupabaseConfigured()
   const portfolio = await getPortfolio()
   const rows = configured ? await getAdminRows() : null
+  const analytics = configured
+    ? await getAnalyticsSummary()
+    : emptyAnalyticsSummary()
 
   return (
     <DashboardClient
@@ -22,6 +29,7 @@ export default async function AdminDashboardPage() {
         blogPosts: rows?.blogPosts.length ?? 0,
       }}
       errors={rows?.errors ?? []}
+      analytics={analytics}
     />
   )
 }

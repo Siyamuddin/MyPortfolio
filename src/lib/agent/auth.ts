@@ -29,7 +29,7 @@ const unauthorized = () =>
 
 const serviceUnavailable = () =>
   NextResponse.json(
-    { ok: false, error: "Blog agent API is not configured." },
+    { ok: false, error: "Agent API is not configured." },
     { status: 503 }
   )
 

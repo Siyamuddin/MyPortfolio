@@ -1,19 +1,12 @@
-import { revalidatePath, revalidateTag } from "next/cache"
 import { z } from "zod"
+import { revalidateAfterMutation } from "@/lib/agent/common"
 import { slugifyTitle } from "@/lib/portfolio/blog"
-import { PORTFOLIO_CACHE_TAG } from "@/lib/portfolio/repository"
 import { createServiceClient } from "@/lib/supabase/admin"
-import { isSupabaseConfigured } from "@/lib/supabase/env"
 import type { BlogPostRow } from "@/lib/portfolio/types"
 
-const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+export { assertAgentDbReady } from "@/lib/agent/common"
 
-const revalidateAfterMutation = async () => {
-  revalidateTag(PORTFOLIO_CACHE_TAG)
-  revalidatePath("/", "layout")
-  revalidatePath("/blog", "layout")
-  revalidatePath("/admin", "layout")
-}
+const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 export const createBlogSchema = z.object({
   title: z.string().trim().min(1).max(300),
@@ -84,13 +77,6 @@ const defaultDateLabels = () => {
     timeZone: "UTC",
   })
   return { date, date_time }
-}
-
-export const assertAgentDbReady = () => {
-  if (!isSupabaseConfigured() || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    return false
-  }
-  return true
 }
 
 export const createBlogPost = async (input: CreateBlogInput) => {

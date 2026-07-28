@@ -54,7 +54,7 @@ NEXT_PUBLIC_GISCUS_CATEGORY_ID=
 # Long random string — used to hash IP + User-Agent (raw IP is never stored)
 ANALYTICS_SALT=replace-with-a-long-random-secret
 
-# Hermes / agent blog CRUD (Authorization: Bearer <key>)
+# Hermes / agent admin API key (Authorization: Bearer <key>)
 BLOG_API_KEY=replace-with-a-long-random-secret
 ```
 
@@ -112,49 +112,51 @@ CMS MDX cannot `import` arbitrary packages at runtime (unsafe). Use the code reg
 
 Built-ins: `Callout`, `YouTube`, `CodeBlock`, plus styled GFM elements.
 
-## 9. Hermes agent blog API
+## 9. Hermes agent admin API
 
-Secure CRUD for an external agent (e.g. Hermes). Auth is a shared secret — **not** your admin password.
+Full CMS access for an external agent (e.g. Hermes). Auth is a shared secret (`BLOG_API_KEY`, the agent admin API key) — **not** your admin password.
 
-### Endpoints
-
-| Method | Path | Purpose |
-|--------|------|---------|
-| `POST` | `/api/agent/blog` | Create (default `status: draft`) |
-| `GET` | `/api/agent/blog/{slug}` | Read (including drafts) |
-| `PUT` | `/api/agent/blog/{slug}` | Partial update |
-| `DELETE` | `/api/agent/blog/{slug}` | Delete |
-
-Header on every request:
+### Auth header
 
 ```http
 Authorization: Bearer <BLOG_API_KEY>
 Content-Type: application/json
 ```
 
-Example create:
+### Endpoints
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/api/agent/portfolio` | Full CMS snapshot (includes draft blogs) |
+| `GET`/`PUT` | `/api/agent/profile` | Read / upsert profile |
+| `GET`/`POST` | `/api/agent/{resource}` | List / create (`services`, `skills`, `education`, `experience`, `projects`, `faqs`) |
+| `GET`/`PUT`/`DELETE` | `/api/agent/{resource}/{id}` | By UUID |
+| `POST` | `/api/agent/blog` | Create post (default `draft`) |
+| `GET`/`PUT`/`DELETE` | `/api/agent/blog/{slug}` | By slug |
+| `GET` | `/api/agent/comments?status=` | List comments |
+| `PATCH`/`DELETE` | `/api/agent/comments/{id}` | Moderate / delete |
+| `POST` | `/api/agent/upload` | Multipart `file` + `folder` (`avatars`\|`projects`\|`blog`\|`skills`\|`resume`) |
+| `POST` | `/api/agent/seed` | Destructive wipe+seed; body `{ "confirm": "SEED_FROM_STATIC" }` |
+
+Example snapshot:
 
 ```bash
 export SITE_URL=https://siyamuddin.com
 export BLOG_API_KEY=your-key
 
-curl -sS -X POST "$SITE_URL/api/agent/blog" \
-  -H "Authorization: Bearer $BLOG_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Hello","slug":"hello","body":"## Hi\n","status":"draft"}'
+curl -sS "$SITE_URL/api/agent/portfolio" \
+  -H "Authorization: Bearer $BLOG_API_KEY"
 ```
 
 ### Hermes skill
 
-- Template (no secrets): [`hermes/skills/siyam-portfolio-blog/`](../hermes/skills/siyam-portfolio-blog/)
-- Paste-ready with credentials (gitignored): `hermes/skills/siyam-portfolio-blog.PASTE.md`
-- Installed locally at: `~/.hermes/skills/portfolio/siyam-portfolio-blog/SKILL.md`
-
-Copy the PASTE file into Hermes if needed:
+- Template (no secrets): [`hermes/skills/siyam-portfolio-admin/`](../hermes/skills/siyam-portfolio-admin/)
+- Paste-ready with credentials (gitignored): `hermes/skills/siyam-portfolio-admin.PASTE.md`
+- Installed locally at: `~/.hermes/skills/portfolio/siyam-portfolio-admin/SKILL.md`
 
 ```bash
-mkdir -p ~/.hermes/skills/portfolio/siyam-portfolio-blog
-cp hermes/skills/siyam-portfolio-blog.PASTE.md ~/.hermes/skills/portfolio/siyam-portfolio-blog/SKILL.md
+mkdir -p ~/.hermes/skills/portfolio/siyam-portfolio-admin
+cp hermes/skills/siyam-portfolio-admin.PASTE.md ~/.hermes/skills/portfolio/siyam-portfolio-admin/SKILL.md
 ```
 
 Add the same `BLOG_API_KEY` in Vercel so production accepts the agent.
@@ -166,5 +168,6 @@ Add the same `BLOG_API_KEY` in Vercel so production accepts the agent.
 - Contact form and pending-comment alerts use Resend (`RESEND_API_KEY` / `CONTACT_TO_EMAIL`)
 - Comment alerts soft-fail (comment still saves) if Resend is not configured
 - Analytics soft-fail if Supabase / service role is missing
-- Agent blog API soft-fails with `503` if `BLOG_API_KEY` or Supabase is missing
+- Agent admin API soft-fails with `503` if `BLOG_API_KEY` or Supabase is missing
 - Never commit `*.PASTE.md` or real API keys
+- Seed via API is destructive — require explicit confirmation

@@ -53,6 +53,9 @@ NEXT_PUBLIC_GISCUS_CATEGORY_ID=
 
 # Long random string — used to hash IP + User-Agent (raw IP is never stored)
 ANALYTICS_SALT=replace-with-a-long-random-secret
+
+# Hermes / agent blog CRUD (Authorization: Bearer <key>)
+BLOG_API_KEY=replace-with-a-long-random-secret
 ```
 
 Add the same values in Vercel → Project → Settings → Environment Variables.
@@ -109,6 +112,53 @@ CMS MDX cannot `import` arbitrary packages at runtime (unsafe). Use the code reg
 
 Built-ins: `Callout`, `YouTube`, `CodeBlock`, plus styled GFM elements.
 
+## 9. Hermes agent blog API
+
+Secure CRUD for an external agent (e.g. Hermes). Auth is a shared secret — **not** your admin password.
+
+### Endpoints
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/api/agent/blog` | Create (default `status: draft`) |
+| `GET` | `/api/agent/blog/{slug}` | Read (including drafts) |
+| `PUT` | `/api/agent/blog/{slug}` | Partial update |
+| `DELETE` | `/api/agent/blog/{slug}` | Delete |
+
+Header on every request:
+
+```http
+Authorization: Bearer <BLOG_API_KEY>
+Content-Type: application/json
+```
+
+Example create:
+
+```bash
+export SITE_URL=https://siyamuddin.com
+export BLOG_API_KEY=your-key
+
+curl -sS -X POST "$SITE_URL/api/agent/blog" \
+  -H "Authorization: Bearer $BLOG_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Hello","slug":"hello","body":"## Hi\n","status":"draft"}'
+```
+
+### Hermes skill
+
+- Template (no secrets): [`hermes/skills/siyam-portfolio-blog/`](../hermes/skills/siyam-portfolio-blog/)
+- Paste-ready with credentials (gitignored): `hermes/skills/siyam-portfolio-blog.PASTE.md`
+- Installed locally at: `~/.hermes/skills/portfolio/siyam-portfolio-blog/SKILL.md`
+
+Copy the PASTE file into Hermes if needed:
+
+```bash
+mkdir -p ~/.hermes/skills/portfolio/siyam-portfolio-blog
+cp hermes/skills/siyam-portfolio-blog.PASTE.md ~/.hermes/skills/portfolio/siyam-portfolio-blog/SKILL.md
+```
+
+Add the same `BLOG_API_KEY` in Vercel so production accepts the agent.
+
 ## Notes
 
 - Nav labels/routes stay in code (`navPages` / SEO helpers)
@@ -116,3 +166,5 @@ Built-ins: `Callout`, `YouTube`, `CodeBlock`, plus styled GFM elements.
 - Contact form and pending-comment alerts use Resend (`RESEND_API_KEY` / `CONTACT_TO_EMAIL`)
 - Comment alerts soft-fail (comment still saves) if Resend is not configured
 - Analytics soft-fail if Supabase / service role is missing
+- Agent blog API soft-fails with `503` if `BLOG_API_KEY` or Supabase is missing
+- Never commit `*.PASTE.md` or real API keys

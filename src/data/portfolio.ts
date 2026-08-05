@@ -22,6 +22,9 @@ export const profile: Profile = {
   resumeUrl: "/resume.pdf",
 };
 
+/** Default flagship project on the About page when using static fallback data. */
+export const featuredProjectTitle = "AirSeoul";
+
 export const services: Service[] = [
     {
     title: "AI/ML Solutions",
@@ -49,6 +52,8 @@ export const skills: Skill[] = [
   { name: "Java", color: "#ED8B00", icon: "java" },
   { name: "Spring Boot", color: "#6DB33F", icon: "spring" },
   { name: "React", color: "#61DAFB", icon: "react" },
+  { name: "Flutter", color: "#02569B", icon: "flutter" },
+  { name: "Dart", color: "#0175C2", icon: "dart" },
   { name: "TypeScript", color: "#3178C6", icon: "typescript" },
   { name: "Python", color: "#FFD43B", icon: "python" },
   { name: "JavaScript", color: "#F7DF1E", icon: "javascript" },
@@ -64,6 +69,8 @@ export const skills: Skill[] = [
   { name: "Prometheus", color: "#E6522C", icon: "prometheus" },
   { name: "Grafana", color: "#F46800", icon: "grafana" },
   { name: "N8N", color: "#EA4AAA", icon: "n8n" },
+  { name: "AI Automation", color: "#FFD21E", icon: "huggingface" },
+  { name: "Business Automation", color: "#6D00CC", icon: "make" },
   { name: "LangChain", color: "#1C3C3C", icon: "langchain" },
   { name: "Ollama", color: "#000000", icon: "ollama" },
   { name: "Apache Kafka", color: "#231F20", icon: "apachekafka" },
@@ -114,7 +121,9 @@ export const projects: Project[] = [
     title: "AirSeoul",
     category: "Web Development",
     image: "/images/projects/portfolio.jpg",
-    url: "https://github.com/Siyamuddin",
+    url: "",
+    githubUrl: "https://github.com/Siyamuddin",
+    highlight: "50K+ req/hr",
     description: "Full-stack flight booking platform handling 50K+ req/hr with Spring Boot, React, Redis, Docker, and AWS",
   },
   {
@@ -122,6 +131,7 @@ export const projects: Project[] = [
     category: "Web Development",
     image: "/images/projects/n8n.jpg",
     url: "https://shop.setlone.com",
+    highlight: "Live on AWS",
     description: "Brand & influencer e-commerce platform with blockchain-based payment module deployed on AWS",
   },
   {
@@ -129,6 +139,7 @@ export const projects: Project[] = [
     category: "Applications",
     image: "/images/projects/dashboard.jpg",
     url: "https://setlone.com",
+    highlight: "Real-time fintech",
     description: "Social networking + fintech platform with real-time features, WebSocket architecture, and Redis caching",
   },
   {
@@ -136,6 +147,8 @@ export const projects: Project[] = [
     category: "Automation",
     image: "/images/projects/ai-agent.jpg",
     url: "",
+    githubUrl: "https://github.com/Siyamuddin",
+    highlight: "100+ users",
     description: "Agentic automation with FastAPI, Whisper ASR, RAG pipelines, and LLM integration — 100+ real users",
   },
   {
@@ -143,6 +156,7 @@ export const projects: Project[] = [
     category: "Applications",
     image: "/images/projects/spring.jpg",
     url: "",
+    githubUrl: "https://github.com/Siyamuddin",
     description: "RESTful API service with Spring Boot, JPA, MySQL, Redis caching, and Docker containerization",
   },
   {
@@ -150,6 +164,7 @@ export const projects: Project[] = [
     category: "Applications",
     image: "/images/projects/more.jpg",
     url: "https://github.com/Siyamuddin",
+    githubUrl: "https://github.com/Siyamuddin",
     description: "Check out my full portfolio on GitHub",
   },
 ];

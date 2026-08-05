@@ -26,11 +26,14 @@ export interface Experience {
 }
 
 export interface Project {
-  title: string;
-  category: "Web Development" | "Applications" | "Automation";
-  image: string;
-  url: string;
-  description: string;
+  id?: string
+  title: string
+  category: "Web Development" | "Applications" | "Automation"
+  image: string
+  url: string
+  description: string
+  highlight?: string
+  githubUrl?: string
 }
 
 export interface BlogPost {

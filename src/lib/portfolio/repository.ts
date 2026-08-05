@@ -2,6 +2,7 @@ import { cache } from "react"
 import { unstable_cache } from "next/cache"
 import { createClient } from "@supabase/supabase-js"
 import { navPages } from "@/data/portfolio"
+import { resolveFeaturedProject } from "@/lib/portfolio/featured-project"
 import {
   mapBlogComment,
   mapBlogPost,
@@ -82,13 +83,20 @@ const fetchPortfolioFromSupabase = async (): Promise<PortfolioData> => {
   if (blogResult.error) throw blogResult.error
   if (faqsResult.error) throw faqsResult.error
 
+  const profileRow = profileResult.data as ProfileRow
+  const projects = ((projectsResult.data ?? []) as ProjectRow[]).map(mapProject)
+
   return {
-    profile: mapProfile(profileResult.data as ProfileRow),
+    profile: mapProfile(profileRow),
     services: ((servicesResult.data ?? []) as ServiceRow[]).map(mapService),
     skills: ((skillsResult.data ?? []) as SkillRow[]).map(mapSkill),
     education: ((educationResult.data ?? []) as EducationRow[]).map(mapEducation),
     experience: ((experienceResult.data ?? []) as ExperienceRow[]).map(mapExperience),
-    projects: ((projectsResult.data ?? []) as ProjectRow[]).map(mapProject),
+    projects,
+    featuredProject: resolveFeaturedProject(
+      projects,
+      profileRow.featured_project_id
+    ),
     blogPosts: ((blogResult.data ?? []) as BlogPostRow[]).map(mapBlogPost),
     faqs: ((faqsResult.data ?? []) as FaqRow[]).map(mapFaq),
     navPages,

@@ -1,10 +1,13 @@
 import Link from "next/link"
 import { Code2, Server, Smartphone, Sparkles } from "lucide-react"
+import { AboutHeroHeader } from "@/components/pages/AboutHeroHeader"
 import { FaqAccordion } from "@/components/pages/FaqAccordion"
+import { SkillsGrid } from "@/components/pages/SkillsGrid"
+import { FeaturedProjectCard } from "@/components/portfolio/FeaturedProjectCard"
+import { SectionEyebrow } from "@/components/ui/SectionEyebrow"
 import { SectionTitle } from "@/components/ui/SectionTitle"
-import { SkillChip } from "@/components/ui/SkillChip"
 import { getBlogPostHref } from "@/lib/portfolio/blog"
-import type { BlogPost, Faq, Profile, Service, Skill } from "@/lib/types"
+import type { BlogPost, Faq, Profile, Project, Service, Skill } from "@/lib/types"
 
 const serviceIcons = {
   Smartphone,
@@ -19,6 +22,7 @@ type AboutPageProps = {
   skills: Skill[]
   faqs?: Faq[]
   featuredPosts?: BlogPost[]
+  featuredProject?: Project | null
 }
 
 export const AboutPage = ({
@@ -27,6 +31,7 @@ export const AboutPage = ({
   skills,
   faqs = [],
   featuredPosts = [],
+  featuredProject = null,
 }: AboutPageProps) => {
   const writingLinks = featuredPosts
     .map((post) => {
@@ -37,17 +42,15 @@ export const AboutPage = ({
     .filter((item): item is NonNullable<typeof item> => Boolean(item))
     .slice(0, 3)
 
+  const resumeHref = profile.resumeUrl ?? "/resume.pdf"
+
   return (
     <article
       id="about-panel"
       className="rounded-[20px] border border-jet bg-eerie-black-2 p-[15px] shadow-[var(--shadow-1)] min-[580px]:mx-auto min-[580px]:w-[520px] min-[580px]:p-[30px] min-[768px]:w-[700px] min-[1024px]:w-[950px] min-[1024px]:shadow-[var(--shadow-5)] min-[1250px]:w-auto min-[1250px]:min-h-full"
       aria-labelledby="about-title"
     >
-      <header>
-        <SectionTitle as="h1">
-          <span id="about-title">About Me</span>
-        </SectionTitle>
-      </header>
+      <AboutHeroHeader profile={profile} resumeHref={resumeHref} />
 
       <section className="text-sm font-light leading-relaxed text-light-gray min-[580px]:text-[15px]">
         {profile.bio.map((paragraph, index) => (
@@ -67,7 +70,18 @@ export const AboutPage = ({
         ))}
       </section>
 
-      <section className="mt-8 mb-9">
+      {featuredProject ? (
+        <section className="mt-10 mb-10" aria-labelledby="featured-project-title">
+          <SectionEyebrow>Featured work</SectionEyebrow>
+          <SectionTitle as="h3">
+            <span id="featured-project-title">Flagship Project</span>
+          </SectionTitle>
+          <FeaturedProjectCard project={featuredProject} variant="showcase" />
+        </section>
+      ) : null}
+
+      <section className="mt-10 mb-10">
+        <SectionEyebrow>Services</SectionEyebrow>
         <SectionTitle as="h3">What I&apos;m Doing</SectionTitle>
         <ul className="grid grid-cols-1 gap-5 min-[580px]:gap-[20px] min-[1024px]:grid-cols-2 min-[1024px]:gap-x-[25px] min-[1024px]:gap-y-5">
           {services.map((service) => {
@@ -96,17 +110,15 @@ export const AboutPage = ({
         </ul>
       </section>
 
-      <section className="mb-2">
+      <section className="mb-10">
+        <SectionEyebrow>Tech stack</SectionEyebrow>
         <SectionTitle as="h3">Skills</SectionTitle>
-        <ul className="flex flex-wrap items-center justify-center gap-4 p-5">
-          {skills.map((skill) => (
-            <SkillChip key={skill.name} skill={skill} />
-          ))}
-        </ul>
+        <SkillsGrid skills={skills} />
       </section>
 
       {writingLinks.length > 0 ? (
-        <section className="mb-9 mt-8" aria-labelledby="recent-writing-title">
+        <section className="mb-10" aria-labelledby="recent-writing-title">
+          <SectionEyebrow>Writing</SectionEyebrow>
           <SectionTitle as="h3">
             <span id="recent-writing-title">Recent Writing</span>
           </SectionTitle>

@@ -189,8 +189,20 @@ body {
   .scale-up {
     animation: none !important;
   }
+
+  .group-hover\:scale-110,
+  .hover\:scale-110 {
+    transform: none !important;
+  }
 }
 
 .scale-up {
   animation: scaleUp 0.25s ease forwards;
+}
+
+/* Static glow fallback when reduced motion is enabled */
+.hero-glow-fallback {
+  background:
+    radial-gradient(ellipse 70% 55% at 20% 35%, rgba(255, 219, 112, 0.1), transparent 65%),
+    radial-gradient(ellipse 60% 50% at 80% 60%, rgba(255, 219, 112, 0.06), transparent 70%);
 }

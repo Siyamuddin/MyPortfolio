@@ -3,12 +3,14 @@ import {
   education,
   experience,
   faqs,
+  featuredProjectTitle,
   navPages,
   profile,
   projects,
   services,
   skills,
 } from "@/data/portfolio"
+import { resolveFeaturedProject } from "@/lib/portfolio/featured-project"
 import type { PortfolioData } from "@/lib/portfolio/types"
 
 export const getStaticPortfolio = (): PortfolioData => ({
@@ -18,6 +20,7 @@ export const getStaticPortfolio = (): PortfolioData => ({
   education,
   experience,
   projects,
+  featuredProject: resolveFeaturedProject(projects, null, featuredProjectTitle),
   blogPosts: blogPosts.filter((post) => post.status === "published"),
   faqs,
   navPages,

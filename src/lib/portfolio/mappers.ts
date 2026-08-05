@@ -68,6 +68,7 @@ export const mapExperience = (row: ExperienceRow): Experience => ({
 })
 
 export const mapProject = (row: ProjectRow): Project => ({
+  id: row.id,
   title: row.title,
   category: row.category,
   image: row.image,

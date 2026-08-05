@@ -16,7 +16,10 @@ export default async function AdminProfilePage() {
   return (
     <div className="space-y-4">
       <h2 className="text-xl text-white-2">Profile</h2>
-      <ProfileAdminForm profile={rows?.profile ?? null} />
+      <ProfileAdminForm
+        profile={rows?.profile ?? null}
+        projects={rows?.projects ?? []}
+      />
     </div>
   )
 }

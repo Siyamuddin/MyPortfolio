@@ -5,13 +5,14 @@ import { useState, useTransition } from "react"
 import { FileUploadField } from "@/components/admin/FileUploadField"
 import { fieldClassName } from "@/components/admin/AdminForm"
 import { upsertProfileAction } from "@/lib/portfolio/admin-actions"
-import type { ProfileRow } from "@/lib/portfolio/types"
+import type { ProfileRow, ProjectRow } from "@/lib/portfolio/types"
 
 type ProfileAdminFormProps = {
   profile: ProfileRow | null
+  projects: ProjectRow[]
 }
 
-export const ProfileAdminForm = ({ profile }: ProfileAdminFormProps) => {
+export const ProfileAdminForm = ({ profile, projects }: ProfileAdminFormProps) => {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [message, setMessage] = useState<string | null>(null)
@@ -148,6 +149,23 @@ export const ProfileAdminForm = ({ profile }: ProfileAdminFormProps) => {
         defaultValue={profile?.resume_url ?? ""}
         accept=".pdf,application/pdf"
       />
+      <label className="block text-sm text-light-gray-70">
+        Featured work (About page)
+        <select
+          name="featured_project_id"
+          defaultValue={profile?.featured_project_id ?? ""}
+          className={fieldClassName}
+          aria-label="Featured work project"
+          tabIndex={0}
+        >
+          <option value="">None</option>
+          {projects.map((project) => (
+            <option key={project.id} value={project.id}>
+              {project.title}
+            </option>
+          ))}
+        </select>
+      </label>
       <div className="grid gap-4 md:grid-cols-2">
         {(
           [

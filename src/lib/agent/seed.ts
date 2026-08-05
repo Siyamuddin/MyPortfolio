@@ -1,4 +1,4 @@
-import { blogPosts as staticBlogPosts, faqs as staticFaqs } from "@/data/portfolio"
+import { blogPosts as staticBlogPosts, faqs as staticFaqs, featuredProjectTitle } from "@/data/portfolio"
 import {
   assertAgentDbReady,
   revalidateAfterMutation,
@@ -39,7 +39,7 @@ export const seedFromStatic = async (
     admin.from("profile").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
   ])
 
-  const { error: profileError } = await admin.from("profile").insert({
+  const { data: profileData, error: profileError } = await admin.from("profile").insert({
     name: staticData.profile.name,
     title: staticData.profile.title,
     email: staticData.profile.email,
@@ -49,7 +49,7 @@ export const seedFromStatic = async (
     socials: staticData.profile.socials,
     avatar: staticData.profile.avatar,
     resume_url: staticData.profile.resumeUrl ?? null,
-  })
+  }).select("id").single()
   if (profileError) return { ok: false, error: profileError.message, status: 500 }
 
   const { error: servicesError } = await admin.from("services").insert(
@@ -95,7 +95,7 @@ export const seedFromStatic = async (
   )
   if (experienceError) return { ok: false, error: experienceError.message, status: 500 }
 
-  const { error: projectsError } = await admin.from("projects").insert(
+  const { data: insertedProjects, error: projectsError } = await admin.from("projects").insert(
     staticData.projects.map((item, index) => ({
       title: item.title,
       category: item.category,
@@ -104,8 +104,19 @@ export const seedFromStatic = async (
       description: item.description,
       sort_order: index,
     }))
-  )
+  ).select("id, title")
   if (projectsError) return { ok: false, error: projectsError.message, status: 500 }
+
+  const featuredProject = insertedProjects?.find(
+    (project) => project.title === featuredProjectTitle
+  )
+  if (profileData?.id && featuredProject?.id) {
+    const { error: featuredError } = await admin
+      .from("profile")
+      .update({ featured_project_id: featuredProject.id })
+      .eq("id", profileData.id)
+    if (featuredError) return { ok: false, error: featuredError.message, status: 500 }
+  }
 
   const { error: blogError } = await admin.from("blog_posts").insert(
     staticBlogPosts.map((item, index) => ({

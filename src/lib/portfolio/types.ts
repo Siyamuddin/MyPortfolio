@@ -17,6 +17,7 @@ export type PortfolioData = {
   education: Education[]
   experience: Experience[]
   projects: Project[]
+  featuredProject: Project | null
   blogPosts: BlogPost[]
   faqs: Faq[]
   navPages: { id: NavPage | string; label: string }[]
@@ -34,6 +35,7 @@ export type ProfileRow = {
   socials: Profile["socials"]
   avatar: string
   resume_url: string | null
+  featured_project_id?: string | null
 }
 
 export type ServiceRow = {

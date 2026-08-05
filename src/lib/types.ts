@@ -26,6 +26,7 @@ export interface Experience {
 }
 
 export interface Project {
+  id?: string
   title: string
   category: "Web Development" | "Applications" | "Automation"
   image: string

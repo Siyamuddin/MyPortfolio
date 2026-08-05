@@ -22,6 +22,9 @@ export const profile: Profile = {
   resumeUrl: "/resume.pdf",
 };
 
+/** Default flagship project on the About page when using static fallback data. */
+export const featuredProjectTitle = "AirSeoul";
+
 export const services: Service[] = [
     {
     title: "AI/ML Solutions",

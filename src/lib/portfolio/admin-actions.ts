@@ -7,7 +7,7 @@ import {
   type ActionResult,
 } from "@/lib/portfolio/auth-actions"
 import { createServiceClient } from "@/lib/supabase/admin"
-import { blogPosts as staticBlogPosts, faqs as staticFaqs } from "@/data/portfolio"
+import { blogPosts as staticBlogPosts, faqs as staticFaqs, featuredProjectTitle } from "@/data/portfolio"
 import { getStaticPortfolio } from "@/lib/portfolio/static"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
@@ -31,6 +31,11 @@ const profileSchema = z.object({
   socials: socialsSchema,
   avatar: z.string(),
   resume_url: z.string().nullable(),
+  featured_project_id: z
+    .union([z.string().uuid(), z.literal("")])
+    .nullable()
+    .optional()
+    .transform((value) => (value ? value : null)),
 })
 
 const serviceSchema = z.object({
@@ -134,6 +139,7 @@ export const upsertProfileAction = async (
       }),
       avatar: formData.get("avatar") ?? "",
       resume_url: formData.get("resume_url") || null,
+      featured_project_id: formData.get("featured_project_id") ?? null,
     })
 
     const row = {
@@ -146,6 +152,7 @@ export const upsertProfileAction = async (
       socials: payload.socials,
       avatar: payload.avatar,
       resume_url: payload.resume_url,
+      featured_project_id: payload.featured_project_id,
       updated_at: new Date().toISOString(),
     }
 
@@ -363,7 +370,7 @@ export const seedFromStaticAction = async (): Promise<ActionResult> => {
       admin.from("profile").delete().neq("id", "00000000-0000-0000-0000-000000000000"),
     ])
 
-    const { error: profileError } = await admin.from("profile").insert({
+    const { data: profileData, error: profileError } = await admin.from("profile").insert({
       name: staticData.profile.name,
       title: staticData.profile.title,
       email: staticData.profile.email,
@@ -373,7 +380,7 @@ export const seedFromStaticAction = async (): Promise<ActionResult> => {
       socials: staticData.profile.socials,
       avatar: staticData.profile.avatar,
       resume_url: staticData.profile.resumeUrl ?? null,
-    })
+    }).select("id").single()
     if (profileError) return { ok: false, error: profileError.message }
 
     const { error: servicesError } = await admin.from("services").insert(
@@ -419,7 +426,7 @@ export const seedFromStaticAction = async (): Promise<ActionResult> => {
     )
     if (experienceError) return { ok: false, error: experienceError.message }
 
-    const { error: projectsError } = await admin.from("projects").insert(
+    const { data: insertedProjects, error: projectsError } = await admin.from("projects").insert(
       staticData.projects.map((item, index) => ({
         title: item.title,
         category: item.category,
@@ -428,8 +435,19 @@ export const seedFromStaticAction = async (): Promise<ActionResult> => {
         description: item.description,
         sort_order: index,
       }))
-    )
+    ).select("id, title")
     if (projectsError) return { ok: false, error: projectsError.message }
+
+    const featuredProject = insertedProjects?.find(
+      (project) => project.title === featuredProjectTitle
+    )
+    if (profileData?.id && featuredProject?.id) {
+      const { error: featuredError } = await admin
+        .from("profile")
+        .update({ featured_project_id: featuredProject.id })
+        .eq("id", profileData.id)
+      if (featuredError) return { ok: false, error: featuredError.message }
+    }
 
     const { error: blogError } = await admin.from("blog_posts").insert(
       staticBlogPosts.map((item, index) => ({

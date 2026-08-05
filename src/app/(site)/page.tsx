@@ -29,6 +29,11 @@ export default async function HomePage() {
         featuredPosts={portfolio.blogPosts.filter(
           (post) => post.status === "published" && post.slug && post.body.trim(),
         )}
+        featuredProject={
+          portfolio.projects.find((project) => project.title === "AirSeoul") ??
+          portfolio.projects[0] ??
+          null
+        }
       />
     </>
   )

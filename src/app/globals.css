@@ -189,6 +189,11 @@ body {
   .scale-up {
     animation: none !important;
   }
+
+  .group-hover\:scale-110,
+  .hover\:scale-110 {
+    transform: none !important;
+  }
 }
 
 .scale-up {

@@ -1,10 +1,12 @@
 import Link from "next/link"
-import { Code2, Server, Smartphone, Sparkles } from "lucide-react"
+import { Code2, Download, Server, Smartphone, Sparkles } from "lucide-react"
 import { FaqAccordion } from "@/components/pages/FaqAccordion"
+import { SkillsGrid } from "@/components/pages/SkillsGrid"
+import { FeaturedProjectCard } from "@/components/portfolio/FeaturedProjectCard"
+import { SectionEyebrow } from "@/components/ui/SectionEyebrow"
 import { SectionTitle } from "@/components/ui/SectionTitle"
-import { SkillChip } from "@/components/ui/SkillChip"
 import { getBlogPostHref } from "@/lib/portfolio/blog"
-import type { BlogPost, Faq, Profile, Service, Skill } from "@/lib/types"
+import type { BlogPost, Faq, Profile, Project, Service, Skill } from "@/lib/types"
 
 const serviceIcons = {
   Smartphone,
@@ -19,6 +21,7 @@ type AboutPageProps = {
   skills: Skill[]
   faqs?: Faq[]
   featuredPosts?: BlogPost[]
+  featuredProject?: Project | null
 }
 
 export const AboutPage = ({
@@ -27,6 +30,7 @@ export const AboutPage = ({
   skills,
   faqs = [],
   featuredPosts = [],
+  featuredProject = null,
 }: AboutPageProps) => {
   const writingLinks = featuredPosts
     .map((post) => {
@@ -37,6 +41,8 @@ export const AboutPage = ({
     .filter((item): item is NonNullable<typeof item> => Boolean(item))
     .slice(0, 3)
 
+  const resumeHref = profile.resumeUrl ?? "/resume.pdf"
+
   return (
     <article
       id="about-panel"
@@ -44,9 +50,42 @@ export const AboutPage = ({
       aria-labelledby="about-title"
     >
       <header>
+        <SectionEyebrow>Introduction</SectionEyebrow>
         <SectionTitle as="h1">
           <span id="about-title">About Me</span>
         </SectionTitle>
+        <p className="mb-5 text-sm font-medium leading-relaxed text-gold min-[580px]:text-[15px]">
+          {profile.title} · AI automation · Production systems · {profile.location}
+        </p>
+        <div className="mb-8 flex flex-wrap gap-3">
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center rounded-xl bg-gold px-5 py-2.5 text-sm font-medium text-smoky-black transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+            tabIndex={0}
+            aria-label="Contact me for work inquiries"
+          >
+            Contact me
+          </Link>
+          <a
+            href={resumeHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl border border-jet px-5 py-2.5 text-sm font-medium text-white-2 transition-colors hover:border-gold/50 hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+            tabIndex={0}
+            aria-label="Download resume PDF"
+          >
+            <Download className="h-4 w-4" aria-hidden="true" />
+            Download resume
+          </a>
+          <Link
+            href="/portfolio"
+            className="inline-flex items-center justify-center rounded-xl px-2 py-2.5 text-sm font-medium text-light-gray-70 underline-offset-2 transition-colors hover:text-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+            tabIndex={0}
+            aria-label="View portfolio projects"
+          >
+            View projects
+          </Link>
+        </div>
       </header>
 
       <section className="text-sm font-light leading-relaxed text-light-gray min-[580px]:text-[15px]">
@@ -67,7 +106,18 @@ export const AboutPage = ({
         ))}
       </section>
 
-      <section className="mt-8 mb-9">
+      {featuredProject ? (
+        <section className="mt-10 mb-10" aria-labelledby="featured-project-title">
+          <SectionEyebrow>Featured work</SectionEyebrow>
+          <SectionTitle as="h3">
+            <span id="featured-project-title">Flagship Project</span>
+          </SectionTitle>
+          <FeaturedProjectCard project={featuredProject} />
+        </section>
+      ) : null}
+
+      <section className="mt-10 mb-10">
+        <SectionEyebrow>Services</SectionEyebrow>
         <SectionTitle as="h3">What I&apos;m Doing</SectionTitle>
         <ul className="grid grid-cols-1 gap-5 min-[580px]:gap-[20px] min-[1024px]:grid-cols-2 min-[1024px]:gap-x-[25px] min-[1024px]:gap-y-5">
           {services.map((service) => {
@@ -96,17 +146,15 @@ export const AboutPage = ({
         </ul>
       </section>
 
-      <section className="mb-2">
+      <section className="mb-10">
+        <SectionEyebrow>Tech stack</SectionEyebrow>
         <SectionTitle as="h3">Skills</SectionTitle>
-        <ul className="flex flex-wrap items-center justify-center gap-4 p-5">
-          {skills.map((skill) => (
-            <SkillChip key={skill.name} skill={skill} />
-          ))}
-        </ul>
+        <SkillsGrid skills={skills} />
       </section>
 
       {writingLinks.length > 0 ? (
-        <section className="mb-9 mt-8" aria-labelledby="recent-writing-title">
+        <section className="mb-10" aria-labelledby="recent-writing-title">
+          <SectionEyebrow>Writing</SectionEyebrow>
           <SectionTitle as="h3">
             <span id="recent-writing-title">Recent Writing</span>
           </SectionTitle>

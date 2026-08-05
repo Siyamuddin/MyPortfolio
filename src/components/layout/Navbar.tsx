@@ -27,8 +27,8 @@ export const Navbar = () => {
               <Link
                 href={href}
                 className={cn(
-                  "block px-[7px] py-5 text-[11px] text-light-gray transition-colors duration-250 hover:text-light-gray-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold min-[580px]:text-sm min-[768px]:text-[15px] min-[1024px]:font-medium",
-                  isActive && "text-gold"
+                  "relative block px-[7px] py-5 text-[11px] text-light-gray transition-colors duration-250 hover:text-light-gray-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold min-[580px]:text-sm min-[768px]:text-[15px] min-[1024px]:font-medium",
+                  isActive && "text-gold after:absolute after:bottom-2 after:left-1/2 after:h-0.5 after:w-5 after:-translate-x-1/2 after:rounded-full after:bg-gold min-[1024px]:after:bottom-auto min-[1024px]:after:left-0 min-[1024px]:after:top-1/2 min-[1024px]:after:h-5 min-[1024px]:after:w-0.5 min-[1024px]:after:-translate-x-0 min-[1024px]:after:-translate-y-1/2"
                 )}
                 aria-current={isActive ? "page" : undefined}
                 aria-label={`Navigate to ${page.label}`}

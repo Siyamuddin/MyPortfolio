@@ -2,5 +2,13 @@
   "framework": "nextjs",
   "buildCommand": "next build",
   "installCommand": "npm install",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.siyamuddin.com" }],
+      "destination": "https://siyamuddin.com/:path*",
+      "permanent": true
+    }
+  ]
 }

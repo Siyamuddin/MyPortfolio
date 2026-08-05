@@ -9,7 +9,7 @@ export const ContactPage = () => {
       aria-labelledby="contact-title"
     >
       <header>
-        <SectionTitle>
+        <SectionTitle as="h1">
           <span id="contact-title">Contact</span>
         </SectionTitle>
       </header>

@@ -1,8 +1,10 @@
+import Link from "next/link"
 import { Code2, Server, Smartphone, Sparkles } from "lucide-react"
 import { FaqAccordion } from "@/components/pages/FaqAccordion"
 import { SectionTitle } from "@/components/ui/SectionTitle"
 import { SkillChip } from "@/components/ui/SkillChip"
-import type { Faq, Profile, Service, Skill } from "@/lib/types"
+import { getBlogPostHref } from "@/lib/portfolio/blog"
+import type { BlogPost, Faq, Profile, Service, Skill } from "@/lib/types"
 
 const serviceIcons = {
   Smartphone,
@@ -16,6 +18,7 @@ type AboutPageProps = {
   services: Service[]
   skills: Skill[]
   faqs?: Faq[]
+  featuredPosts?: BlogPost[]
 }
 
 export const AboutPage = ({
@@ -23,7 +26,17 @@ export const AboutPage = ({
   services,
   skills,
   faqs = [],
+  featuredPosts = [],
 }: AboutPageProps) => {
+  const writingLinks = featuredPosts
+    .map((post) => {
+      const href = getBlogPostHref(post)
+      if (!href || href.startsWith("http")) return null
+      return { title: post.title, href, category: post.category, date: post.date }
+    })
+    .filter((item): item is NonNullable<typeof item> => Boolean(item))
+    .slice(0, 3)
+
   return (
     <article
       id="about-panel"
@@ -31,7 +44,7 @@ export const AboutPage = ({
       aria-labelledby="about-title"
     >
       <header>
-        <SectionTitle>
+        <SectionTitle as="h1">
           <span id="about-title">About Me</span>
         </SectionTitle>
       </header>
@@ -91,6 +104,44 @@ export const AboutPage = ({
           ))}
         </ul>
       </section>
+
+      {writingLinks.length > 0 ? (
+        <section className="mb-9 mt-8" aria-labelledby="recent-writing-title">
+          <SectionTitle as="h3">
+            <span id="recent-writing-title">Recent Writing</span>
+          </SectionTitle>
+          <ul className="space-y-3">
+            {writingLinks.map((post) => (
+              <li key={post.href}>
+                <Link
+                  href={post.href}
+                  className="group block rounded-xl border border-jet bg-eerie-black-1 px-4 py-3 transition-colors hover:border-gold/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                  tabIndex={0}
+                  aria-label={`Read blog post: ${post.title}`}
+                >
+                  <p className="text-sm font-medium text-white-2 transition-colors group-hover:text-gold min-[580px]:text-[15px]">
+                    {post.title}
+                  </p>
+                  <p className="mt-1 text-xs text-light-gray-70">
+                    {post.category}
+                    {post.date ? ` · ${post.date}` : ""}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 text-sm text-light-gray-70">
+            <Link
+              href="/blog"
+              className="text-gold underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+              tabIndex={0}
+              aria-label="View all blog posts"
+            >
+              View all posts
+            </Link>
+          </p>
+        </section>
+      ) : null}
 
       <FaqAccordion faqs={faqs} />
     </article>

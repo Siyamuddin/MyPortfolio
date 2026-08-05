@@ -26,6 +26,9 @@ export default async function HomePage() {
         services={portfolio.services}
         skills={portfolio.skills}
         faqs={portfolio.faqs}
+        featuredPosts={portfolio.blogPosts.filter(
+          (post) => post.status === "published" && post.slug && post.body.trim(),
+        )}
       />
     </>
   )

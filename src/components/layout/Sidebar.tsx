@@ -137,9 +137,9 @@ export const Sidebar = ({ profile }: SidebarProps) => {
         </div>
 
         <div className="min-[1250px]:text-center">
-          <h1 className="mb-2.5 text-[17px] font-medium tracking-[-0.25px] text-white-2 min-[580px]:mb-[15px] min-[580px]:whitespace-nowrap min-[580px]:text-[26px]">
+          <p className="mb-2.5 text-[17px] font-medium tracking-[-0.25px] text-white-2 min-[580px]:mb-[15px] min-[580px]:whitespace-nowrap min-[580px]:text-[26px]">
             {profile.name}
-          </h1>
+          </p>
           <p className="w-max rounded-lg bg-onyx px-3 py-[3px] text-[11px] font-light text-white-1 min-[580px]:px-[18px] min-[580px]:py-[5px] min-[580px]:text-xs min-[1250px]:mx-auto">
             {profile.title}
           </p>

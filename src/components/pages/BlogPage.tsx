@@ -19,7 +19,7 @@ export const BlogPage = ({ blogPosts }: BlogPageProps) => {
       aria-labelledby="blog-title"
     >
       <header>
-        <SectionTitle>
+        <SectionTitle as="h1">
           <span id="blog-title">Blog</span>
         </SectionTitle>
       </header>

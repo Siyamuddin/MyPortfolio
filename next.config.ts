@@ -29,6 +29,16 @@ const nextConfig: NextConfig = {
           ]),
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.siyamuddin.com" }],
+        destination: "https://siyamuddin.com/:path*",
+        permanent: true,
+      },
+    ]
+  },
   async headers() {
     return [
       {

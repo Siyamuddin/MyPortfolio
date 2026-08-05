@@ -24,7 +24,7 @@ export const ResumePage = ({
       aria-labelledby="resume-title"
     >
       <header>
-        <SectionTitle>
+        <SectionTitle as="h1">
           <span id="resume-title">Resume</span>
         </SectionTitle>
       </header>

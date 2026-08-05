@@ -14,7 +14,7 @@ export const PortfolioPage = ({ projects }: PortfolioPageProps) => {
       aria-labelledby="portfolio-title"
     >
       <header>
-        <SectionTitle>
+        <SectionTitle as="h1">
           <span id="portfolio-title">Portfolio</span>
         </SectionTitle>
       </header>

@@ -1,7 +1,9 @@
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import Image from "next/image"
+import { FeaturedProjectVisual } from "@/components/three/FeaturedProjectMockup"
 import { cn } from "@/lib/cn"
+import { resolveProjectImageSrc } from "@/lib/portfolio/project-image"
 import type { Project } from "@/lib/types"
 
 const GithubIcon = ({ className }: { className?: string }) => (
@@ -17,16 +19,14 @@ const GithubIcon = ({ className }: { className?: string }) => (
 
 type FeaturedProjectCardProps = {
   project: Project
+  variant?: "default" | "showcase"
 }
 
-const placeholderSrc = (title: string) =>
-  `https://placehold.co/800x420/1a1a1e/ffdb70?text=${encodeURIComponent(title.slice(0, 18))}`
-
-export const FeaturedProjectCard = ({ project }: FeaturedProjectCardProps) => {
-  const imageSrc =
-    project.image.startsWith("http") || project.image.startsWith("/")
-      ? project.image
-      : placeholderSrc(project.title)
+export const FeaturedProjectCard = ({
+  project,
+  variant = "default",
+}: FeaturedProjectCardProps) => {
+  const imageSrc = resolveProjectImageSrc(project.image, project.title)
   const liveUrl =
     project.url.startsWith("http") &&
     (!project.githubUrl || project.url !== project.githubUrl)
@@ -44,17 +44,33 @@ export const FeaturedProjectCard = ({ project }: FeaturedProjectCardProps) => {
   const showGithub = Boolean(githubUrl)
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-jet bg-eerie-black-1">
+    <article
+      className={cn(
+        "overflow-hidden rounded-2xl border border-jet bg-eerie-black-1",
+        variant === "showcase" && "shadow-[var(--shadow-3)]"
+      )}
+    >
       <div className="grid min-[768px]:grid-cols-2">
-        <figure className="relative aspect-[16/10] min-[768px]:aspect-auto min-[768px]:min-h-[220px]">
-          <Image
-            src={imageSrc}
-            alt={project.title}
-            fill
-            sizes="(min-width:768px) 50vw, 100vw"
-            className="object-cover"
-            unoptimized={imageSrc.includes("placehold.co")}
-          />
+        <figure
+          className={cn(
+            "relative aspect-[16/10] min-[768px]:aspect-auto",
+            variant === "showcase"
+              ? "min-h-[240px] min-[768px]:min-h-[280px]"
+              : "min-[768px]:min-h-[220px]"
+          )}
+        >
+          {variant === "showcase" ? (
+            <FeaturedProjectVisual imageSrc={imageSrc} title={project.title} />
+          ) : (
+            <Image
+              src={imageSrc}
+              alt={project.title}
+              fill
+              sizes="(min-width:768px) 50vw, 100vw"
+              className="object-cover"
+              unoptimized={imageSrc.includes("placehold.co")}
+            />
+          )}
         </figure>
         <div className="flex flex-col justify-center p-5 min-[580px]:p-6">
           {project.highlight ? (

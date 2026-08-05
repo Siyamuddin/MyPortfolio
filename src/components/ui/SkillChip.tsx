@@ -50,7 +50,7 @@ export const SkillChip = ({ skill }: SkillChipProps) => {
   }, [])
 
   const chipClassName = cn(
-    "group relative flex h-16 w-16 items-center justify-center rounded-xl bg-onyx transition-transform duration-250 hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100 hover:border hover:border-gold/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold",
+    "relative flex h-16 w-16 items-center justify-center rounded-xl bg-onyx transition-transform duration-250 hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100 hover:border hover:border-gold/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold",
     open && "border border-gold/30"
   )
 
@@ -79,13 +79,13 @@ export const SkillChip = ({ skill }: SkillChipProps) => {
     </span>
   )
 
-  const tooltip = (
+  const tooltip = (showVisitLink: boolean) => (
     <span id={tooltipId} role="tooltip" className={tooltipClassName}>
       <span className="mb-0.5 block text-[13px] font-medium text-white-2">
         {skill.name}
       </span>
       {description}
-      {href ? (
+      {href && showVisitLink ? (
         <a
           href={href}
           target="_blank"
@@ -98,6 +98,11 @@ export const SkillChip = ({ skill }: SkillChipProps) => {
           Visit official site
         </a>
       ) : null}
+      {href && !showVisitLink ? (
+        <span className="mt-2 block text-[11px] font-medium text-gold">
+          Click chip to visit official site
+        </span>
+      ) : null}
       <span
         className="absolute top-full left-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 border-r border-b border-jet bg-eerie-black-1"
         aria-hidden="true"
@@ -107,7 +112,7 @@ export const SkillChip = ({ skill }: SkillChipProps) => {
 
   if (href && isTouch) {
     return (
-      <li>
+      <li className="group relative" onBlur={handleBlur}>
         <button
           type="button"
           className={chipClassName}
@@ -115,18 +120,17 @@ export const SkillChip = ({ skill }: SkillChipProps) => {
           aria-describedby={open ? tooltipId : undefined}
           aria-expanded={open}
           onClick={handleToggle}
-          onBlur={handleBlur}
         >
           {icon}
-          {tooltip}
         </button>
+        {tooltip(true)}
       </li>
     )
   }
 
   if (href) {
     return (
-      <li>
+      <li className="group relative">
         <a
           href={href}
           target="_blank"
@@ -137,21 +141,23 @@ export const SkillChip = ({ skill }: SkillChipProps) => {
           tabIndex={0}
         >
           {icon}
-          {tooltip}
         </a>
+        {tooltip(false)}
       </li>
     )
   }
 
   return (
-    <li
-      className={chipClassName}
-      aria-label={skill.name}
-      aria-describedby={tooltipId}
-      tabIndex={0}
-    >
-      {icon}
-      {tooltip}
+    <li className="group relative">
+      <div
+        className={chipClassName}
+        tabIndex={0}
+        aria-label={skill.name}
+        aria-describedby={tooltipId}
+      >
+        {icon}
+      </div>
+      {tooltip(false)}
     </li>
   )
 }

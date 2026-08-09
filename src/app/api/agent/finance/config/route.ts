@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { z } from "zod"
-import { guardAgentRequest } from "@/lib/agent/auth"
+import { guardFinanceRequest } from "@/lib/finance/auth"
 import { getConfig, updateConfig } from "@/lib/finance/supabase"
 
 const budgetCapsSchema = z.object({
@@ -31,7 +31,7 @@ const configPatchSchema = z
   })
 
 export const GET = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardFinanceRequest(request)
   if (blocked) return blocked
 
   const data = await getConfig()
@@ -39,7 +39,7 @@ export const GET = async (request: NextRequest) => {
 }
 
 export const PUT = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardFinanceRequest(request)
   if (blocked) return blocked
 
   let body: unknown

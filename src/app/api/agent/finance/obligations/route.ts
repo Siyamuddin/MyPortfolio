@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { z } from "zod"
-import { guardAgentRequest } from "@/lib/agent/auth"
+import { guardFinanceRequest } from "@/lib/finance/auth"
 import { getObligations, toggleObligation } from "@/lib/finance/supabase"
 
 const toggleSchema = z.object({
@@ -9,7 +9,7 @@ const toggleSchema = z.object({
 })
 
 export const GET = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardFinanceRequest(request)
   if (blocked) return blocked
 
   const data = await getObligations()
@@ -17,7 +17,7 @@ export const GET = async (request: NextRequest) => {
 }
 
 export const PATCH = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardFinanceRequest(request)
   if (blocked) return blocked
 
   let body: unknown

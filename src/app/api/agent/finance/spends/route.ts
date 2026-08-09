@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { z } from "zod"
-import { guardAgentRequest } from "@/lib/agent/auth"
+import { guardFinanceRequest } from "@/lib/finance/auth"
 import { getSpends, upsertSpend } from "@/lib/finance/supabase"
 
 const monthQuerySchema = z
@@ -20,7 +20,7 @@ const spendBodySchema = z.object({
 })
 
 export const GET = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardFinanceRequest(request)
   if (blocked) return blocked
 
   const monthParam = request.nextUrl.searchParams.get("month")
@@ -39,7 +39,7 @@ export const GET = async (request: NextRequest) => {
 }
 
 export const POST = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardFinanceRequest(request)
   if (blocked) return blocked
 
   let body: unknown

@@ -10,6 +10,7 @@ import type {
   ServiceRow,
   SkillRow,
 } from "@/lib/portfolio/types"
+import type { ContactMessageRow } from "@/lib/portfolio/types"
 import type { AdminCommentRow } from "@/components/admin/CommentsAdmin"
 
 export const getAdminRows = async () => {
@@ -76,6 +77,35 @@ export const getAdminComments = async (): Promise<AdminCommentRow[]> => {
   }
 
   return (data as AdminCommentRow[]) ?? []
+}
+
+export const getContactMessages = async (): Promise<ContactMessageRow[]> => {
+  if (!isSupabaseConfigured()) return []
+
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from("contact_messages")
+    .select("*")
+    .order("created_at", { ascending: false })
+
+  if (error) {
+    console.error("[admin] contact messages fetch failed", error.message)
+    return []
+  }
+
+  return (data as ContactMessageRow[]) ?? []
+}
+
+export const getUnreadMessageCount = async () => {
+  if (!isSupabaseConfigured()) return 0
+  const supabase = await createClient()
+  const { count, error } = await supabase
+    .from("contact_messages")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "unread")
+
+  if (error) return 0
+  return count ?? 0
 }
 
 export const getPendingCommentCount = async () => {

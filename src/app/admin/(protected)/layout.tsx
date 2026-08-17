@@ -1,7 +1,10 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { logoutAction } from "@/lib/portfolio/auth-actions"
-import { getPendingCommentCount } from "@/lib/portfolio/admin-data"
+import {
+  getPendingCommentCount,
+  getUnreadMessageCount,
+} from "@/lib/portfolio/admin-data"
 
 export const metadata: Metadata = {
   robots: {
@@ -27,13 +30,17 @@ const navItems = [
   { href: "/admin/blog", label: "Blog" },
   { href: "/admin/faq", label: "FAQ" },
   { href: "/admin/comments", label: "Comments" },
+  { href: "/admin/messages", label: "Messages" },
   { href: "/admin/finance", label: "Finance" },
 ]
 
 export default async function AdminProtectedLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const pendingComments = await getPendingCommentCount()
+  const [pendingComments, unreadMessages] = await Promise.all([
+    getPendingCommentCount(),
+    getUnreadMessageCount(),
+  ])
 
   return (
     <div className="min-h-screen bg-[#121214] text-white-2">
@@ -82,6 +89,11 @@ export default async function AdminProtectedLayout({
                   {item.href === "/admin/comments" && pendingComments > 0 ? (
                     <span className="rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] text-amber-300">
                       {pendingComments}
+                    </span>
+                  ) : null}
+                  {item.href === "/admin/messages" && unreadMessages > 0 ? (
+                    <span className="rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] text-amber-300">
+                      {unreadMessages}
                     </span>
                   ) : null}
                 </Link>

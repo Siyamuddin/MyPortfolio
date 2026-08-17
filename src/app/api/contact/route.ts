@@ -1,6 +1,8 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { z } from "zod"
+import { createServiceClient } from "@/lib/supabase/admin"
+import { isSupabaseConfigured } from "@/lib/supabase/env"
 
 const contactSchema = z.object({
   fullname: z.string().trim().min(2).max(100),
@@ -33,6 +35,71 @@ const isRateLimited = (ip: string) => {
   return entry.count > maxRequests
 }
 
+type ContactPayload = z.infer<typeof contactSchema>
+
+/** Store the submission so it is never lost, even when email delivery is off. */
+const persistMessage = async (payload: ContactPayload): Promise<boolean> => {
+  if (!isSupabaseConfigured() || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return false
+  }
+
+  try {
+    const supabase = createServiceClient()
+    const { error } = await supabase.from("contact_messages").insert({
+      fullname: payload.fullname,
+      email: payload.email,
+      message: payload.message,
+      status: "unread",
+    })
+
+    if (error) {
+      console.error("[contact] persist failed", error.message)
+      return false
+    }
+
+    return true
+  } catch (error) {
+    console.error("[contact] persist error", error)
+    return false
+  }
+}
+
+/** Attempt to forward the submission by email via Resend, if configured. */
+const sendEmail = async (payload: ContactPayload): Promise<boolean> => {
+  const resendApiKey = process.env.RESEND_API_KEY
+  if (!resendApiKey) return false
+
+  const toEmail = process.env.CONTACT_TO_EMAIL ?? "siyamuddin177@gmail.com"
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Portfolio Contact <onboarding@resend.dev>",
+        to: [toEmail],
+        reply_to: payload.email,
+        subject: `Portfolio message from ${payload.fullname}`,
+        text: `From: ${payload.fullname} <${payload.email}>\n\n${payload.message}`,
+      }),
+    })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error("[contact] Resend error:", errorText)
+      return false
+    }
+
+    return true
+  } catch (error) {
+    console.error("[contact] email error", error)
+    return false
+  }
+}
+
 export const POST = async (request: NextRequest) => {
   const ip = getClientIp(request)
 
@@ -60,49 +127,31 @@ export const POST = async (request: NextRequest) => {
     )
   }
 
-  const { fullname, email, message } = parsed.data
-  const resendApiKey = process.env.RESEND_API_KEY
-  const toEmail = process.env.CONTACT_TO_EMAIL ?? "siyamuddin177@gmail.com"
+  const payload = parsed.data
+  const canPersist =
+    isSupabaseConfigured() && Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY)
+  const canEmail = Boolean(process.env.RESEND_API_KEY)
 
-  if (!resendApiKey) {
-    console.info("[contact]", { fullname, email, message })
+  // Nothing is wired up to receive the message — log it and acknowledge politely.
+  if (!canPersist && !canEmail) {
+    console.info("[contact]", payload)
     return NextResponse.json({
       message:
         "Message received. Email delivery is not configured yet — I'll follow up soon.",
     })
   }
 
-  try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${resendApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: "Portfolio Contact <onboarding@resend.dev>",
-        to: [toEmail],
-        reply_to: email,
-        subject: `Portfolio message from ${fullname}`,
-        text: `From: ${fullname} <${email}>\n\n${message}`,
-      }),
-    })
+  const [stored, emailed] = await Promise.all([
+    persistMessage(payload),
+    sendEmail(payload),
+  ])
 
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error("[contact] Resend error:", errorText)
-      return NextResponse.json(
-        { message: "Failed to send message. Please try again later." },
-        { status: 502 }
-      )
-    }
-
+  if (stored || emailed) {
     return NextResponse.json({ message: "Message sent successfully." })
-  } catch (error) {
-    console.error("[contact] Unexpected error:", error)
-    return NextResponse.json(
-      { message: "Failed to send message. Please try again later." },
-      { status: 500 }
-    )
   }
+
+  return NextResponse.json(
+    { message: "Failed to send message. Please try again later." },
+    { status: 502 }
+  )
 }

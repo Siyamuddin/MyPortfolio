@@ -2,6 +2,7 @@ import { cache } from "react"
 import { unstable_cache } from "next/cache"
 import { createClient } from "@supabase/supabase-js"
 import { navPages } from "@/data/portfolio"
+import { sortBlogPostsByNewest } from "@/lib/portfolio/blog"
 import { resolveFeaturedProject } from "@/lib/portfolio/featured-project"
 import {
   mapBlogComment,
@@ -97,7 +98,9 @@ const fetchPortfolioFromSupabase = async (): Promise<PortfolioData> => {
       projects,
       profileRow.featured_project_id
     ),
-    blogPosts: ((blogResult.data ?? []) as BlogPostRow[]).map(mapBlogPost),
+    blogPosts: sortBlogPostsByNewest(
+      ((blogResult.data ?? []) as BlogPostRow[]).map(mapBlogPost)
+    ),
     faqs: ((faqsResult.data ?? []) as FaqRow[]).map(mapFaq),
     navPages,
     source: "supabase",

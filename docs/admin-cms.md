@@ -84,6 +84,7 @@ Use `/admin` sections:
 - **Blog** — slug, MDX body, draft/published
 - **FAQ** — About page accordion + FAQPage schema
 - **Comments** — approve/reject native comments
+- **Messages** — read/archive/delete contact form submissions
 - **Dashboard → Visitors** — page views + unique visitors by day / month / year
 
 Uploads go to the `portfolio` Storage bucket (`avatars/`, `projects/`, `blog/`, `skills/`, `resume/`).

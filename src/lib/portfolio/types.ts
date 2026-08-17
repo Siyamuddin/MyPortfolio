@@ -115,3 +115,14 @@ export type BlogCommentRow = {
   status: "pending" | "approved" | "rejected"
   created_at: string
 }
+
+export type ContactMessageStatus = "unread" | "read" | "archived"
+
+export type ContactMessageRow = {
+  id: string
+  fullname: string
+  email: string
+  message: string
+  status: ContactMessageStatus
+  created_at: string
+}

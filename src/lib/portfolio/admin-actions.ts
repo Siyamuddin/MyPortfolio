@@ -1,5 +1,6 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import {
   requireAdmin,
@@ -106,6 +107,8 @@ const faqSchema = z.object({
 })
 
 const commentStatusSchema = z.enum(["pending", "approved", "rejected"])
+
+const messageStatusSchema = z.enum(["unread", "read", "archived"])
 
 const parseJson = <T>(value: FormDataEntryValue | null, fallback: T): T => {
   if (typeof value !== "string" || !value) return fallback
@@ -275,6 +278,50 @@ export const deleteCommentAction = async (id: string): Promise<ActionResult> => 
     return {
       ok: false,
       error: error instanceof Error ? error.message : "Failed to delete comment",
+    }
+  }
+}
+
+export const updateMessageStatusAction = async (
+  id: string,
+  status: "unread" | "read" | "archived"
+): Promise<ActionResult> => {
+  try {
+    const { supabase } = await requireAdmin()
+    const parsedStatus = messageStatusSchema.parse(status)
+    const { error } = await supabase
+      .from("contact_messages")
+      .update({
+        status: parsedStatus,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+
+    if (error) return { ok: false, error: error.message }
+    revalidatePath("/admin/messages")
+    return { ok: true }
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "Failed to update message",
+    }
+  }
+}
+
+export const deleteMessageAction = async (id: string): Promise<ActionResult> => {
+  try {
+    const { supabase } = await requireAdmin()
+    const { error } = await supabase
+      .from("contact_messages")
+      .delete()
+      .eq("id", id)
+    if (error) return { ok: false, error: error.message }
+    revalidatePath("/admin/messages")
+    return { ok: true }
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "Failed to delete message",
     }
   }
 }

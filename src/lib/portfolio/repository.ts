@@ -130,14 +130,14 @@ export const getPortfolio = cache(async (): Promise<PortfolioData> => {
   return getCachedSupabasePortfolio()
 })
 
-export const getPortfolioFreshness = cache(async (): Promise<Date> => {
+export const getPortfolioFreshness = cache(async (): Promise<Date | undefined> => {
   if (!isSupabaseConfigured()) {
-    return new Date("2026-07-28T00:00:00.000Z")
+    return undefined
   }
 
   try {
     const supabase = createAnonClient()
-    if (!supabase) return new Date("2026-07-28T00:00:00.000Z")
+    if (!supabase) return undefined
 
     const tables = [
       "profile",
@@ -167,10 +167,10 @@ export const getPortfolioFreshness = cache(async (): Promise<Date> => {
       .map((value) => new Date(value as string).getTime())
       .filter((value) => !Number.isNaN(value))
 
-    if (timestamps.length === 0) return new Date()
+    if (results.some(result => result.error) || timestamps.length === 0) return undefined
     return new Date(Math.max(...timestamps))
   } catch {
-    return new Date()
+    return undefined
   }
 })
 
@@ -182,7 +182,7 @@ export const getBlogPostBySlug = cache(
 
     try {
       const supabase = createAnonClient()
-      if (!supabase) return getStaticBlogPostBySlug(slug)
+      if (!supabase) return null
 
       const { data, error } = await supabase
         .from("blog_posts")
@@ -192,11 +192,11 @@ export const getBlogPostBySlug = cache(
         .maybeSingle()
 
       if (error) throw error
-      if (!data) return getStaticBlogPostBySlug(slug)
+      if (!data) return null
       return mapBlogPost(data as BlogPostRow)
     } catch (error) {
       console.error("[blog] getBlogPostBySlug failed", error)
-      return getStaticBlogPostBySlug(slug)
+      return null
     }
   }
 )

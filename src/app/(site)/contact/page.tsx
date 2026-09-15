@@ -20,7 +20,7 @@ export default async function ContactRoute() {
     <>
       <JsonLdScript data={buildContactJsonLd(portfolio.profile)} />
       <JsonLdScript data={buildBreadcrumbJsonLd("Contact", "/contact")} />
-      <ContactPage />
+      <ContactPage profile={portfolio.profile} />
     </>
   )
 }

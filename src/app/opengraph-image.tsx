@@ -20,7 +20,7 @@ export default async function Image() {
           justifyContent: "center",
           padding: "72px",
           background:
-            "linear-gradient(145deg, #0a0a0b 0%, #1a1a1e 55%, #222226 100%)",
+            "#111210",
           color: "#e8e8ed",
           fontFamily: "sans-serif",
         }}
@@ -35,7 +35,7 @@ export default async function Image() {
             marginBottom: 24,
           }}
         >
-          Portfolio
+          Independent development & AI automation
         </div>
         <div
           style={{
@@ -57,7 +57,7 @@ export default async function Image() {
             marginBottom: 28,
           }}
         >
-          {profile.title}
+          Web applications. Mobile apps. AI automation.
         </div>
         <div
           style={{

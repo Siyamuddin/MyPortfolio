@@ -82,6 +82,7 @@ export const mapBlogPost = (row: BlogPostRow): BlogPost => ({
   category: row.category,
   date: row.date,
   dateTime: row.date_time,
+  updatedAt: row.updated_at,
   excerpt: row.excerpt,
   image: row.image,
   url: row.url ?? "",

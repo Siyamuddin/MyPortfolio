@@ -1,0 +1,121 @@
+[
+  {
+    "path": "/",
+    "title": "Siyam Uddin | Web, App Development &amp; AI Automation",
+    "canonical": [
+      "https://siyamuddin.com"
+    ],
+    "structuredData": 3
+  },
+  {
+    "path": "/portfolio",
+    "title": "Web, App &amp; Automation Projects | Siyam Uddin",
+    "canonical": [
+      "https://siyamuddin.com/portfolio"
+    ],
+    "structuredData": 3
+  },
+  {
+    "path": "/resume",
+    "title": "Resume | Siyam Uddin",
+    "canonical": [
+      "https://siyamuddin.com/resume"
+    ],
+    "structuredData": 3
+  },
+  {
+    "path": "/blog",
+    "title": "Software Engineering &amp; AI Writing | Siyam Uddin",
+    "canonical": [
+      "https://siyamuddin.com/blog"
+    ],
+    "structuredData": 3
+  },
+  {
+    "path": "/contact",
+    "title": "Discuss a Project | Siyam Uddin",
+    "canonical": [
+      "https://siyamuddin.com/contact"
+    ],
+    "structuredData": 3
+  },
+  {
+    "path": "/blog/agentic-ai-in-industrial-iot-security",
+    "title": "Agentic AI in Industrial IoT Security | Siyam Uddin",
+    "canonical": [
+      "https://siyamuddin.com/blog/agentic-ai-in-industrial-iot-security"
+    ],
+    "structuredData": 3
+  },
+  {
+    "asset": "/robots.txt",
+    "status": 200,
+    "type": "text/plain"
+  },
+  {
+    "asset": "/sitemap.xml",
+    "status": 200,
+    "type": "application/xml"
+  },
+  {
+    "asset": "/opengraph-image",
+    "status": 200,
+    "type": "image/png"
+  },
+  {
+    "asset": "/favicon.ico",
+    "status": 200,
+    "type": "image/x-icon"
+  },
+  {
+    "asset": "/favicon-16.png",
+    "status": 200,
+    "type": "image/png"
+  },
+  {
+    "asset": "/favicon-32.png",
+    "status": 200,
+    "type": "image/png"
+  },
+  {
+    "asset": "/favicon-48.webp",
+    "status": 200,
+    "type": "image/webp"
+  },
+  {
+    "asset": "/icon-192.png",
+    "status": 200,
+    "type": "image/png"
+  },
+  {
+    "asset": "/icon-512.png",
+    "status": 200,
+    "type": "image/png"
+  },
+  {
+    "asset": "/apple-touch-icon.png",
+    "status": 200,
+    "type": "image/png"
+  },
+  {
+    "asset": "/site.webmanifest",
+    "status": 200,
+    "type": "application/manifest+json"
+  },
+  {
+    "asset": "/resume.pdf",
+    "status": 200,
+    "type": "application/pdf"
+  },
+  {
+    "asset": "/images/preview-unavailable.svg",
+    "status": 200,
+    "type": "image/svg+xml"
+  },
+  {
+    "missingArticle": 404
+  },
+  {
+    "adminNoIndex": true
+  }
+]

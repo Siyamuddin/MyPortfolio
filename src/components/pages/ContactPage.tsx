@@ -1,30 +1,23 @@
-import { ContactForm } from "@/components/contact/ContactForm";
-import type { Profile } from "@/lib/types";
+import { SectionTitle } from "@/components/ui/SectionTitle"
+import { ContactForm } from "@/components/contact/ContactForm"
 
-export const ContactPage = ({ profile }: { profile: Profile }) => (
-  <article className="page-content" aria-labelledby="contact-title">
-    <header className="page-header">
-      <p className="eyebrow">Start a conversation</p>
-      <h1 id="contact-title">What are you working on?</h1>
-      <p>
-        A new product, a workflow that takes too long, or an existing
-        application that needs attention. Tell me about it.
-      </p>
-    </header>
-    <div className="contact-layout">
-      <aside className="contact-aside">
-        <h2>A little context goes a long way.</h2>
-        <p>
-          Share your goal, what you have so far, and your ideal timeline. If you
-          have a budget in mind, include it too.
-        </p>
-        <p>Prefer email?</p>
-        <a className="contact-email" href={`mailto:${profile.email}`}>
-          {profile.email}
-        </a>
-        <p className="meta">{profile.location}</p>
-      </aside>
-      <ContactForm />
-    </div>
-  </article>
-);
+export const ContactPage = () => {
+  return (
+    <article
+      id="contact-panel"
+      className="rounded-[20px] border border-jet bg-eerie-black-2 p-[15px] shadow-[var(--shadow-1)] min-[580px]:mx-auto min-[580px]:w-[520px] min-[580px]:p-[30px] min-[768px]:w-[700px] min-[1024px]:w-[950px] min-[1024px]:shadow-[var(--shadow-5)] min-[1250px]:w-auto min-[1250px]:min-h-full"
+      aria-labelledby="contact-title"
+    >
+      <header>
+        <SectionTitle as="h1">
+          <span id="contact-title">Contact</span>
+        </SectionTitle>
+      </header>
+
+      <section>
+        <h3 className="mb-5 text-lg capitalize text-white-2">Send Message</h3>
+        <ContactForm />
+      </section>
+    </article>
+  )
+}

@@ -23,13 +23,11 @@ export const PortfolioFilterList = ({ projects }: PortfolioFilterListProps) => {
   return (
     <section>
       <ProjectFilter value={filter} onChange={setFilter} />
-      <p className="sr-only" role="status">{filteredProjects.length} projects shown</p>
-      <ul className="project-grid">
+      <ul className="mb-2.5 grid grid-cols-1 gap-[30px] min-[768px]:grid-cols-2 min-[1024px]:grid-cols-3">
         {filteredProjects.map((project) => (
           <ProjectCard key={project.title} project={project} />
         ))}
       </ul>
-      {filteredProjects.length === 0 && <p>No projects in this category yet.</p>}
     </section>
   )
 }

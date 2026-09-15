@@ -28,7 +28,7 @@ export const mdxComponents: MDXComponents = {
   YouTube,
   CodeBlock,
   h1: (props) => (
-    <Heading as="h2" className="mb-4 mt-8 text-2xl min-[580px]:text-3xl" {...props} />
+    <Heading as="h1" className="mb-4 mt-8 text-2xl min-[580px]:text-3xl" {...props} />
   ),
   h2: (props) => (
     <Heading as="h2" className="mb-3 mt-8 text-xl min-[580px]:text-2xl" {...props} />

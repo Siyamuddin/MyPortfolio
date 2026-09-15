@@ -1,4 +1,3 @@
-import { isoDate } from "@/lib/seo/dates"
 import type { Education, Experience, Profile } from "@/lib/types"
 import { SITE_NAME, SITE_URL } from "@/lib/seo"
 
@@ -48,7 +47,31 @@ export const buildPersonNode = (
     ...(extras?.skills?.length
       ? { knowsAbout: extras.skills }
       : {}),
-
+    ...(extras?.education?.length
+      ? {
+          alumniOf: extras.education.map((item) => ({
+            "@type": "CollegeOrUniversity",
+            name: item.school,
+            ...(item.degree ? { description: item.degree } : {}),
+          })),
+        }
+      : {}),
+    ...(extras?.experience?.length
+      ? {
+          worksFor: extras.experience.map((item) => ({
+            "@type": "Organization",
+            name: item.company,
+          })),
+          hasOccupation: extras.experience.map((item) => ({
+            "@type": "Occupation",
+            name: item.role,
+            occupationLocation: {
+              "@type": "City",
+              name: item.location || profile.location,
+            },
+          })),
+        }
+      : {}),
   }
 }
 
@@ -183,7 +206,7 @@ export const buildBlogItemListJsonLd = (
       author: { "@id": PERSON_ID },
     }
     if (link) item.url = link
-    if (isoDate(post.dateTime)) item.datePublished = isoDate(post.dateTime)
+    if (post.dateTime) item.datePublished = post.dateTime
 
     return {
       "@type": "ListItem",
@@ -226,6 +249,6 @@ export const buildContactJsonLd = (profile: Profile) => ({
 export const JsonLdScript = ({ data }: { data: unknown }) => (
   <script
     type="application/ld+json"
-    dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }}
+    dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
   />
 )

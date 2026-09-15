@@ -42,7 +42,6 @@ export interface BlogPost {
   category: string
   date: string
   dateTime: string
-  updatedAt?: string
   excerpt: string
   image: string
   url: string

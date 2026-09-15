@@ -1,4 +1,3 @@
-import "../public.css"
 import { AnalyticsBeacon } from "@/components/analytics/AnalyticsBeacon"
 import { MainShell } from "@/components/layout/MainShell"
 import { getPortfolio } from "@/lib/portfolio/repository"

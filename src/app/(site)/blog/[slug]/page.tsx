@@ -1,4 +1,3 @@
-import { isoDate } from "@/lib/seo/dates"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { BlogArticle } from "@/components/blog/BlogArticle"
@@ -8,7 +7,7 @@ import {
   getBlogPostBySlug,
   getPortfolio,
 } from "@/lib/portfolio/repository"
-import { SITE_URL, OG_IMAGE, twitterHandleFromUrl } from "@/lib/seo"
+import { SITE_URL, twitterHandleFromUrl } from "@/lib/seo"
 import {
   buildBreadcrumbJsonLd,
   JsonLdScript,
@@ -30,11 +29,16 @@ export const generateMetadata = async ({
 }: PageProps): Promise<Metadata> => {
   const { slug } = await params
   const post = await getBlogPostBySlug(slug)
-  if (!post || !post.body.trim()) return { title: "Article not found", robots: { index: false, follow: false } }
+  if (!post) return {}
 
   const portfolio = await getPortfolio()
   const url = `${SITE_URL}/blog/${post.slug}`
-  const image = post.image.startsWith("http") ? post.image : post.image.startsWith("/") && !post.image.endsWith(".svg") ? `${SITE_URL}${post.image}` : OG_IMAGE.url
+  const image =
+    post.image.startsWith("http") || post.image.startsWith("/")
+      ? post.image.startsWith("http")
+        ? post.image
+        : `${SITE_URL}${post.image}`
+      : undefined
 
   return {
     title: post.title,
@@ -47,8 +51,7 @@ export const generateMetadata = async ({
       url,
       siteName: "Siyam Uddin Portfolio",
       locale: "en_US",
-      publishedTime: isoDate(post.dateTime),
-      modifiedTime: isoDate(post.updatedAt),
+      publishedTime: post.dateTime,
       images: image
         ? [{ url: image, alt: post.title }]
         : undefined,
@@ -68,23 +71,26 @@ export default async function BlogArticlePage({ params }: PageProps) {
   const post = await getBlogPostBySlug(slug)
   if (!post || !post.body.trim()) notFound()
 
-  const portfolio = await getPortfolio()
   const content = await renderMdx(post.body)
   const comments = post.id ? await getApprovedComments(post.id) : []
   const url = `${SITE_URL}/blog/${post.slug}`
-  const image = post.image.startsWith("http") ? post.image : post.image.startsWith("/") && !post.image.endsWith(".svg") ? `${SITE_URL}${post.image}` : OG_IMAGE.url
+  const image =
+    post.image.startsWith("http")
+      ? post.image
+      : post.image.startsWith("/")
+        ? `${SITE_URL}${post.image}`
+        : undefined
 
   const blogPosting = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
     description: post.excerpt,
-    datePublished: isoDate(post.dateTime),
-    dateModified: isoDate(post.updatedAt),
+    datePublished: post.dateTime,
     url,
     author: {
       "@type": "Person",
-      name: portfolio.profile.name,
+      name: "Siyam Uddin",
       url: SITE_URL,
     },
     mainEntityOfPage: url,

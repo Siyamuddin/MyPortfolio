@@ -1,4 +1,4 @@
-import { ContentImage } from "@/components/ui/ContentImage"
+import Image from "next/image"
 import Link from "next/link"
 import { NativeComments } from "@/components/blog/NativeComments"
 import { GiscusComments } from "@/components/blog/GiscusComments"
@@ -15,13 +15,20 @@ type BlogArticleProps = {
   comments: BlogComment[]
 }
 
+const placeholderSrc = (title: string) =>
+  `https://placehold.co/1200x630/1a1a1e/ffdb70?text=${encodeURIComponent(title.slice(0, 28))}`
+
 export const BlogArticle = ({ post, content, comments }: BlogArticleProps) => {
+  const imageSrc =
+    post.image.startsWith("http") || post.image.startsWith("/")
+      ? post.image
+      : placeholderSrc(post.title)
   const nativeEnabled = showNativeComments()
   const giscusEnabled = showGiscusComments() && Boolean(getGiscusConfig())
 
   return (
     <article
-      className="page-content article-page"
+      className="rounded-[20px] border border-jet bg-eerie-black-2 p-[15px] shadow-[var(--shadow-1)] min-[580px]:mx-auto min-[580px]:w-[520px] min-[580px]:p-[30px] min-[768px]:w-[700px] min-[1024px]:w-[950px] min-[1024px]:shadow-[var(--shadow-5)] min-[1250px]:w-auto"
       aria-labelledby="article-title"
     >
       <nav className="mb-6 text-sm text-light-gray-70" aria-label="Breadcrumb">
@@ -41,8 +48,8 @@ export const BlogArticle = ({ post, content, comments }: BlogArticleProps) => {
         </ol>
       </nav>
 
-      <header className="page-header">
-        <div className="meta flex flex-wrap items-center gap-2">
+      <header className="mb-6">
+        <div className="mb-3 flex flex-wrap items-center gap-2 text-sm text-light-gray-70">
           <span>{post.category}</span>
           <span className="h-1 w-1 rounded-full bg-light-gray-70" />
           <time dateTime={post.dateTime}>{post.date}</time>
@@ -58,7 +65,18 @@ export const BlogArticle = ({ post, content, comments }: BlogArticleProps) => {
         </p>
       </header>
 
-      <figure className="project-media article-cover"><ContentImage src={post.image} alt={post.title} sizes="(min-width: 800px) 760px, 100vw" priority /></figure>
+      <figure className="mb-8 overflow-hidden rounded-xl">
+        <Image
+          src={imageSrc}
+          alt={post.title}
+          width={1200}
+          height={630}
+          sizes="(min-width:1024px) 950px, 100vw"
+          className="h-auto w-full object-cover"
+          priority
+          unoptimized={imageSrc.includes("placehold.co")}
+        />
+      </figure>
 
       <div className="mdx-content">{content}</div>
 

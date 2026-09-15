@@ -6,8 +6,8 @@ export const profile: Profile = {
   email: "business@siyamuddin.com",
   location: "Seoul, South Korea",
   bio: [
-    "Results-driven Software Engineer with 3+ years of hands-on experience designing and operating large-scale production systems using Python, FastAPI, Java Spring Boot, React, and TypeScript. Proven track record of end-to-end delivery across AWS deployments, CI/CD automation, Redis caching, real-time WebSocket architecture, and JWT/OAuth2 security. Experienced integrating AI/ML technologies — including LangChain, RAG pipelines, and Whisper ASR — directly into production services.",
-    "Currently completing a B.Eng. in Computer Science & Engineering at Sejong University (graduating August 2026). Researching Agentic AI in Industrial IoT Security.",
+    "I build web and mobile applications, backend services, and AI integrations. My work includes flight booking, e-commerce, and automation tools, from the first API to deployment and monitoring.",
+    "My research interests include Agentic AI in Industrial IoT Security. I work with Java, Python, and TypeScript, choosing the tools to fit the problem.",
   ],
   bioHighlight: "Agentic AI in Industrial IoT Security",
   socials: {
@@ -28,22 +28,22 @@ export const featuredProjectTitle = "AirSeoul";
 export const services: Service[] = [
     {
     title: "AI/ML Solutions",
-    description: "Intelligent automation, Building Scalable AI agents, LLM integration/Tuning, and workflow automation with n8n,Open-claw, Hermes.",
+    description: "AI integrations, retrieval-based tools, and workflow automation that connect your data and existing applications.",
     icon: "Sparkles",
   },
   {
-    title: "Mobile Apps",
-    description: "Professional development of applications for Android and iOS using Flutter, Capacitor for rapid web to app conversion.",
-    icon: "Smartphone",
-  },
-  {
     title: "Web Development",
-    description: "High-quality scalable development of full-stack web applications with modern tools and frameworks.",
+    description: "Web applications with responsive interfaces, APIs, and databases, built with React, Next.js, and Spring Boot.",
     icon: "Code2",
   },
   {
+    title: "Mobile Apps",
+    description: "iOS and Android applications with Flutter or Capacitor, including the backend services they depend on.",
+    icon: "Smartphone",
+  },
+  {
     title: "Backend Development",
-    description: "High-performance backend services with reliable deployment on AWS, GCP.",
+    description: "APIs, data integrations, and cloud deployments with monitoring and automated delivery.",
     icon: "Server",
   },
 ];
@@ -81,7 +81,7 @@ export const education: Education[] = [
     school: "Sejong University",
     degree: "B.Eng. Computer Science & Engineering",
     period: "2022 — 2026",
-    description: "Final year B.Eng. in Computer Science & Engineering at Sejong University, Seoul. Research focus: Agentic AI in Industrial IoT Security. Graduating August 2026.",
+    description: "Computer Science & Engineering studies at Sejong University, Seoul. Research focus: Agentic AI in Industrial IoT Security.",
   },
 ];
 
@@ -120,7 +120,7 @@ export const projects: Project[] = [
   {
     title: "AirSeoul",
     category: "Web Development",
-    image: "/images/projects/portfolio.jpg",
+    image: "",
     url: "",
     githubUrl: "https://github.com/Siyamuddin",
     highlight: "50K+ req/hr",
@@ -129,7 +129,7 @@ export const projects: Project[] = [
   {
     title: "GlobalSellerket",
     category: "Web Development",
-    image: "/images/projects/n8n.jpg",
+    image: "",
     url: "https://shop.setlone.com",
     highlight: "Live on AWS",
     description: "Brand & influencer e-commerce platform with blockchain-based payment module deployed on AWS",
@@ -137,7 +137,7 @@ export const projects: Project[] = [
   {
     title: "SetlOne",
     category: "Applications",
-    image: "/images/projects/dashboard.jpg",
+    image: "",
     url: "https://setlone.com",
     highlight: "Real-time fintech",
     description: "Social networking + fintech platform with real-time features, WebSocket architecture, and Redis caching",
@@ -145,7 +145,7 @@ export const projects: Project[] = [
   {
     title: "Automation Tools",
     category: "Automation",
-    image: "/images/projects/ai-agent.jpg",
+    image: "",
     url: "",
     githubUrl: "https://github.com/Siyamuddin",
     highlight: "100+ users",
@@ -154,19 +154,12 @@ export const projects: Project[] = [
   {
     title: "Spring Boot API Service",
     category: "Applications",
-    image: "/images/projects/spring.jpg",
+    image: "",
     url: "",
     githubUrl: "https://github.com/Siyamuddin",
     description: "RESTful API service with Spring Boot, JPA, MySQL, Redis caching, and Docker containerization",
   },
-  {
-    title: "View More on GitHub →",
-    category: "Applications",
-    image: "/images/projects/more.jpg",
-    url: "https://github.com/Siyamuddin",
-    githubUrl: "https://github.com/Siyamuddin",
-    description: "Check out my full portfolio on GitHub",
-  },
+
 ];
 
 export const blogPosts: BlogPost[] = [
@@ -177,7 +170,7 @@ export const blogPosts: BlogPost[] = [
     dateTime: "2026-03",
     excerpt:
       "Exploring how autonomous AI agents can transform security monitoring and threat response in Industrial IoT environments.",
-    image: "/images/blog/agentic-ai.jpg",
+    image: "",
     url: "",
     slug: "agentic-ai-in-industrial-iot-security",
     status: "published",
@@ -212,7 +205,7 @@ Use agents for **triage and recommendation**, not silent destructive actions, un
     dateTime: "2026-02",
     excerpt:
       "A practical guide to using Spring AI starter for adding LLM capabilities to your Java backend applications.",
-    image: "/images/blog/spring-ai.jpg",
+    image: "",
     url: "",
     slug: "integrating-ai-into-spring-boot-with-spring-ai",
     status: "published",
@@ -244,7 +237,7 @@ MDX components like \`YouTube\` work here too when you register them in the app 
     dateTime: "2026-01",
     excerpt:
       "How I built a scalable automation infrastructure using n8n, Docker, and Cloudflare Tunnel.",
-    image: "/images/blog/n8n.jpg",
+    image: "",
     url: "",
     slug: "building-production-automation-pipelines-with-n8n",
     status: "published",
@@ -285,7 +278,7 @@ export const faqs: Faq[] = [
   {
     question: "Where can I read more of your writing?",
     answer:
-      "Published articles live under Blog. Drafts stay private in the admin CMS until they are ready.",
+      "You can find my articles on software engineering, AI, and automation under Writing.",
   },
 ]
 

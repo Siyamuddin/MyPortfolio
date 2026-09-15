@@ -1,14 +1,8 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
-import { z } from "zod"
+import { contactSchema, type ContactFormValues } from "@/lib/contact/validation"
 import { createServiceClient } from "@/lib/supabase/admin"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
-
-const contactSchema = z.object({
-  fullname: z.string().trim().min(2).max(100),
-  email: z.string().trim().email().max(200),
-  message: z.string().trim().min(10).max(5000),
-})
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
 
@@ -35,7 +29,7 @@ const isRateLimited = (ip: string) => {
   return entry.count > maxRequests
 }
 
-type ContactPayload = z.infer<typeof contactSchema>
+type ContactPayload = ContactFormValues
 
 /** Store the submission so it is never lost, even when email delivery is off. */
 const persistMessage = async (payload: ContactPayload): Promise<boolean> => {
@@ -132,13 +126,11 @@ export const POST = async (request: NextRequest) => {
     isSupabaseConfigured() && Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY)
   const canEmail = Boolean(process.env.RESEND_API_KEY)
 
-  // Nothing is wired up to receive the message — log it and acknowledge politely.
   if (!canPersist && !canEmail) {
-    console.info("[contact]", payload)
-    return NextResponse.json({
-      message:
-        "Message received. Email delivery is not configured yet — I'll follow up soon.",
-    })
+    return NextResponse.json(
+      { message: "The contact form is temporarily unavailable. Please use the email link instead." },
+      { status: 503 }
+    )
   }
 
   const [stored, emailed] = await Promise.all([

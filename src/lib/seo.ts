@@ -5,10 +5,10 @@ import type { NavPage } from "@/lib/types"
 export const SITE_URL = "https://siyamuddin.com"
 export const SITE_NAME = "Siyam Uddin Portfolio"
 export const OG_IMAGE = {
-  url: `${SITE_URL}/og-image.jpg`,
+  url: `${SITE_URL}/opengraph-image`,
   width: 1200,
   height: 630,
-  type: "image/jpeg",
+  type: "image/png",
   alt: "Siyam Uddin - Full-Stack Software Engineer Portfolio",
 }
 
@@ -22,7 +22,7 @@ export const pagePaths: Record<NavPage, string> = {
 
 export const pathToNavPage = (pathname: string): NavPage => {
   const normalized = pathname.replace(/\/$/, "") || "/"
-  const entry = Object.entries(pagePaths).find(([, path]) => path === normalized)
+  const entry = Object.entries(pagePaths).find(([, path]) => path === normalized || (path !== "/" && normalized.startsWith(`${path}/`)))
   return (entry?.[0] as NavPage) ?? "about"
 }
 
@@ -85,14 +85,10 @@ export const buildProfileAwarePageSeo = (
   page: NavPage
 ): Metadata => {
   const creator = twitterHandleFromUrl(profile.socials.twitter)
-  const bioExcerpt =
-    profile.bio[0]?.slice(0, 160).replace(/\s+/g, " ").trim() ||
-    `${profile.title} based in ${profile.location}.`
-
   const pages: Record<NavPage, PageSeoInput> = {
     about: {
-      title: `${profile.name} — ${profile.title} | Java Spring Boot & React Developer`,
-      description: bioExcerpt,
+      title: `${profile.name} | Web, App Development & AI Automation`,
+      description: `Freelance web and app development, AI integration, and workflow automation by ${profile.name}, based in ${profile.location}. Explore my work and discuss your project.`,
       path: "/",
       ogTitle: `${profile.name} — ${profile.title}`,
       absoluteTitle: true,
@@ -106,22 +102,22 @@ export const buildProfileAwarePageSeo = (
       twitterCreator: creator,
     },
     portfolio: {
-      title: "Portfolio",
+      title: "Web, App & Automation Projects",
       description: `Selected projects by ${profile.name} — production web apps, platforms, and AI automation.`,
       path: "/portfolio",
       ogTitle: `Portfolio | ${profile.name} — ${profile.title}`,
       twitterCreator: creator,
     },
     blog: {
-      title: "Blog",
+      title: "Software Engineering & AI Writing",
       description: `Articles and notes from ${profile.name} on software engineering, AI, and automation.`,
       path: "/blog",
       ogTitle: `Blog | ${profile.name} — ${profile.title}`,
       twitterCreator: creator,
     },
     contact: {
-      title: "Contact",
-      description: `Get in touch with ${profile.name} — ${profile.title} in ${profile.location}.`,
+      title: "Discuss a Project",
+      description: `Discuss web development, app development, or AI automation with ${profile.name}. Share your project goals, timeline, and requirements.`,
       path: "/contact",
       ogTitle: `Contact | ${profile.name} — ${profile.title}`,
       twitterCreator: creator,
@@ -130,49 +126,3 @@ export const buildProfileAwarePageSeo = (
 
   return buildPageMetadata(pages[page])
 }
-
-/** @deprecated Prefer buildProfileAwarePageSeo with getPortfolio() */
-export const pageSeo = {
-  about: buildPageMetadata({
-    title:
-      "Siyam Uddin — Full-Stack Software Engineer | Java Spring Boot & React Developer",
-    description:
-      "Full-Stack Software Engineer with 3+ years of experience in Java Spring Boot, React, TypeScript, AWS, Docker, and AI/ML. Based in Seoul, South Korea. Building production-grade systems serving 50K+ req/hr.",
-    path: "/",
-    ogTitle: "Siyam Uddin — Full-Stack Software Engineer",
-    absoluteTitle: true,
-    twitterCreator: "@siyamuddin",
-  }),
-  resume: buildPageMetadata({
-    title: "Resume",
-    description:
-      "Resume of Siyam Uddin — education at Sejong University and experience building production Spring Boot, React, and AWS systems in Seoul.",
-    path: "/resume",
-    ogTitle: "Resume | Siyam Uddin — Full-Stack Software Engineer",
-    twitterCreator: "@siyamuddin",
-  }),
-  portfolio: buildPageMetadata({
-    title: "Portfolio",
-    description:
-      "Selected projects by Siyam Uddin — AirSeoul flight booking, GlobalSellerket, SetlOne, and AI automation tools built with Spring Boot and React.",
-    path: "/portfolio",
-    ogTitle: "Portfolio | Siyam Uddin — Full-Stack Software Engineer",
-    twitterCreator: "@siyamuddin",
-  }),
-  blog: buildPageMetadata({
-    title: "Blog",
-    description:
-      "Articles and notes from Siyam Uddin on Agentic AI, Spring AI, n8n automation, and full-stack engineering.",
-    path: "/blog",
-    ogTitle: "Blog | Siyam Uddin — Full-Stack Software Engineer",
-    twitterCreator: "@siyamuddin",
-  }),
-  contact: buildPageMetadata({
-    title: "Contact",
-    description:
-      "Get in touch with Siyam Uddin — Full-Stack Software Engineer in Seoul available for Java, Spring Boot, React, and AI/ML projects.",
-    path: "/contact",
-    ogTitle: "Contact | Siyam Uddin — Full-Stack Software Engineer",
-    twitterCreator: "@siyamuddin",
-  }),
-} as const

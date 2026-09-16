@@ -2,6 +2,7 @@ import { ArrowUpRight } from "lucide-react"
 import { ContentImage as Image } from "@/components/portfolio/ContentImage"
 import type { Project } from "@/lib/types"
 import { projectPlaceholderSrc } from "@/lib/portfolio/project-image"
+import { getProjectLinks } from "@/lib/portfolio/project-links"
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg
@@ -19,11 +20,7 @@ type ProjectCardProps = {
 }
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
-  const isGithub = (value: string) => { try { return new URL(value).hostname === "github.com" } catch { return false } }
-  const validUrl = (value?: string) => value && /^https?:\/\//.test(value) ? value : null
-  const destination = validUrl(project.url)
-  const liveUrl = destination && !isGithub(destination) ? destination : null
-  const githubUrl = validUrl(project.githubUrl) || (destination && isGithub(destination) ? destination : null)
+  const { liveUrl, githubUrl } = getProjectLinks(project)
   const imageSrc =
     project.image.startsWith("http") || project.image.startsWith("/")
       ? project.image

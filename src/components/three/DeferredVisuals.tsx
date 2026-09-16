@@ -9,7 +9,7 @@ const Mockup = dynamic(() => import("./FeaturedProjectMockup").then((module) => 
 
 export const DeferredNetwork = (props: { className?: string; pointer: React.RefObject<{ x: number; y: number }> }) => {
   const enabled = useEnhancedVisuals()
-  return enabled ? <Network {...props} /> : <div className={`hero-glow-fallback pointer-events-none ${props.className ?? ""}`} aria-hidden="true" />
+  return enabled ? <Network {...props} /> : <div className={`hero-glow-fallback pointer-events-none absolute inset-0 ${props.className ?? ""}`} aria-hidden="true" />
 }
 
 export const DeferredProjectVisual = (props: { imageSrc: string; title: string; className?: string }) => {

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useTransition } from "react"
+import { formatTimestamp } from "@/lib/format-timestamp"
 import {
   deleteCommentAction,
   updateCommentStatusAction,
@@ -76,7 +77,7 @@ export const CommentsAdmin = ({ items }: CommentsAdminProps) => {
               dateTime={item.created_at}
               className="text-light-gray-70"
             >
-              {new Date(item.created_at).toLocaleString()}
+              {formatTimestamp(item.created_at)}
             </time>
           </div>
           <p className="mb-2 text-sm text-light-gray-70">

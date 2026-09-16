@@ -2,6 +2,14 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { sourceLoader } from './load-source.mjs';
 
+test('admin timestamps remain identical across server and browser time zones', () => {
+  const { formatTimestamp } = sourceLoader()('src/lib/format-timestamp.ts');
+  for (const value of ['2026-09-16T00:30:00Z', '2026-09-16T09:30:00+09:00', '2026-09-15T17:30:00-07:00']) {
+    assert.equal(formatTimestamp(value), '2026-09-16 00:30 UTC');
+  }
+  assert.equal(formatTimestamp('invalid'), 'Unknown date');
+});
+
 test('owner authorization is checked against the database and fails closed', async () => {
   const { isPortfolioAdmin } = sourceLoader()('src/lib/supabase/authorization.ts');
   assert.equal(await isPortfolioAdmin({ rpc: async () => ({ data: true, error: null }) }), true);

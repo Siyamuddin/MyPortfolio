@@ -15,12 +15,13 @@ This release preserves the existing public design and CMS content while repairin
 
 ## Verification
 
-- Clean `npm ci`; lint, 35 isolated regression tests, production build, and TypeScript checks pass.
+- Clean `npm ci`; lint, 36 isolated regression tests, production build, and TypeScript checks pass.
 - Dependency audit reports zero known vulnerabilities in the installed lockfile.
 - All migrations and owner/non-admin/anonymous database-policy tests pass in disposable PostgreSQL. CI repeats these checks on PostgreSQL 17.
 - Six public page types checked at actual widths 320, 390, 768, and 1440 pixels, with no horizontal overflow.
 - Public pages have one H1, canonical URLs, valid JSON-LD, and social images. Missing articles return 404/noindex; admin login remains noindex.
 - Production Data API denies anonymous access to comment emails, finance, inbox, raw analytics and analytics summaries. Public signup is confirmed disabled.
+- Live admin verification identified a server/browser timestamp mismatch. Comments and inbox now use explicit UTC timestamps, avoiding locale-dependent hydration errors.
 - Delivery tests use mocks. No real contact email, comment, finance entry, or new account was created.
 
 ## Database deployment and maintenance

@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== "development" || process.env.ALLOW_DESTRUCTIVE_SEED !== "true") {
+  throw new Error("Seeding requires NODE_ENV=development and ALLOW_DESTRUCTIVE_SEED=true. Never use production credentials.");
+}
 const { createClient } = require("@supabase/supabase-js")
 const { execFileSync } = require("child_process")
 const fs = require("fs")

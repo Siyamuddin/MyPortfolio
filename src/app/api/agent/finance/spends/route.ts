@@ -1,21 +1,21 @@
+import { amountSchema, monthSchema, dateSchema } from "@/lib/finance/validation"
+import { financeResponse } from "@/lib/finance/response"
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { guardFinanceRequest } from "@/lib/finance/auth"
 import { getSpends, upsertSpend } from "@/lib/finance/supabase"
 
-const monthQuerySchema = z
-  .string()
-  .regex(/^\d{4}-\d{2}$/, "month must be YYYY-MM")
+const monthQuerySchema = monthSchema
 
 const spendBodySchema = z.object({
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "date must be YYYY-MM-DD"),
-  food: z.coerce.number().finite().optional(),
-  transport: z.coerce.number().finite().optional(),
-  shopping: z.coerce.number().finite().optional(),
-  subscriptions: z.coerce.number().finite().optional(),
-  remittance: z.coerce.number().finite().optional(),
-  other: z.coerce.number().finite().optional(),
+  date: dateSchema,
+  food: amountSchema.optional(),
+  transport: amountSchema.optional(),
+  shopping: amountSchema.optional(),
+  subscriptions: amountSchema.optional(),
+  remittance: amountSchema.optional(),
+  other: amountSchema.optional(),
   note: z.string().max(5000).optional(),
 })
 
@@ -34,8 +34,7 @@ export const GET = async (request: NextRequest) => {
     }
   }
 
-  const data = await getSpends(monthParam ?? undefined)
-  return NextResponse.json({ ok: true, data })
+  return financeResponse(() => getSpends(monthParam ?? undefined))
 }
 
 export const POST = async (request: NextRequest) => {
@@ -64,13 +63,17 @@ export const POST = async (request: NextRequest) => {
     )
   }
 
-  const data = await upsertSpend(parsed.data)
-  if (!data) {
-    return NextResponse.json(
-      { ok: false, error: "Failed to upsert spend entry." },
-      { status: 503 }
-    )
-  }
+  try {
+    const data = await upsertSpend(parsed.data)
+    if (!data) {
+      return NextResponse.json(
+        { ok: false, error: "Failed to upsert spend entry." },
+        { status: 503 }
+      )
+    }
 
-  return NextResponse.json({ ok: true, data })
+    return NextResponse.json({ ok: true, data })
+  } catch {
+    return NextResponse.json({ ok: false, error: "Finance data is unavailable. Please try again." }, { status: 503 })
+  }
 }

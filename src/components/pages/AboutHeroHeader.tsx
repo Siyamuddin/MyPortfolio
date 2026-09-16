@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useRef } from "react"
 import { Download } from "lucide-react"
-import { AgenticNetworkBackground } from "@/components/three/AgenticNetworkBackground"
+import { DeferredNetwork } from "@/components/three/DeferredVisuals"
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow"
 import { SectionTitle } from "@/components/ui/SectionTitle"
 import type { Profile } from "@/lib/types"
@@ -35,7 +35,7 @@ export const AboutHeroHeader = ({ profile, resumeHref }: AboutHeroHeaderProps) =
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
     >
-      <AgenticNetworkBackground
+      <DeferredNetwork
         pointer={pointer}
         className="min-h-[260px] opacity-45 min-[768px]:min-h-[300px]"
       />

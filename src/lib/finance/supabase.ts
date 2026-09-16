@@ -129,7 +129,7 @@ const getAdminOrNull = () => {
   try {
     return createServiceClient()
   } catch {
-    return null
+    throw new Error("Finance database is unavailable")
   }
 }
 
@@ -144,7 +144,7 @@ const monthBounds = (month: string): { start: string; endExclusive: string } | n
   const start = `${match[1]}-${match[2]}-01`
   const nextYear = monthIndex === 12 ? year + 1 : year
   const nextMonth = monthIndex === 12 ? 1 : monthIndex + 1
-  const endExclusive = `${nextYear}-${String(nextMonth).padStart(2, "0")}-01`
+  const endExclusive = `${String(nextYear).padStart(4, "0")}-${String(nextMonth).padStart(2, "0")}-01`
   return { start, endExclusive }
 }
 
@@ -165,7 +165,7 @@ export const computeSpendTotal = (entry: {
 
 export const getSpends = async (month?: string): Promise<SpendEntry[]> => {
   const admin = getAdminOrNull()
-  if (!admin) return []
+  if (!admin) throw new Error("Finance database is not configured")
 
   try {
     let query = admin
@@ -177,15 +177,16 @@ export const getSpends = async (month?: string): Promise<SpendEntry[]> => {
 
     if (month) {
       const bounds = monthBounds(month)
-      if (!bounds) return []
+      if (!bounds) throw new Error("Invalid month")
       query = query.gte("date", bounds.start).lt("date", bounds.endExclusive)
     }
 
     const { data, error } = await query
-    if (error || !data) return []
+    if (error) throw error
+    if (!data) return []
     return (data as SpendRow[]).map(mapSpend)
   } catch {
-    return []
+    throw new Error("Finance database is unavailable")
   }
 }
 
@@ -204,7 +205,7 @@ export const upsertSpend = async (
   entry: UpsertSpendInput
 ): Promise<SpendEntry | null> => {
   const admin = getAdminOrNull()
-  if (!admin) return null
+  if (!admin) throw new Error("Finance database is not configured")
 
   const food = asNumber(entry.food)
   const transport = asNumber(entry.transport)
@@ -243,16 +244,17 @@ export const upsertSpend = async (
       )
       .single()
 
-    if (error || !data) return null
+    if (error) throw error
+    if (!data) return null
     return mapSpend(data as SpendRow)
   } catch {
-    return null
+    throw new Error("Finance database is unavailable")
   }
 }
 
 export const getConfig = async (): Promise<FinanceConfig | null> => {
   const admin = getAdminOrNull()
-  if (!admin) return null
+  if (!admin) throw new Error("Finance database is not configured")
 
   try {
     const { data, error } = await admin
@@ -263,10 +265,11 @@ export const getConfig = async (): Promise<FinanceConfig | null> => {
       .eq("id", 1)
       .maybeSingle()
 
-    if (error || !data) return null
+    if (error) throw error
+    if (!data) return null
     return mapConfig(data as ConfigRow)
   } catch {
-    return null
+    throw new Error("Finance database is unavailable")
   }
 }
 
@@ -274,7 +277,7 @@ export const updateConfig = async (
   partial: Partial<FinanceConfig>
 ): Promise<FinanceConfig | null> => {
   const admin = getAdminOrNull()
-  if (!admin) return null
+  if (!admin) throw new Error("Finance database is not configured")
 
   try {
     const existing = await getConfig()
@@ -306,16 +309,17 @@ export const updateConfig = async (
       )
       .single()
 
-    if (error || !data) return null
+    if (error) throw error
+    if (!data) return null
     return mapConfig(data as ConfigRow)
   } catch {
-    return null
+    throw new Error("Finance database is unavailable")
   }
 }
 
 export const getObligations = async (): Promise<Obligation[]> => {
   const admin = getAdminOrNull()
-  if (!admin) return []
+  if (!admin) throw new Error("Finance database is not configured")
 
   try {
     const { data, error } = await admin
@@ -323,10 +327,11 @@ export const getObligations = async (): Promise<Obligation[]> => {
       .select("id, name, amount, paid, due_date, priority")
       .order("priority", { ascending: true })
 
-    if (error || !data) return []
+    if (error) throw error
+    if (!data) return []
     return (data as ObligationRow[]).map(mapObligation)
   } catch {
-    return []
+    throw new Error("Finance database is unavailable")
   }
 }
 
@@ -334,7 +339,7 @@ export const toggleObligation = async (
   id: string
 ): Promise<Obligation | null> => {
   const admin = getAdminOrNull()
-  if (!admin) return null
+  if (!admin) throw new Error("Finance database is not configured")
 
   try {
     const { data: existing, error: readError } = await admin
@@ -343,7 +348,8 @@ export const toggleObligation = async (
       .eq("id", id)
       .maybeSingle()
 
-    if (readError || !existing) return null
+    if (readError) throw readError
+    if (!existing) return null
 
     const current = existing as ObligationRow
     const { data, error } = await admin
@@ -356,16 +362,17 @@ export const toggleObligation = async (
       .select("id, name, amount, paid, due_date, priority")
       .single()
 
-    if (error || !data) return null
+    if (error) throw error
+    if (!data) return null
     return mapObligation(data as ObligationRow)
   } catch {
-    return null
+    throw new Error("Finance database is unavailable")
   }
 }
 
 export const getGuidelines = async (): Promise<Guideline[]> => {
   const admin = getAdminOrNull()
-  if (!admin) return []
+  if (!admin) throw new Error("Finance database is not configured")
 
   try {
     const { data, error } = await admin
@@ -373,9 +380,10 @@ export const getGuidelines = async (): Promise<Guideline[]> => {
       .select("id, title, body, severity")
       .order("id", { ascending: true })
 
-    if (error || !data) return []
+    if (error) throw error
+    if (!data) return []
     return (data as GuidelineRow[]).map(mapGuideline)
   } catch {
-    return []
+    throw new Error("Finance database is unavailable")
   }
 }

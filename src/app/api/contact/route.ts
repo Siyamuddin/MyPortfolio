@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { z } from "zod"
+import { guardSubmissionRate } from "@/lib/rate-limit"
 import { createServiceClient } from "@/lib/supabase/admin"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
@@ -9,31 +10,6 @@ const contactSchema = z.object({
   email: z.string().trim().email().max(200),
   message: z.string().trim().min(10).max(5000),
 })
-
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
-
-const getClientIp = (request: NextRequest) => {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    request.headers.get("x-real-ip") ??
-    "unknown"
-  )
-}
-
-const isRateLimited = (ip: string) => {
-  const now = Date.now()
-  const windowMs = 60_000
-  const maxRequests = 5
-  const entry = rateLimitMap.get(ip)
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + windowMs })
-    return false
-  }
-
-  entry.count += 1
-  return entry.count > maxRequests
-}
 
 type ContactPayload = z.infer<typeof contactSchema>
 
@@ -53,13 +29,13 @@ const persistMessage = async (payload: ContactPayload): Promise<boolean> => {
     })
 
     if (error) {
-      console.error("[contact] persist failed", error.message)
+      console.error("[contact] persist failed", error.code)
       return false
     }
 
     return true
-  } catch (error) {
-    console.error("[contact] persist error", error)
+  } catch {
+    console.error("[contact] persistence unavailable")
     return false
   }
 }
@@ -88,28 +64,18 @@ const sendEmail = async (payload: ContactPayload): Promise<boolean> => {
     })
 
     if (!response.ok) {
-      const errorText = await response.text()
-      console.error("[contact] Resend error:", errorText)
+      console.error("[contact] email rejected", response.status)
       return false
     }
 
     return true
-  } catch (error) {
-    console.error("[contact] email error", error)
+  } catch {
+    console.error("[contact] email unavailable")
     return false
   }
 }
 
 export const POST = async (request: NextRequest) => {
-  const ip = getClientIp(request)
-
-  if (isRateLimited(ip)) {
-    return NextResponse.json(
-      { message: "Too many requests. Please try again later." },
-      { status: 429 }
-    )
-  }
-
   let body: unknown
 
   try {
@@ -132,14 +98,15 @@ export const POST = async (request: NextRequest) => {
     isSupabaseConfigured() && Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY)
   const canEmail = Boolean(process.env.RESEND_API_KEY)
 
-  // Nothing is wired up to receive the message — log it and acknowledge politely.
   if (!canPersist && !canEmail) {
-    console.info("[contact]", payload)
     return NextResponse.json({
       message:
-        "Message received. Email delivery is not configured yet — I'll follow up soon.",
-    })
+        "Messages are unavailable right now. Please use the email link.",
+    }, { status: 503 })
   }
+
+  const blocked = await guardSubmissionRate(request, "contact")
+  if (blocked) return blocked
 
   const [stored, emailed] = await Promise.all([
     persistMessage(payload),

@@ -34,7 +34,7 @@ export const ResumePage = ({
           <IconBox>
             <BookOpen className="h-4 w-4" />
           </IconBox>
-          <h3 className="text-lg capitalize text-white-2">Education</h3>
+          <h2 className="text-lg capitalize text-white-2">Education</h2>
         </div>
         <ol className="ml-[45px] text-sm min-[580px]:ml-[65px] min-[580px]:text-[15px]">
           {education.map((item) => (
@@ -54,7 +54,7 @@ export const ResumePage = ({
           <IconBox>
             <Briefcase className="h-4 w-4" />
           </IconBox>
-          <h3 className="text-lg capitalize text-white-2">Experience</h3>
+          <h2 className="text-lg capitalize text-white-2">Experience</h2>
         </div>
         <ol className="ml-[45px] text-sm min-[580px]:ml-[65px] min-[580px]:text-[15px]">
           {experience.map((item) => (

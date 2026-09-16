@@ -13,9 +13,9 @@ export const SkillsGrid = ({ skills }: SkillsGridProps) => {
     <div className="space-y-8">
       {groups.map((group) => (
         <div key={group.label}>
-          <h4 className="mb-4 text-center text-xs font-medium uppercase tracking-wider text-light-gray-70 min-[580px]:text-left">
+          <h3 className="mb-4 text-center text-xs font-medium uppercase tracking-wider text-light-gray-70 min-[580px]:text-left">
             {group.label}
-          </h4>
+          </h3>
           <ul className="flex flex-wrap items-center justify-center gap-4 min-[580px]:justify-start">
             {group.skills.map((skill) => (
               <SkillChip key={skill.name} skill={skill} />

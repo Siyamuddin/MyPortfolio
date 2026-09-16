@@ -56,7 +56,7 @@ export const DashboardClient = ({
           {!configured
             ? " (Supabase env vars missing — using static fallback)"
             : !hasProfile
-              ? " (no profile row yet — public site still uses static fallback until you seed or create a profile)"
+              ? " (no profile row yet — create a profile before publishing)"
               : ""}
         </p>
       </section>
@@ -88,7 +88,7 @@ export const DashboardClient = ({
 
       <AnalyticsPanel analytics={analytics} />
 
-      <section className="rounded-2xl border border-jet bg-eerie-black-2 p-6">
+      {process.env.NODE_ENV === "development" ? <section className="rounded-2xl border border-jet bg-eerie-black-2 p-6">
         <h3 className="mb-2 text-lg text-white-2">Import from static</h3>
         <p className="mb-4 text-sm text-light-gray">
           Replace all CMS rows with the current{" "}
@@ -110,7 +110,7 @@ export const DashboardClient = ({
             {message}
           </p>
         ) : null}
-      </section>
+      </section> : null}
     </div>
   )
 }

@@ -42,6 +42,7 @@ export interface BlogPost {
   category: string
   date: string
   dateTime: string
+  updatedAt?: string
   excerpt: string
   image: string
   url: string
@@ -61,7 +62,6 @@ export interface BlogComment {
   id: string
   postId: string
   authorName: string
-  authorEmail: string
   body: string
   status: "pending" | "approved" | "rejected"
   createdAt: string

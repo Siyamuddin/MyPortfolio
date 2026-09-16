@@ -1,7 +1,8 @@
-import { ArrowUpRight, Eye } from "lucide-react"
-import Image from "next/image"
+import { ArrowUpRight } from "lucide-react"
+import { ContentImage as Image } from "@/components/portfolio/ContentImage"
 import type { Project } from "@/lib/types"
-import { cn } from "@/lib/cn"
+import { projectPlaceholderSrc } from "@/lib/portfolio/project-image"
+import { getProjectLinks } from "@/lib/portfolio/project-links"
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg
@@ -18,27 +19,16 @@ type ProjectCardProps = {
   project: Project
 }
 
-const placeholderSrc = (title: string) =>
-  `https://placehold.co/600x400/1a1a1e/ffdb70?text=${encodeURIComponent(title.slice(0, 18))}`
-
 export const ProjectCard = ({ project }: ProjectCardProps) => {
-  const liveUrl = project.url.startsWith("http") ? project.url : null
-  const githubUrl = project.githubUrl?.startsWith("http")
-    ? project.githubUrl
-    : null
+  const { liveUrl, githubUrl } = getProjectLinks(project)
   const imageSrc =
     project.image.startsWith("http") || project.image.startsWith("/")
       ? project.image
-      : placeholderSrc(project.title)
+      : projectPlaceholderSrc()
 
   const media = (
     <>
-      <figure className="relative mb-4 h-[200px] w-full overflow-hidden rounded-2xl before:absolute before:inset-0 before:z-[1] before:bg-transparent before:transition-colors group-hover:before:bg-black/50 min-[450px]:h-auto min-[450px]:aspect-[3/2]">
-        {liveUrl || githubUrl ? (
-          <div className="absolute top-1/2 left-1/2 z-[1] -translate-x-1/2 -translate-y-1/2 scale-[0.8] rounded-xl bg-jet p-[18px] text-gold opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:scale-100">
-            <Eye className="h-5 w-5" aria-hidden="true" />
-          </div>
-        ) : null}
+      <figure className="relative mb-4 h-[200px] w-full overflow-hidden rounded-2xl before:absolute before:inset-0 before:z-[1] before:bg-transparent before:transition-colors min-[450px]:h-auto min-[450px]:aspect-[3/2]">
         <Image
           src={imageSrc}
           alt={project.title}
@@ -51,9 +41,9 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
       </figure>
       <div className="ml-2.5">
         <div className="mb-1 flex flex-wrap items-center gap-2">
-          <h3 className="text-[15px] font-normal capitalize leading-snug text-white-2">
+          <h2 className="text-[15px] font-normal capitalize leading-snug text-white-2">
             {project.title}
-          </h3>
+          </h2>
           {project.highlight ? (
             <span className="rounded-md bg-onyx px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-gold">
               {project.highlight}
@@ -69,16 +59,16 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         {(liveUrl || githubUrl) && (
           <div className="mt-3 flex flex-wrap gap-3 text-xs font-medium">
             {liveUrl ? (
-              <span className="inline-flex items-center gap-1 text-gold">
-                Live demo
+              <a href={liveUrl} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.title} website`} className="inline-flex min-h-11 items-center gap-1 text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
+                Visit website
                 <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-              </span>
+              </a>
             ) : null}
             {githubUrl && githubUrl !== liveUrl ? (
-              <span className="inline-flex items-center gap-1 text-light-gray-70">
+              <a href={githubUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} source on GitHub`} className="inline-flex min-h-11 items-center gap-1 text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
                 <GithubIcon className="h-3.5 w-3.5" />
                 Source
-              </span>
+              </a>
             ) : null}
           </div>
         )}
@@ -86,38 +76,5 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
     </>
   )
 
-  const cardClassName =
-    "group block w-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-
-  return (
-    <li className="scale-up motion-reduce:animate-none">
-      {liveUrl ? (
-        <a
-          href={liveUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cardClassName}
-          tabIndex={0}
-          aria-label={`View project ${project.title}`}
-        >
-          {media}
-        </a>
-      ) : githubUrl ? (
-        <a
-          href={githubUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cardClassName}
-          tabIndex={0}
-          aria-label={`View ${project.title} on GitHub`}
-        >
-          {media}
-        </a>
-      ) : (
-        <div className={cn(cardClassName, "cursor-default")} aria-label={project.title}>
-          {media}
-        </div>
-      )}
-    </li>
-  )
+  return <li className="group scale-up motion-reduce:animate-none">{media}</li>
 }

@@ -1,11 +1,8 @@
-import Image from "next/image"
+import { ContentImage as Image } from "@/components/portfolio/ContentImage"
 import Link from "next/link"
 import { SectionTitle } from "@/components/ui/SectionTitle"
 import { getBlogPostHref } from "@/lib/portfolio/blog"
 import type { BlogPost } from "@/lib/types"
-
-const placeholderSrc = (title: string) =>
-  `https://placehold.co/800x460/1a1a1e/ffdb70?text=${encodeURIComponent(title.slice(0, 20))}`
 
 type BlogPageProps = {
   blogPosts: BlogPost[]
@@ -30,7 +27,7 @@ export const BlogPage = ({ blogPosts }: BlogPageProps) => {
             const imageSrc =
               post.image.startsWith("http") || post.image.startsWith("/")
                 ? post.image
-                : placeholderSrc(post.title)
+                : "/images/project-placeholder.svg"
             const href = getBlogPostHref(post)
             const isExternal = Boolean(href?.startsWith("http"))
 
@@ -60,9 +57,9 @@ export const BlogPage = ({ blogPosts }: BlogPageProps) => {
                       {post.date}
                     </time>
                   </div>
-                  <h3 className="mb-2.5 line-clamp-2 text-lg leading-snug text-white-2 transition-colors group-hover:text-gold">
+                  <h2 className="mb-2.5 line-clamp-2 text-lg leading-snug text-white-2 transition-colors group-hover:text-gold">
                     {post.title}
-                  </h3>
+                  </h2>
                   <p className="line-clamp-3 text-sm font-light leading-relaxed text-light-gray min-[580px]:text-[15px]">
                     {post.excerpt}
                   </p>

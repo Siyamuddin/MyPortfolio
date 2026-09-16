@@ -1,3 +1,4 @@
+import { isPortfolioAdmin } from "@/lib/supabase/authorization"
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
@@ -30,21 +31,27 @@ export const updateSession = async (request: NextRequest) => {
     data: { user },
   } = await supabase.auth.getUser()
 
+  const isAdmin = Boolean(user && await isPortfolioAdmin(supabase))
+  const redirectWithCookies = (url: URL) => {
+    const response = NextResponse.redirect(url)
+    for (const cookie of supabaseResponse.cookies.getAll()) response.cookies.set(cookie)
+    return response
+  }
   const pathname = request.nextUrl.pathname
   const isAdminRoute = pathname.startsWith("/admin")
   const isLoginRoute = pathname === "/admin/login"
 
-  if (isAdminRoute && !isLoginRoute && !user) {
+  if (isAdminRoute && !isLoginRoute && !isAdmin) {
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = "/admin/login"
     redirectUrl.searchParams.set("next", pathname)
-    return NextResponse.redirect(redirectUrl)
+    return redirectWithCookies(redirectUrl)
   }
 
-  if (isLoginRoute && user) {
+  if (isLoginRoute && isAdmin) {
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = "/admin"
-    return NextResponse.redirect(redirectUrl)
+    return redirectWithCookies(redirectUrl)
   }
 
   return supabaseResponse

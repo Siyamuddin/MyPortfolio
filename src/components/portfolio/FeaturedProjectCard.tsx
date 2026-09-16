@@ -1,9 +1,10 @@
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
-import Image from "next/image"
-import { FeaturedProjectVisual } from "@/components/three/FeaturedProjectMockup"
+import { ContentImage as Image } from "@/components/portfolio/ContentImage"
+import { DeferredProjectVisual } from "@/components/three/DeferredVisuals"
 import { cn } from "@/lib/cn"
 import { resolveProjectImageSrc } from "@/lib/portfolio/project-image"
+import { getProjectLinks } from "@/lib/portfolio/project-links"
 import type { Project } from "@/lib/types"
 
 const GithubIcon = ({ className }: { className?: string }) => (
@@ -26,22 +27,10 @@ export const FeaturedProjectCard = ({
   project,
   variant = "default",
 }: FeaturedProjectCardProps) => {
-  const imageSrc = resolveProjectImageSrc(project.image, project.title)
-  const liveUrl =
-    project.url.startsWith("http") &&
-    (!project.githubUrl || project.url !== project.githubUrl)
-      ? project.url
-      : project.url.startsWith("http")
-        ? project.url
-        : null
-  const githubUrl = project.githubUrl?.startsWith("http")
-    ? project.githubUrl
-    : null
-  const showLive = Boolean(
-    project.url.startsWith("http") &&
-      (!githubUrl || project.url !== githubUrl)
-  )
-  const showGithub = Boolean(githubUrl)
+  const imageSrc = resolveProjectImageSrc(project.image)
+  const { liveUrl, githubUrl } = getProjectLinks(project)
+  const showLive = Boolean(liveUrl)
+  const showGithub = Boolean(githubUrl && githubUrl !== liveUrl)
 
   return (
     <article
@@ -60,7 +49,7 @@ export const FeaturedProjectCard = ({
           )}
         >
           {variant === "showcase" ? (
-            <FeaturedProjectVisual imageSrc={imageSrc} title={project.title} />
+            <DeferredProjectVisual imageSrc={imageSrc} title={project.title} />
           ) : (
             <Image
               src={imageSrc}
@@ -90,11 +79,11 @@ export const FeaturedProjectCard = ({
                 href={liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-gold px-4 py-2 text-sm font-medium text-smoky-black transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-gold px-4 py-2 text-sm font-medium text-smoky-black transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
                 tabIndex={0}
-                aria-label={`View live demo of ${project.title}`}
+                aria-label={`Visit ${project.title} website`}
               >
-                Live demo
+                Visit website
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </a>
             ) : null}
@@ -104,7 +93,7 @@ export const FeaturedProjectCard = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold",
+                  "inline-flex min-h-11 items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold",
                   showLive
                     ? "border border-jet text-white-2 hover:border-gold/50 hover:text-gold"
                     : "bg-gold text-smoky-black hover:opacity-90"
@@ -118,7 +107,7 @@ export const FeaturedProjectCard = ({
             ) : null}
             <Link
               href="/portfolio"
-              className="inline-flex items-center gap-1 text-sm text-light-gray-70 underline-offset-2 transition-colors hover:text-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+              className="inline-flex min-h-11 items-center gap-1 text-sm text-light-gray-70 underline-offset-2 transition-colors hover:text-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
               tabIndex={0}
               aria-label="View all portfolio projects"
             >

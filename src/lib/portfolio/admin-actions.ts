@@ -392,6 +392,10 @@ export const uploadFileAction = async (
 }
 
 export const seedFromStaticAction = async (): Promise<ActionResult> => {
+  if (process.env.NODE_ENV !== "development" || process.env.ALLOW_DESTRUCTIVE_SEED !== "true") {
+    return { ok: false, error: "Static seeding is disabled outside explicitly enabled development environments." }
+  }
+
   try {
     await requireAdmin()
 

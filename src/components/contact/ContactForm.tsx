@@ -8,9 +8,9 @@ import { z } from "zod"
 import { cn } from "@/lib/cn"
 
 const contactSchema = z.object({
-  fullname: z.string().trim().min(2, "Name must be at least 2 characters"),
-  email: z.string().trim().email("Enter a valid email address"),
-  message: z.string().trim().min(10, "Message must be at least 10 characters"),
+  fullname: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
+  email: z.string().trim().email("Enter a valid email address").max(200),
+  message: z.string().trim().min(10, "Message must be at least 10 characters").max(5000),
 })
 
 type ContactFormValues = z.infer<typeof contactSchema>
@@ -68,18 +68,20 @@ export const ContactForm = () => {
       noValidate
       aria-label="Contact form"
     >
+      <p id="message-guidance" className="mb-6 text-sm leading-relaxed text-light-gray">Tell me your project goal and timeline. Include a budget if you have one in mind.</p>
       <div className="mb-6 grid grid-cols-1 gap-6 min-[580px]:mb-8 min-[580px]:grid-cols-2 min-[580px]:gap-[30px]">
         <div>
-          <label htmlFor="fullname" className="sr-only">
+          <label htmlFor="fullname" className="mb-2 block text-sm text-white-2">
             Full name
           </label>
           <input
             id="fullname"
+            maxLength={100}
             type="text"
             placeholder="Full name"
             autoComplete="name"
             className={cn(
-              "w-full rounded-[14px] border border-jet bg-transparent px-5 py-3 text-sm font-normal text-white-2 placeholder:font-medium placeholder:text-light-gray-70 focus:border-gold focus:outline-none min-[580px]:px-5 min-[580px]:py-4",
+              "w-full rounded-[14px] border border-[#777780] bg-transparent px-5 py-3 text-base font-normal text-white-2 placeholder:font-medium placeholder:text-light-gray-70 focus:border-gold focus:outline-none min-[580px]:px-5 min-[580px]:py-4",
               errors.fullname && "border-red-400"
             )}
             aria-invalid={Boolean(errors.fullname)}
@@ -94,16 +96,17 @@ export const ContactForm = () => {
         </div>
 
         <div>
-          <label htmlFor="email" className="sr-only">
+          <label htmlFor="email" className="mb-2 block text-sm text-white-2">
             Email address
           </label>
           <input
             id="email"
+            maxLength={200}
             type="email"
             placeholder="Email address"
             autoComplete="email"
             className={cn(
-              "w-full rounded-[14px] border border-jet bg-transparent px-5 py-3 text-sm font-normal text-white-2 placeholder:font-medium placeholder:text-light-gray-70 focus:border-gold focus:outline-none min-[580px]:px-5 min-[580px]:py-4",
+              "w-full rounded-[14px] border border-[#777780] bg-transparent px-5 py-3 text-base font-normal text-white-2 placeholder:font-medium placeholder:text-light-gray-70 focus:border-gold focus:outline-none min-[580px]:px-5 min-[580px]:py-4",
               errors.email && "border-red-400"
             )}
             aria-invalid={Boolean(errors.email)}
@@ -119,19 +122,20 @@ export const ContactForm = () => {
       </div>
 
       <div className="mb-6 min-[580px]:mb-8">
-        <label htmlFor="message" className="sr-only">
+        <label htmlFor="message" className="mb-2 block text-sm text-white-2">
           Your message
         </label>
         <textarea
           id="message"
+          maxLength={5000}
           placeholder="Your message"
           rows={5}
           className={cn(
-            "min-h-[100px] max-h-[200px] w-full resize-y rounded-[14px] border border-jet bg-transparent px-5 py-3 text-sm font-normal text-white-2 placeholder:font-medium placeholder:text-light-gray-70 focus:border-gold focus:outline-none min-[580px]:px-5 min-[580px]:py-4",
+            "min-h-[100px] max-h-[200px] w-full resize-y rounded-[14px] border border-[#777780] bg-transparent px-5 py-3 text-base font-normal text-white-2 placeholder:font-medium placeholder:text-light-gray-70 focus:border-gold focus:outline-none min-[580px]:px-5 min-[580px]:py-4",
             errors.message && "border-red-400"
           )}
           aria-invalid={Boolean(errors.message)}
-          aria-describedby={errors.message ? "message-error" : undefined}
+          aria-describedby={errors.message ? "message-guidance message-error" : "message-guidance"}
           {...register("message")}
         />
         {errors.message ? (

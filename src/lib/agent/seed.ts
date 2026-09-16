@@ -12,6 +12,11 @@ export const SEED_CONFIRM = "SEED_FROM_STATIC"
 export const seedFromStatic = async (
   confirm: string
 ): Promise<{ ok: true } | AgentFail> => {
+
+  if (process.env.NODE_ENV !== "development" || process.env.ALLOW_DESTRUCTIVE_SEED !== "true") {
+    return { ok: false, error: "Static seeding is disabled outside explicitly enabled development environments.", status: 403 }
+  }
+
   if (confirm !== SEED_CONFIRM) {
     return {
       ok: false,

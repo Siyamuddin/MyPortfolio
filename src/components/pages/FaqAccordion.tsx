@@ -30,7 +30,7 @@ export const FaqAccordion = ({ faqs }: FaqAccordionProps) => {
 
   return (
     <section className="mt-10 mb-2" aria-labelledby="faq-title">
-      <SectionTitle as="h3">
+      <SectionTitle section>
         <span id="faq-title">FAQ</span>
       </SectionTitle>
       <ul className="space-y-3">

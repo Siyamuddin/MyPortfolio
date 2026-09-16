@@ -1,3 +1,4 @@
+import { isPortfolioAdmin } from "@/lib/supabase/authorization"
 import { createServerClient } from "@supabase/ssr"
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
@@ -49,7 +50,7 @@ export const guardFinanceRequest = async (
       data: { user },
     } = await supabase.auth.getUser()
 
-    if (user) return null
+    if (user && await isPortfolioAdmin(supabase)) return null
     return unauthorized()
   }
 

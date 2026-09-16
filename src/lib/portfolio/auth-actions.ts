@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { PORTFOLIO_CACHE_TAG } from "@/lib/portfolio/repository"
+import { isPortfolioAdmin } from "@/lib/supabase/authorization"
 import { createClient } from "@/lib/supabase/server"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
@@ -23,7 +24,7 @@ export const requireAdmin = async () => {
     error,
   } = await supabase.auth.getUser()
 
-  if (error || !user) {
+  if (error || !user || !(await isPortfolioAdmin(supabase))) {
     throw new Error("Unauthorized")
   }
 
@@ -50,6 +51,11 @@ export const loginAction = async (
 
   if (error) {
     return { ok: false, error: error.message }
+  }
+
+  if (!(await isPortfolioAdmin(supabase))) {
+    await supabase.auth.signOut()
+    return { ok: false, error: "This account does not have access to the portfolio admin." }
   }
 
   redirect("/admin")

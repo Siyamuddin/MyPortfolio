@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import Image from "next/image"
-import { FeaturedProjectVisual } from "@/components/three/FeaturedProjectMockup"
+import { DeferredProjectVisual } from "@/components/three/DeferredVisuals"
 import { cn } from "@/lib/cn"
 import { resolveProjectImageSrc } from "@/lib/portfolio/project-image"
 import type { Project } from "@/lib/types"
@@ -26,7 +26,7 @@ export const FeaturedProjectCard = ({
   project,
   variant = "default",
 }: FeaturedProjectCardProps) => {
-  const imageSrc = resolveProjectImageSrc(project.image, project.title)
+  const imageSrc = resolveProjectImageSrc(project.image)
   const liveUrl =
     project.url.startsWith("http") &&
     (!project.githubUrl || project.url !== project.githubUrl)
@@ -60,7 +60,7 @@ export const FeaturedProjectCard = ({
           )}
         >
           {variant === "showcase" ? (
-            <FeaturedProjectVisual imageSrc={imageSrc} title={project.title} />
+            <DeferredProjectVisual imageSrc={imageSrc} title={project.title} />
           ) : (
             <Image
               src={imageSrc}

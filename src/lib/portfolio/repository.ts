@@ -74,7 +74,7 @@ const fetchPortfolioFromSupabase = async (): Promise<PortfolioData> => {
   ])
 
   if (profileResult.error) throw profileResult.error
-  if (!profileResult.data) return getStaticPortfolio()
+  if (!profileResult.data) throw new Error("Profile is unavailable")
 
   if (servicesResult.error) throw servicesResult.error
   if (skillsResult.error) throw skillsResult.error
@@ -112,8 +112,8 @@ const getCachedSupabasePortfolio = unstable_cache(
     try {
       return await fetchPortfolioFromSupabase()
     } catch (error) {
-      console.error("[portfolio] Supabase fetch failed, using static fallback", error)
-      return getStaticPortfolio()
+      console.error("[portfolio] Supabase fetch failed", error)
+      throw new Error("Portfolio content is temporarily unavailable")
     }
   },
   ["portfolio-data"],
@@ -130,14 +130,14 @@ export const getPortfolio = cache(async (): Promise<PortfolioData> => {
   return getCachedSupabasePortfolio()
 })
 
-export const getPortfolioFreshness = cache(async (): Promise<Date> => {
+export const getPortfolioFreshness = cache(async (): Promise<Date | undefined> => {
   if (!isSupabaseConfigured()) {
-    return new Date("2026-07-28T00:00:00.000Z")
+    return undefined
   }
 
   try {
     const supabase = createAnonClient()
-    if (!supabase) return new Date("2026-07-28T00:00:00.000Z")
+    if (!supabase) return undefined
 
     const tables = [
       "profile",
@@ -167,10 +167,10 @@ export const getPortfolioFreshness = cache(async (): Promise<Date> => {
       .map((value) => new Date(value as string).getTime())
       .filter((value) => !Number.isNaN(value))
 
-    if (timestamps.length === 0) return new Date()
+    if (timestamps.length === 0) return undefined
     return new Date(Math.max(...timestamps))
   } catch {
-    return new Date()
+    return undefined
   }
 })
 
@@ -182,7 +182,7 @@ export const getBlogPostBySlug = cache(
 
     try {
       const supabase = createAnonClient()
-      if (!supabase) return getStaticBlogPostBySlug(slug)
+      if (!supabase) return null
 
       const { data, error } = await supabase
         .from("blog_posts")
@@ -192,11 +192,11 @@ export const getBlogPostBySlug = cache(
         .maybeSingle()
 
       if (error) throw error
-      if (!data) return getStaticBlogPostBySlug(slug)
+      if (!data) return null
       return mapBlogPost(data as BlogPostRow)
     } catch (error) {
       console.error("[blog] getBlogPostBySlug failed", error)
-      return getStaticBlogPostBySlug(slug)
+      throw new Error("Article content is temporarily unavailable")
     }
   }
 )
@@ -211,13 +211,13 @@ export const getApprovedComments = cache(
 
       const { data, error } = await supabase
         .from("blog_comments")
-        .select("*")
+        .select("id, post_id, author_name, body, status, created_at")
         .eq("post_id", postId)
         .eq("status", "approved")
         .order("created_at", { ascending: true })
 
       if (error) throw error
-      return ((data ?? []) as BlogCommentRow[]).map(mapBlogComment)
+      return ((data ?? []) as Omit<BlogCommentRow, "author_email">[]).map(mapBlogComment)
     } catch (error) {
       console.error("[blog] getApprovedComments failed", error)
       return []

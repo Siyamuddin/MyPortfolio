@@ -2,13 +2,13 @@ import type { MetadataRoute } from "next"
 import { getPortfolio, getPortfolioFreshness } from "@/lib/portfolio/repository"
 import { SITE_URL } from "@/lib/seo"
 
-const toLastModified = (value: string | Date | undefined, fallback: Date) => {
-  if (!value) return fallback
+const toLastModified = (value: string | Date | undefined) => {
+  if (!value) return undefined
   if (value instanceof Date) {
-    return Number.isNaN(value.getTime()) ? fallback : value
+    return Number.isNaN(value.getTime()) ? undefined : value
   }
   const parsed = new Date(value)
-  return Number.isNaN(parsed.getTime()) ? fallback : parsed
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -16,13 +16,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getPortfolioFreshness(),
     getPortfolio(),
   ])
-  const lastModified = toLastModified(siteFreshness, new Date("2026-07-28"))
+  const lastModified = toLastModified(siteFreshness)
 
   const articleEntries = portfolio.blogPosts
     .filter((post) => post.status === "published" && post.body.trim() && post.slug)
     .map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
-      lastModified: toLastModified(post.dateTime, lastModified),
+      lastModified: toLastModified(post.updatedAt),
       changeFrequency: "monthly" as const,
       priority: 0.65,
     }))

@@ -18,12 +18,7 @@ export const notifyPendingComment = async ({
   const excerpt = body.length > 280 ? `${body.slice(0, 277)}…` : body
 
   if (!resendApiKey) {
-    console.info("[blog-comment] pending (email not configured)", {
-      postTitle,
-      authorName,
-      authorEmail,
-      excerpt,
-    })
+    console.info("[blog-comment] notification delivery is not configured")
     return
   }
 

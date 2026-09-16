@@ -1,10 +1,13 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { logoutAction } from "@/lib/portfolio/auth-actions"
+import { redirect } from "next/navigation"
+import { logoutAction, requireAdmin } from "@/lib/portfolio/auth-actions"
 import {
   getPendingCommentCount,
   getUnreadMessageCount,
 } from "@/lib/portfolio/admin-data"
+
+export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   robots: {
@@ -37,6 +40,7 @@ const navItems = [
 export default async function AdminProtectedLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  try { await requireAdmin() } catch { redirect("/admin/login") }
   const [pendingComments, unreadMessages] = await Promise.all([
     getPendingCommentCount(),
     getUnreadMessageCount(),
@@ -86,12 +90,13 @@ export default async function AdminProtectedLayout({
                   aria-label={`Manage ${item.label}`}
                 >
                   {item.label}
-                  {item.href === "/admin/comments" && pendingComments > 0 ? (
+                  {((item.href === "/admin/comments" && pendingComments === null) || (item.href === "/admin/messages" && unreadMessages === null)) ? <span aria-label="Count unavailable" title="Count unavailable">!</span> : null}
+                  {item.href === "/admin/comments" && pendingComments !== null && pendingComments > 0 ? (
                     <span className="rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] text-amber-300">
                       {pendingComments}
                     </span>
                   ) : null}
-                  {item.href === "/admin/messages" && unreadMessages > 0 ? (
+                  {item.href === "/admin/messages" && unreadMessages !== null && unreadMessages > 0 ? (
                     <span className="rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] text-amber-300">
                       {unreadMessages}
                     </span>

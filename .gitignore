@@ -37,10 +37,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Supabase CLI local state
+supabase/.temp/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
 # Hermes paste-ready skills with embedded secrets
 hermes/skills/*.PASTE.md
-

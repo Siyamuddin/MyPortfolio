@@ -1,3 +1,4 @@
+import { financeResponse } from "@/lib/finance/response"
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { z } from "zod"
@@ -12,8 +13,7 @@ export const GET = async (request: NextRequest) => {
   const blocked = await guardFinanceRequest(request)
   if (blocked) return blocked
 
-  const data = await getObligations()
-  return NextResponse.json({ ok: true, data })
+  return financeResponse(() => getObligations())
 }
 
 export const PATCH = async (request: NextRequest) => {
@@ -42,13 +42,17 @@ export const PATCH = async (request: NextRequest) => {
     )
   }
 
-  const data = await toggleObligation(parsed.data.id)
-  if (!data) {
-    return NextResponse.json(
-      { ok: false, error: "Obligation not found or database unavailable." },
-      { status: 404 }
-    )
-  }
+  try {
+    const data = await toggleObligation(parsed.data.id)
+    if (!data) {
+      return NextResponse.json(
+        { ok: false, error: "Obligation not found or database unavailable." },
+        { status: 404 }
+      )
+    }
 
-  return NextResponse.json({ ok: true, data })
+    return NextResponse.json({ ok: true, data })
+  } catch {
+    return NextResponse.json({ ok: false, error: "Finance data is unavailable. Please try again." }, { status: 503 })
+  }
 }

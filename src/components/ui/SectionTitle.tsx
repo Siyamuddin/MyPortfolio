@@ -4,6 +4,7 @@ type SectionTitleProps = {
   children: React.ReactNode
   as?: "h1" | "h2" | "h3"
   className?: string
+  section?: boolean
 }
 
 const pageTitleClassName =
@@ -13,7 +14,10 @@ export const SectionTitle = ({
   children,
   as = "h2",
   className,
+  section = false,
 }: SectionTitleProps) => {
+  if (section) return <h2 className={cn("mb-5 text-lg capitalize text-white-2", className)}>{children}</h2>
+
   if (as === "h3") {
     return (
       <h3 className={cn("mb-5 text-lg capitalize text-white-2", className)}>

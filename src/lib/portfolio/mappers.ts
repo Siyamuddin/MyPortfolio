@@ -82,6 +82,7 @@ export const mapBlogPost = (row: BlogPostRow): BlogPost => ({
   category: row.category,
   date: row.date,
   dateTime: row.date_time,
+  updatedAt: row.updated_at,
   excerpt: row.excerpt,
   image: row.image,
   url: row.url ?? "",
@@ -97,11 +98,10 @@ export const mapFaq = (row: FaqRow): Faq => ({
   sortOrder: row.sort_order,
 })
 
-export const mapBlogComment = (row: BlogCommentRow): BlogComment => ({
+export const mapBlogComment = (row: Omit<BlogCommentRow, "author_email">): BlogComment => ({
   id: row.id,
   postId: row.post_id,
   authorName: row.author_name,
-  authorEmail: row.author_email,
   body: row.body,
   status: row.status,
   createdAt: row.created_at,

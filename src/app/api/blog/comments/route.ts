@@ -1,7 +1,8 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { z } from "zod"
-import { createClient } from "@supabase/supabase-js"
+import { createServiceClient } from "@/lib/supabase/admin"
+import { guardSubmissionRate } from "@/lib/rate-limit"
 import { notifyPendingComment } from "@/lib/comments/notify"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
@@ -13,54 +14,7 @@ const commentSchema = z.object({
   website: z.string().optional(),
 })
 
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
-
-const getClientIp = (request: NextRequest) =>
-  request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-  request.headers.get("x-real-ip") ??
-  "unknown"
-
-const isRateLimited = (ip: string) => {
-  const now = Date.now()
-  const windowMs = 60_000
-  const maxRequests = 5
-  const entry = rateLimitMap.get(ip)
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + windowMs })
-    return false
-  }
-
-  entry.count += 1
-  return entry.count > maxRequests
-}
-
-const createAnonClient = () => {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (!url || !anonKey) return null
-  return createClient(url, anonKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  })
-}
-
 export const POST = async (request: NextRequest) => {
-  const ip = getClientIp(request)
-
-  if (isRateLimited(ip)) {
-    return NextResponse.json(
-      { message: "Too many requests. Please try again later." },
-      { status: 429 }
-    )
-  }
-
-  if (!isSupabaseConfigured()) {
-    return NextResponse.json(
-      { message: "Comments are unavailable right now." },
-      { status: 503 }
-    )
-  }
-
   let body: unknown
   try {
     body = await request.json()
@@ -82,13 +36,16 @@ export const POST = async (request: NextRequest) => {
     })
   }
 
-  const supabase = createAnonClient()
-  if (!supabase) {
+  if (!isSupabaseConfigured() || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return NextResponse.json(
       { message: "Comments are unavailable right now." },
       { status: 503 }
     )
   }
+
+  const blocked = await guardSubmissionRate(request, "comments")
+  if (blocked) return blocked
+  const supabase = createServiceClient()
 
   const { postId, authorName, authorEmail, body: commentBody } = parsed.data
 
@@ -99,7 +56,10 @@ export const POST = async (request: NextRequest) => {
     .eq("status", "published")
     .maybeSingle()
 
-  if (postError || !post) {
+  if (postError) {
+    return NextResponse.json({ message: "Comments are temporarily unavailable." }, { status: 503 })
+  }
+  if (!post) {
     return NextResponse.json(
       { message: "Blog post not found." },
       { status: 404 }
@@ -116,7 +76,7 @@ export const POST = async (request: NextRequest) => {
 
   if (insertError) {
     return NextResponse.json(
-      { message: insertError.message || "Failed to submit comment." },
+      { message: "Failed to submit comment. Please try again." },
       { status: 500 }
     )
   }

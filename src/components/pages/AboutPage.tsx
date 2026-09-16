@@ -73,7 +73,7 @@ export const AboutPage = ({
       {featuredProject ? (
         <section className="mt-10 mb-10" aria-labelledby="featured-project-title">
           <SectionEyebrow>Featured work</SectionEyebrow>
-          <SectionTitle as="h3">
+          <SectionTitle section>
             <span id="featured-project-title">Flagship Project</span>
           </SectionTitle>
           <FeaturedProjectCard project={featuredProject} variant="showcase" />
@@ -82,7 +82,7 @@ export const AboutPage = ({
 
       <section className="mt-10 mb-10">
         <SectionEyebrow>Services</SectionEyebrow>
-        <SectionTitle as="h3">What I&apos;m Doing</SectionTitle>
+        <SectionTitle section>What I&apos;m Doing</SectionTitle>
         <ul className="grid grid-cols-1 gap-5 min-[580px]:gap-[20px] min-[1024px]:grid-cols-2 min-[1024px]:gap-x-[25px] min-[1024px]:gap-y-5">
           {services.map((service) => {
             const Icon =
@@ -97,9 +97,9 @@ export const AboutPage = ({
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </div>
                 <div className="text-center min-[580px]:text-left">
-                  <h4 className="mb-1.5 text-base capitalize text-white-2 min-[580px]:text-lg">
+                  <h3 className="mb-1.5 text-base capitalize text-white-2 min-[580px]:text-lg">
                     {service.title}
-                  </h4>
+                  </h3>
                   <p className="text-sm font-light leading-relaxed text-light-gray min-[580px]:text-[15px]">
                     {service.description}
                   </p>
@@ -112,14 +112,14 @@ export const AboutPage = ({
 
       <section className="mb-10">
         <SectionEyebrow>Tech stack</SectionEyebrow>
-        <SectionTitle as="h3">Skills</SectionTitle>
+        <SectionTitle section>Skills</SectionTitle>
         <SkillsGrid skills={skills} />
       </section>
 
       {writingLinks.length > 0 ? (
         <section className="mb-10" aria-labelledby="recent-writing-title">
           <SectionEyebrow>Writing</SectionEyebrow>
-          <SectionTitle as="h3">
+          <SectionTitle section>
             <span id="recent-writing-title">Recent Writing</span>
           </SectionTitle>
           <ul className="space-y-3">

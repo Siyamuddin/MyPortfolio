@@ -1,4 +1,5 @@
-import { createClient } from "@/lib/supabase/server"
+import { requireAdmin } from "@/lib/portfolio/auth-actions"
+import { createServiceClient } from "@/lib/supabase/admin"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 import type {
   BlogPostRow,
@@ -18,7 +19,7 @@ export const getAdminRows = async () => {
     return null
   }
 
-  const supabase = await createClient()
+  const { supabase } = await requireAdmin()
 
   const [
     profile,
@@ -63,17 +64,16 @@ export const getAdminRows = async () => {
 }
 
 export const getAdminComments = async (): Promise<AdminCommentRow[]> => {
-  if (!isSupabaseConfigured()) return []
-
-  const supabase = await createClient()
+  await requireAdmin()
+  const supabase = createServiceClient()
   const { data, error } = await supabase
     .from("blog_comments")
     .select("*, blog_posts(title, slug)")
     .order("created_at", { ascending: false })
 
   if (error) {
-    console.error("[admin] comments fetch failed", error.message)
-    return []
+    console.error("[admin] comments fetch failed", error.code)
+    throw new Error("Comments could not be loaded. Please try again.")
   }
 
   return (data as AdminCommentRow[]) ?? []
@@ -82,15 +82,15 @@ export const getAdminComments = async (): Promise<AdminCommentRow[]> => {
 export const getContactMessages = async (): Promise<ContactMessageRow[]> => {
   if (!isSupabaseConfigured()) return []
 
-  const supabase = await createClient()
+  const { supabase } = await requireAdmin()
   const { data, error } = await supabase
     .from("contact_messages")
     .select("*")
     .order("created_at", { ascending: false })
 
   if (error) {
-    console.error("[admin] contact messages fetch failed", error.message)
-    return []
+    console.error("[admin] contact messages fetch failed", error.code)
+    throw new Error("Messages could not be loaded. Please try again.")
   }
 
   return (data as ContactMessageRow[]) ?? []
@@ -98,24 +98,24 @@ export const getContactMessages = async (): Promise<ContactMessageRow[]> => {
 
 export const getUnreadMessageCount = async () => {
   if (!isSupabaseConfigured()) return 0
-  const supabase = await createClient()
+  const { supabase } = await requireAdmin()
   const { count, error } = await supabase
     .from("contact_messages")
     .select("id", { count: "exact", head: true })
     .eq("status", "unread")
 
-  if (error) return 0
+  if (error) return null
   return count ?? 0
 }
 
 export const getPendingCommentCount = async () => {
   if (!isSupabaseConfigured()) return 0
-  const supabase = await createClient()
+  const { supabase } = await requireAdmin()
   const { count, error } = await supabase
     .from("blog_comments")
     .select("id", { count: "exact", head: true })
     .eq("status", "pending")
 
-  if (error) return 0
+  if (error) return null
   return count ?? 0
 }

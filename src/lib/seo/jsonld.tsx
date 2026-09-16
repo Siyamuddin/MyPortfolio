@@ -47,31 +47,7 @@ export const buildPersonNode = (
     ...(extras?.skills?.length
       ? { knowsAbout: extras.skills }
       : {}),
-    ...(extras?.education?.length
-      ? {
-          alumniOf: extras.education.map((item) => ({
-            "@type": "CollegeOrUniversity",
-            name: item.school,
-            ...(item.degree ? { description: item.degree } : {}),
-          })),
-        }
-      : {}),
-    ...(extras?.experience?.length
-      ? {
-          worksFor: extras.experience.map((item) => ({
-            "@type": "Organization",
-            name: item.company,
-          })),
-          hasOccupation: extras.experience.map((item) => ({
-            "@type": "Occupation",
-            name: item.role,
-            occupationLocation: {
-              "@type": "City",
-              name: item.location || profile.location,
-            },
-          })),
-        }
-      : {}),
+
   }
 }
 
@@ -249,6 +225,6 @@ export const buildContactJsonLd = (profile: Profile) => ({
 export const JsonLdScript = ({ data }: { data: unknown }) => (
   <script
     type="application/ld+json"
-    dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }}
   />
 )

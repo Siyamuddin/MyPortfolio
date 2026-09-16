@@ -7,7 +7,7 @@ import {
   getBlogPostBySlug,
   getPortfolio,
 } from "@/lib/portfolio/repository"
-import { SITE_URL, twitterHandleFromUrl } from "@/lib/seo"
+import { OG_IMAGE, SITE_URL, twitterHandleFromUrl } from "@/lib/seo"
 import {
   buildBreadcrumbJsonLd,
   JsonLdScript,
@@ -38,7 +38,7 @@ export const generateMetadata = async ({
       ? post.image.startsWith("http")
         ? post.image
         : `${SITE_URL}${post.image}`
-      : undefined
+      : OG_IMAGE.url
 
   return {
     title: post.title,
@@ -52,6 +52,7 @@ export const generateMetadata = async ({
       siteName: "Siyam Uddin Portfolio",
       locale: "en_US",
       publishedTime: post.dateTime,
+      modifiedTime: post.updatedAt,
       images: image
         ? [{ url: image, alt: post.title }]
         : undefined,
@@ -79,7 +80,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
       ? post.image
       : post.image.startsWith("/")
         ? `${SITE_URL}${post.image}`
-        : undefined
+        : OG_IMAGE.url
 
   const blogPosting = {
     "@context": "https://schema.org",
@@ -87,6 +88,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
     headline: post.title,
     description: post.excerpt,
     datePublished: post.dateTime,
+    ...(post.updatedAt ? { dateModified: post.updatedAt } : {}),
     url,
     author: {
       "@type": "Person",

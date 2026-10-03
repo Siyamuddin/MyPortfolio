@@ -293,6 +293,7 @@ export const navPages: { id: string; label: string }[] = [
   { id: "about", label: "About" },
   { id: "resume", label: "Resume" },
   { id: "portfolio", label: "Portfolio" },
+  { id: "events", label: "Events" },
   { id: "blog", label: "Blog" },
   { id: "contact", label: "Contact" },
 ]

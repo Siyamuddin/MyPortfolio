@@ -4,6 +4,9 @@ const supabaseHostname =
   process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/^https?:\/\//, "").split("/")[0]
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: { bodySizeLimit: "5mb" },
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 86400,

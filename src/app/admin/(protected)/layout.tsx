@@ -30,6 +30,7 @@ const navItems = [
   { href: "/admin/education", label: "Education" },
   { href: "/admin/experience", label: "Experience" },
   { href: "/admin/projects", label: "Projects" },
+  { href: "/admin/events", label: "Events" },
   { href: "/admin/blog", label: "Blog" },
   { href: "/admin/faq", label: "FAQ" },
   { href: "/admin/comments", label: "Comments" },

@@ -67,7 +67,7 @@ export interface BlogComment {
   createdAt: string
 }
 
-export type NavPage = "about" | "resume" | "portfolio" | "blog" | "contact"
+export type NavPage = "about" | "resume" | "portfolio" | "events" | "blog" | "contact"
 
 export interface Profile {
   name: string;

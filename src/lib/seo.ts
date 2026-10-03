@@ -16,6 +16,7 @@ export const pagePaths: Record<NavPage, string> = {
   about: "/",
   resume: "/resume",
   portfolio: "/portfolio",
+  events: "/events",
   blog: "/blog",
   contact: "/contact",
 }
@@ -109,6 +110,13 @@ export const buildProfileAwarePageSeo = (
       description: `Selected projects by ${profile.name} — production web apps, platforms, and AI automation.`,
       path: "/portfolio",
       ogTitle: `Portfolio | ${profile.name} — ${profile.title}`,
+      twitterCreator: creator,
+    },
+    events: {
+      title: "Events & Experiences",
+      description: `Hackathons, university events, and community experiences from ${profile.name}, captured in photos and stories.`,
+      path: "/events",
+      ogTitle: `Events | ${profile.name}`,
       twitterCreator: creator,
     },
     blog: {

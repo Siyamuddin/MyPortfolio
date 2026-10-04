@@ -42,7 +42,7 @@ export function EventDetail({ event, tags }: { event: PortfolioEvent; tags: Tag[
         >
           {event.title}
         </h1>
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-light text-light-gray-70">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-light text-light-gray">
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays size={15} aria-hidden="true" />
             <time dateTime={event.date}>{formatEventDate(event.date)}</time>
@@ -81,7 +81,7 @@ export function EventDetail({ event, tags }: { event: PortfolioEvent; tags: Tag[
       ) : null}
 
       {event.description ? (
-        <div className="whitespace-pre-wrap text-sm font-light leading-relaxed text-light-gray min-[580px]:text-[15px]">
+        <div className="max-w-[70ch] whitespace-pre-wrap text-sm font-light leading-7 text-light-gray min-[580px]:text-[15px] min-[580px]:leading-8">
           {event.description}
         </div>
       ) : null}
@@ -100,7 +100,7 @@ export function EventDetail({ event, tags }: { event: PortfolioEvent; tags: Tag[
           href={event.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 inline-flex min-h-[44px] items-center gap-2 text-sm text-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+          className="mt-8 inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-gold px-5 py-2.5 text-sm font-medium text-smoky-black transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
           tabIndex={0}
         >
           Visit event website

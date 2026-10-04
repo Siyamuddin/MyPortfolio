@@ -24,8 +24,12 @@ export const PortfolioFilterList = ({ projects }: PortfolioFilterListProps) => {
     <section>
       <ProjectFilter value={filter} onChange={setFilter} />
       <ul className="mb-2.5 grid grid-cols-1 gap-[30px] min-[768px]:grid-cols-2 min-[1024px]:grid-cols-3">
-        {filteredProjects.map((project) => (
-          <ProjectCard key={project.title} project={project} />
+        {filteredProjects.map((project, index) => (
+          <ProjectCard
+            key={project.title}
+            project={project}
+            priority={index < 3}
+          />
         ))}
       </ul>
     </section>

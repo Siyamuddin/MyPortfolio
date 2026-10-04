@@ -15,7 +15,7 @@
   --white-1: #f7f8f8;
   --white-2: #e8e8ed;
   --light-gray: #d0d6e0;
-  --light-gray-70: rgba(208, 214, 224, 0.7);
+  --light-gray-70: rgba(210, 216, 226, 0.84);
 
   /* Accent */
   --orange-yellow-crayola: #ffdb70;
@@ -66,6 +66,8 @@ body {
 :focus-visible {
   outline: 2px solid var(--orange-yellow-crayola);
   outline-offset: 2px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 4px hsla(44, 100%, 72%, 0.25);
 }
 
 /* ============================================

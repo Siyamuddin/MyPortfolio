@@ -19,6 +19,7 @@ export default async function AdminProfilePage() {
       <ProfileAdminForm
         profile={rows?.profile ?? null}
         projects={rows?.projects ?? []}
+        events={rows?.events ?? []}
       />
     </div>
   )

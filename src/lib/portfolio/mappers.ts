@@ -38,6 +38,7 @@ export const mapProfile = (row: ProfileRow): Profile => ({
   },
   avatar: row.avatar,
   resumeUrl: row.resume_url ?? undefined,
+  featuredEventId: row.featured_event_id ?? null,
 })
 
 export const mapService = (row: ServiceRow): Service => ({

@@ -18,6 +18,7 @@ import { parseTagInput, TAGS_CACHE_TAG } from "@/lib/portfolio/tags"
 const refreshEvents = (slug?: string) => {
   revalidateTag(EVENTS_CACHE_TAG)
   revalidateTag(TAGS_CACHE_TAG)
+  revalidatePath("/")
   revalidatePath("/events")
   if (slug) revalidatePath(`/events/${slug}`)
   revalidatePath("/tags", "layout")

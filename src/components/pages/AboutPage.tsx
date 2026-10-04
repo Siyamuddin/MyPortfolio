@@ -3,11 +3,12 @@ import { Code2, Server, Smartphone, Sparkles } from "lucide-react"
 import { AboutHeroHeader } from "@/components/pages/AboutHeroHeader"
 import { FaqAccordion } from "@/components/pages/FaqAccordion"
 import { SkillsGrid } from "@/components/pages/SkillsGrid"
-import { FeaturedProjectCard } from "@/components/portfolio/FeaturedProjectCard"
+import { FeaturedEventCard } from "@/components/events/FeaturedEventCard"
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow"
 import { SectionTitle } from "@/components/ui/SectionTitle"
 import { getBlogPostHref } from "@/lib/portfolio/blog"
-import type { BlogPost, Faq, Profile, Project, Service, Skill } from "@/lib/types"
+import type { PortfolioEvent } from "@/lib/portfolio/events"
+import type { BlogPost, Faq, Profile, Service, Skill } from "@/lib/types"
 
 const serviceIcons = {
   Smartphone,
@@ -22,7 +23,7 @@ type AboutPageProps = {
   skills: Skill[]
   faqs?: Faq[]
   featuredPosts?: BlogPost[]
-  featuredProject?: Project | null
+  featuredEvent?: PortfolioEvent | null
 }
 
 export const AboutPage = ({
@@ -31,7 +32,7 @@ export const AboutPage = ({
   skills,
   faqs = [],
   featuredPosts = [],
-  featuredProject = null,
+  featuredEvent = null,
 }: AboutPageProps) => {
   const writingLinks = featuredPosts
     .map((post) => {
@@ -70,13 +71,13 @@ export const AboutPage = ({
         ))}
       </section>
 
-      {featuredProject ? (
-        <section className="mt-10 mb-10" aria-labelledby="featured-project-title">
-          <SectionEyebrow>Featured work</SectionEyebrow>
+      {featuredEvent ? (
+        <section className="mt-10 mb-10" aria-labelledby="featured-event-title">
+          <SectionEyebrow>Featured event</SectionEyebrow>
           <SectionTitle section>
-            <span id="featured-project-title">Flagship Project</span>
+            <span id="featured-event-title">In the Spotlight</span>
           </SectionTitle>
-          <FeaturedProjectCard project={featuredProject} variant="showcase" />
+          <FeaturedEventCard event={featuredEvent} />
         </section>
       ) : null}
 

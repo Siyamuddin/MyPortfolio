@@ -90,4 +90,5 @@ export interface Profile {
   };
   avatar: string;
   resumeUrl?: string;
+  featuredEventId?: string | null;
 }

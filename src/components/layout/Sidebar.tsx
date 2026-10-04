@@ -186,8 +186,9 @@ export const Sidebar = ({ profile }: SidebarProps) => {
               </p>
               <a
                 href={`mailto:${profile.email}`}
-                className="block truncate text-[13px] text-white-2 transition-colors hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold min-[580px]:text-[15px] min-[1250px]:text-sm min-[1250px]:font-light"
+                className="block text-[13px] text-white-2 transition-colors [overflow-wrap:anywhere] hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold min-[580px]:text-[15px] min-[1250px]:text-sm min-[1250px]:font-light"
                 tabIndex={0}
+                title={profile.email}
                 aria-label={`Email ${profile.email}`}
               >
                 {profile.email}

@@ -165,7 +165,7 @@ export const projects: Project[] = [
     tags: ["spring-boot", "redis", "docker"],
   },
   {
-    title: "View More on GitHub →",
+    title: "View more on GitHub",
     category: "Applications",
     image: "/images/projects/more.jpg",
     url: "https://github.com/Siyamuddin",

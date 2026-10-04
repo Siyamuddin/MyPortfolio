@@ -95,7 +95,10 @@ export function EventsPage({ events }: { events: PortfolioEvent[] }) {
                 <EventMeta event={latest} />
                 {latest.highlight && <p className={styles.featuredHighlight}>{latest.highlight}</p>}
               </div>
-              <span className={styles.featuredArrow}><ArrowUpRight size={24} aria-hidden="true" /></span>
+              <span className={styles.featuredArrow}>
+                View event
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </span>
             </div>
           </Link>
           <section className={styles.collection} aria-labelledby="collection-title">

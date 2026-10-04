@@ -14,6 +14,8 @@ import {
 import {
   deleteEventAction, uploadEventPhotoAction, upsertEventAction,
 } from "@/lib/portfolio/event-actions"
+import { labelFromSlug, type Tag } from "@/lib/portfolio/tags"
+import { TagsInput } from "@/components/admin/TagsInput"
 import { EventImage } from "@/components/events/EventImage"
 import styles from "./EventsAdmin.module.css"
 
@@ -24,7 +26,7 @@ const displayDate = (date: string) => new Intl.DateTimeFormat("en", {
   month: "short", day: "numeric", year: "numeric", timeZone: "UTC",
 }).format(new Date(`${date}T00:00:00Z`))
 
-export function EventsAdmin({ items }: { items: PortfolioEvent[] }) {
+export function EventsAdmin({ items, tagLabels = {} }: { items: PortfolioEvent[]; tagLabels?: Record<string, string> }) {
   const router = useRouter()
   const [filter, setFilter] = useState<EventFilter>("all")
   const [editing, setEditing] = useState<PortfolioEvent | "new" | null>(null)
@@ -116,7 +118,7 @@ export function EventsAdmin({ items }: { items: PortfolioEvent[] }) {
         </div>
       )}
 
-      {editing ? <EventEditor key={editing === "new" ? "new" : editing.id} event={editing === "new" ? undefined : editing} onClose={() => setEditing(null)} onSaved={(status) => {
+      {editing ? <EventEditor key={editing === "new" ? "new" : editing.id} event={editing === "new" ? undefined : editing} tagLabels={tagLabels} onClose={() => setEditing(null)} onSaved={(status) => {
         setNotice(status === "published" ? "Event saved and published to your showcase." : "Draft saved. Publish it when you’re ready.")
         setEditing(null)
         router.refresh()
@@ -149,12 +151,17 @@ function useModalDialog() {
   return ref
 }
 
-function EventEditor({ event, onClose, onSaved }: {
+function EventEditor({ event, tagLabels, onClose, onSaved }: {
   event?: PortfolioEvent
+  tagLabels: Record<string, string>
   onClose: () => void
   onSaved: (status: "draft" | "published") => void
 }) {
   const dialogRef = useModalDialog()
+  const defaultTags: Tag[] = (event?.tags ?? []).map((slug) => ({
+    slug,
+    label: tagLabels[slug] ?? labelFromSlug(slug),
+  }))
   const uploadRef = useRef<HTMLInputElement>(null)
   const busyRef = useRef(false)
   const [photos, setPhotos] = useState<EventPhoto[]>(event?.photos ?? [])
@@ -308,6 +315,13 @@ function EventEditor({ event, onClose, onSaved }: {
                 </div>
               </div>)}
             </div>
+          </fieldset>
+
+          <fieldset className={styles.formSection} disabled={saving}>
+            <legend>Tags &amp; social preview</legend>
+            <p className={styles.sectionDescription}>Tags create crawlable topic pages at <code>/tags</code>. The social image defaults to your cover photo when left blank.</p>
+            <TagsInput defaultTags={defaultTags} />
+            <label className={styles.field}>Social image URL<input name="og_image" type="url" maxLength={2048} defaultValue={event?.ogImage} placeholder="Defaults to the cover photo" /><small>Optional. Used for link previews when sharing this event.</small></label>
           </fieldset>
 
           <fieldset className={styles.visibilitySection} disabled={saving}>

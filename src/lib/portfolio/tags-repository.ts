@@ -122,3 +122,10 @@ export const getTag = cache(async (slug: string): Promise<Tag> => {
   const registry = await getRegistryMap()
   return { slug, label: resolveTagLabel(slug, registry) }
 })
+
+/** Turn a content row's stored slugs into labeled tags for rendering chips. */
+export const resolveTags = async (slugs: string[]): Promise<Tag[]> => {
+  if (!slugs.length) return []
+  const registry = await getRegistryMap()
+  return slugs.map((slug) => ({ slug, label: resolveTagLabel(slug, registry) }))
+}

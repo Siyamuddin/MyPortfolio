@@ -1,10 +1,12 @@
 import { EventsAdmin } from "@/components/admin/EventsAdmin"
 import { getAdminEvents } from "@/lib/portfolio/events-repository"
+import { getTagRegistry } from "@/lib/portfolio/tags-repository"
 
 export default async function AdminEventsPage() {
   try {
-    const events = await getAdminEvents()
-    return <EventsAdmin items={events} />
+    const [events, registry] = await Promise.all([getAdminEvents(), getTagRegistry()])
+    const tagLabels = Object.fromEntries(registry.map((tag) => [tag.slug, tag.label]))
+    return <EventsAdmin items={events} tagLabels={tagLabels} />
   } catch (error) {
     return (
       <section className="rounded-2xl border border-jet bg-eerie-black-2 p-6">

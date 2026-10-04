@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { AboutPage } from "@/components/pages/AboutPage"
 import { getPortfolio } from "@/lib/portfolio/repository"
+import { getPublishedEvents } from "@/lib/portfolio/events-repository"
+import { resolveFeaturedEvent } from "@/lib/portfolio/featured-event"
 import { buildProfileAwarePageSeo } from "@/lib/seo"
 import {
   buildFaqPageJsonLd,
@@ -14,8 +16,15 @@ export const generateMetadata = async (): Promise<Metadata> => {
 }
 
 export default async function HomePage() {
-  const portfolio = await getPortfolio()
+  const [portfolio, events] = await Promise.all([
+    getPortfolio(),
+    getPublishedEvents(),
+  ])
   const faqJsonLd = buildFaqPageJsonLd(portfolio.faqs)
+  const featuredEvent = resolveFeaturedEvent(
+    events,
+    portfolio.profile.featuredEventId
+  )
 
   return (
     <>
@@ -29,7 +38,7 @@ export default async function HomePage() {
         featuredPosts={portfolio.blogPosts.filter(
           (post) => post.status === "published" && post.slug && post.body.trim(),
         )}
-        featuredProject={portfolio.featuredProject}
+        featuredEvent={featuredEvent}
       />
     </>
   )

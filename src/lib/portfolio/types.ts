@@ -36,6 +36,7 @@ export type ProfileRow = {
   avatar: string
   resume_url: string | null
   featured_project_id?: string | null
+  featured_event_id?: string | null
 }
 
 export type ServiceRow = {

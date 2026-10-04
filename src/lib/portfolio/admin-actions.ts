@@ -39,6 +39,11 @@ const profileSchema = z.object({
     .nullable()
     .optional()
     .transform((value) => (value ? value : null)),
+  featured_event_id: z
+    .union([z.string().uuid(), z.literal("")])
+    .nullable()
+    .optional()
+    .transform((value) => (value ? value : null)),
 })
 
 const serviceSchema = z.object({
@@ -149,6 +154,7 @@ export const upsertProfileAction = async (
       avatar: formData.get("avatar") ?? "",
       resume_url: formData.get("resume_url") || null,
       featured_project_id: formData.get("featured_project_id") ?? null,
+      featured_event_id: formData.get("featured_event_id") ?? null,
     })
 
     const row = {
@@ -162,6 +168,7 @@ export const upsertProfileAction = async (
       avatar: payload.avatar,
       resume_url: payload.resume_url,
       featured_project_id: payload.featured_project_id,
+      featured_event_id: payload.featured_event_id,
       updated_at: new Date().toISOString(),
     }
 

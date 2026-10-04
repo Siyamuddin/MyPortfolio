@@ -14,6 +14,12 @@ import type {
 import type { ContactMessageRow } from "@/lib/portfolio/types"
 import type { AdminCommentRow } from "@/components/admin/CommentsAdmin"
 
+export type EventOptionRow = {
+  id: string
+  title: string
+  status: "draft" | "published"
+}
+
 export const getAdminRows = async () => {
   if (!isSupabaseConfigured()) {
     return null
@@ -30,6 +36,7 @@ export const getAdminRows = async () => {
     projects,
     blogPosts,
     faqs,
+    events,
   ] = await Promise.all([
     supabase.from("profile").select("*").limit(1).maybeSingle(),
     supabase.from("services").select("*").order("sort_order"),
@@ -39,6 +46,10 @@ export const getAdminRows = async () => {
     supabase.from("projects").select("*").order("sort_order"),
     supabase.from("blog_posts").select("*").order("sort_order"),
     supabase.from("faqs").select("*").order("sort_order"),
+    supabase
+      .from("events")
+      .select("id,title,status")
+      .order("date", { ascending: false }),
   ])
 
   return {
@@ -50,6 +61,7 @@ export const getAdminRows = async () => {
     projects: (projects.data as ProjectRow[]) ?? [],
     blogPosts: (blogPosts.data as BlogPostRow[]) ?? [],
     faqs: (faqs.data as FaqRow[]) ?? [],
+    events: (events.data as EventOptionRow[]) ?? [],
     errors: [
       profile.error?.message,
       services.error?.message,

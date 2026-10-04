@@ -5,14 +5,20 @@ import { useState, useTransition } from "react"
 import { FileUploadField } from "@/components/admin/FileUploadField"
 import { fieldClassName } from "@/components/admin/AdminForm"
 import { upsertProfileAction } from "@/lib/portfolio/admin-actions"
+import type { EventOptionRow } from "@/lib/portfolio/admin-data"
 import type { ProfileRow, ProjectRow } from "@/lib/portfolio/types"
 
 type ProfileAdminFormProps = {
   profile: ProfileRow | null
   projects: ProjectRow[]
+  events?: EventOptionRow[]
 }
 
-export const ProfileAdminForm = ({ profile, projects }: ProfileAdminFormProps) => {
+export const ProfileAdminForm = ({
+  profile,
+  projects,
+  events = [],
+}: ProfileAdminFormProps) => {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [message, setMessage] = useState<string | null>(null)
@@ -48,6 +54,12 @@ export const ProfileAdminForm = ({ profile, projects }: ProfileAdminFormProps) =
       setError(result.error ?? "Save failed")
     })
   }
+
+  const currentFeaturedEventId = profile?.featured_event_id ?? ""
+  const eventOptions = events.filter(
+    (event) =>
+      event.status === "published" || event.id === currentFeaturedEventId
+  )
 
   const socials = profile?.socials ?? {
     github: "",
@@ -150,7 +162,7 @@ export const ProfileAdminForm = ({ profile, projects }: ProfileAdminFormProps) =
         accept=".pdf,application/pdf"
       />
       <label className="block text-sm text-light-gray-70">
-        Featured work (About page)
+        Featured work (Portfolio page)
         <select
           name="featured_project_id"
           defaultValue={profile?.featured_project_id ?? ""}
@@ -165,6 +177,28 @@ export const ProfileAdminForm = ({ profile, projects }: ProfileAdminFormProps) =
             </option>
           ))}
         </select>
+      </label>
+      <label className="block text-sm text-light-gray-70">
+        Featured event (Home page spotlight)
+        <select
+          name="featured_event_id"
+          defaultValue={profile?.featured_event_id ?? ""}
+          className={fieldClassName}
+          aria-label="Featured event"
+          tabIndex={0}
+        >
+          <option value="">None</option>
+          {eventOptions.map((event) => (
+            <option key={event.id} value={event.id}>
+              {event.title}
+              {event.status === "published" ? "" : " (draft — not shown)"}
+            </option>
+          ))}
+        </select>
+        <span className="mt-1 block text-xs text-light-gray-70">
+          Only a published event appears on the home page. Clear this to hide the
+          spotlight.
+        </span>
       </label>
       <div className="grid gap-4 md:grid-cols-2">
         {(

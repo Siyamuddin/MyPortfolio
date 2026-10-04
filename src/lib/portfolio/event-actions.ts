@@ -12,10 +12,15 @@ import {
   eventSchema,
   isMissingEventsTable,
 } from "@/lib/portfolio/events"
+import { syncTagRegistry } from "@/lib/portfolio/tag-registry"
+import { parseTagInput, TAGS_CACHE_TAG } from "@/lib/portfolio/tags"
 
-const refreshEvents = () => {
+const refreshEvents = (slug?: string) => {
   revalidateTag(EVENTS_CACHE_TAG)
+  revalidateTag(TAGS_CACHE_TAG)
   revalidatePath("/events")
+  if (slug) revalidatePath(`/events/${slug}`)
+  revalidatePath("/tags", "layout")
   revalidatePath("/admin/events")
   revalidatePath("/admin")
   revalidatePath("/sitemap.xml")
@@ -43,6 +48,7 @@ export const upsertEventAction = async (formData: FormData): Promise<ActionResul
         return { ok: false, error: "The photo collection could not be read. Please reload and try again." }
       }
     }
+    const tags = parseTagInput(formData.get("tags"))
     const { id, ...payload } = eventSchema.parse({
       id: formData.get("id") || undefined,
       title: formData.get("title"),
@@ -55,15 +61,18 @@ export const upsertEventAction = async (formData: FormData): Promise<ActionResul
       url: formData.get("url") ?? "",
       status: formData.get("status") ?? "draft",
       photos,
+      tags: tags.map((tag) => tag.slug),
+      og_image: formData.get("og_image") ?? "",
     })
     const row = { ...payload, updated_at: new Date().toISOString() }
     const query = id
       ? supabase.from("events").update(row).eq("id", id)
       : supabase.from("events").insert(row)
-    const { data, error } = await query.select("id").maybeSingle()
+    const { data, error } = await query.select("id,slug").maybeSingle()
     if (error) return { ok: false, error: isMissingEventsTable(error) ? EVENTS_SETUP_MESSAGE : "Could not save this event. Please try again." }
     if (!data) return { ok: false, error: "This event no longer exists. Reload before saving again." }
-    refreshEvents()
+    await syncTagRegistry(supabase, tags)
+    refreshEvents((data as { slug?: string }).slug)
     return { ok: true }
   } catch (error) {
     return actionError(error, "Could not save this event.")

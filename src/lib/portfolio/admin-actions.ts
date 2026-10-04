@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { z } from "zod"
 import {
   requireAdmin,
@@ -11,6 +11,8 @@ import { createServiceClient } from "@/lib/supabase/admin"
 import { blogPosts as staticBlogPosts, faqs as staticFaqs, featuredProjectTitle } from "@/data/portfolio"
 import { getStaticPortfolio } from "@/lib/portfolio/static"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
+import { syncTagRegistry } from "@/lib/portfolio/tag-registry"
+import { contentTagsSchema, parseTagInput, TAGS_CACHE_TAG } from "@/lib/portfolio/tags"
 
 const socialsSchema = z.object({
   github: z.string(),
@@ -82,6 +84,8 @@ const projectSchema = z.object({
   url: z.string(),
   description: z.string(),
   sort_order: z.coerce.number().int(),
+  tags: contentTagsSchema,
+  og_image: z.string().trim().max(2048).optional().default(""),
 })
 
 const blogSchema = z.object({
@@ -97,6 +101,8 @@ const blogSchema = z.object({
   body: z.string(),
   status: z.enum(["draft", "published"]),
   sort_order: z.coerce.number().int(),
+  tags: contentTagsSchema,
+  og_image: z.string().trim().max(2048).optional().default(""),
 })
 
 const faqSchema = z.object({
@@ -185,11 +191,13 @@ const upsertListItem = async (
   try {
     const { supabase } = await requireAdmin()
     const raw = Object.fromEntries(formData.entries())
+    const tags = parseTagInput(formData.get("tags"))
     const parsed = schema.parse({
       ...raw,
       id: raw.id || undefined,
       highlights: parseJson(formData.get("highlights"), undefined),
       bio: parseJson(formData.get("bio"), undefined),
+      ...(formData.has("tags") ? { tags: tags.map((tag) => tag.slug) } : {}),
     })
 
     const { id, ...rest } = parsed as { id?: string } & Record<string, unknown>
@@ -205,7 +213,13 @@ const upsertListItem = async (
     const { error } = await query
     if (error) return { ok: false, error: error.message }
 
+    if (tags.length) await syncTagRegistry(supabase, tags)
     await revalidatePortfolio()
+    if (formData.has("tags")) {
+      revalidateTag(TAGS_CACHE_TAG)
+      revalidatePath("/tags", "layout")
+      revalidatePath("/sitemap.xml")
+    }
     return { ok: true }
   } catch (error) {
     return {

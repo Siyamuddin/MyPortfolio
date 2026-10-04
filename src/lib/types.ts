@@ -34,6 +34,8 @@ export interface Project {
   description: string
   highlight?: string
   githubUrl?: string
+  tags: string[]
+  ogImage?: string
 }
 
 export interface BlogPost {
@@ -49,6 +51,8 @@ export interface BlogPost {
   slug: string
   body: string
   status: "draft" | "published"
+  tags: string[]
+  ogImage?: string
 }
 
 export interface Faq {

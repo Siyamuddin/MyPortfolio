@@ -1,4 +1,6 @@
 import { z } from "zod"
+import { contentTagsSchema } from "@/lib/portfolio/tags"
+import { slugifyTitle } from "@/lib/portfolio/blog"
 
 export const EVENT_CATEGORIES = [
   "Hackathon",
@@ -13,6 +15,7 @@ export type EventCategory = (typeof EVENT_CATEGORIES)[number]
 export type EventPhoto = { id: string; url: string; caption: string; alt: string }
 export type PortfolioEvent = {
   id: string
+  slug: string
   title: string
   category: EventCategory
   date: string
@@ -23,6 +26,9 @@ export type PortfolioEvent = {
   url: string
   status: "draft" | "published"
   photos: EventPhoto[]
+  tags: string[]
+  ogImage: string
+  updatedAt?: string
 }
 
 export const EVENTS_CACHE_TAG = "portfolio-events"
@@ -91,9 +97,41 @@ export const eventSchema = z.object({
   status: z.enum(["draft", "published"]),
   photos: z.array(eventPhotoSchema).max(MAX_EVENT_PHOTOS, `Add up to ${MAX_EVENT_PHOTOS} photos per event.`)
     .refine((photos) => new Set(photos.map((photo) => photo.id)).size === photos.length, "Each photo must have a unique identifier."),
+  tags: contentTagsSchema,
+  og_image: z.string().trim().max(2048).refine((value) => !value || isSafeEventPhotoUrl(value), "Use an HTTPS image URL for the social preview.").optional().default(""),
 })
 
-export const portfolioEventSchema = eventSchema.extend({ id: z.string().uuid() })
+/** Shape read back from the database. Tolerant of pre-migration rows. */
+export const eventRowSchema = eventSchema.extend({
+  id: z.string().uuid(),
+  slug: z.string().trim().optional(),
+  updated_at: z.string().optional(),
+})
+
+export type EventRow = z.infer<typeof eventRowSchema>
+
+/** The event cover: an explicit OG image, else the first photo, else empty. */
+export const resolveEventCover = (event: Pick<PortfolioEvent, "ogImage" | "photos">): string =>
+  event.ogImage || event.photos[0]?.url || ""
+
+/** Map a validated database row to the camelCase domain object pages consume. */
+export const mapEventRow = (row: EventRow): PortfolioEvent => ({
+  id: row.id,
+  slug: row.slug?.trim() || slugifyTitle(row.title) || "event",
+  title: row.title,
+  category: row.category,
+  date: row.date,
+  location: row.location,
+  organizer: row.organizer,
+  description: row.description,
+  highlight: row.highlight,
+  url: row.url,
+  status: row.status,
+  photos: row.photos,
+  tags: row.tags ?? [],
+  ogImage: row.og_image ?? "",
+  updatedAt: row.updated_at,
+})
 
 export const isMissingEventsTable = (error: { code?: string }) =>
   error.code === "42P01" || error.code === "PGRST205"

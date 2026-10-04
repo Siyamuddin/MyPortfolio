@@ -74,6 +74,8 @@ export const mapProject = (row: ProjectRow): Project => ({
   image: row.image,
   url: row.url ?? "",
   description: row.description,
+  tags: Array.isArray(row.tags) ? row.tags : [],
+  ogImage: row.og_image ?? "",
 })
 
 export const mapBlogPost = (row: BlogPostRow): BlogPost => ({
@@ -89,6 +91,8 @@ export const mapBlogPost = (row: BlogPostRow): BlogPost => ({
   slug: row.slug,
   body: row.body ?? "",
   status: row.status === "published" ? "published" : "draft",
+  tags: Array.isArray(row.tags) ? row.tags : [],
+  ogImage: row.og_image ?? "",
 })
 
 export const mapFaq = (row: FaqRow): Faq => ({

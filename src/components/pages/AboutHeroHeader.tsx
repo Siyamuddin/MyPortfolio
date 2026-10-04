@@ -45,7 +45,7 @@ export const AboutHeroHeader = ({ profile, resumeHref }: AboutHeroHeaderProps) =
           <span id="about-title">{profile.name}</span>
         </SectionTitle>
         <p className="mb-5 text-sm font-medium leading-relaxed text-gold min-[580px]:text-[15px]">
-          {profile.title} · AI automation · Production systems · {profile.location}
+          AI automation · Production systems · {profile.location}
         </p>
         <div className="flex flex-wrap gap-3">
           <Link

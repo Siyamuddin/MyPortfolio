@@ -42,7 +42,7 @@ export const AboutHeroHeader = ({ profile, resumeHref }: AboutHeroHeaderProps) =
       <div className="relative z-10">
         <SectionEyebrow>Introduction</SectionEyebrow>
         <SectionTitle as="h1">
-          <span id="about-title">About Me</span>
+          <span id="about-title">{profile.name}</span>
         </SectionTitle>
         <p className="mb-5 text-sm font-medium leading-relaxed text-gold min-[580px]:text-[15px]">
           {profile.title} · AI automation · Production systems · {profile.location}

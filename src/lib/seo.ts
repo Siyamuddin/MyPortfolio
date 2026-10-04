@@ -9,7 +9,7 @@ export const OG_IMAGE = {
   width: 1200,
   height: 630,
   type: "image/jpeg",
-  alt: "Siyam Uddin - Full-Stack Software Engineer Portfolio",
+  alt: "Siyam Uddin — Web Development & AI Automation Portfolio",
 }
 
 export const pagePaths: Record<NavPage, string> = {

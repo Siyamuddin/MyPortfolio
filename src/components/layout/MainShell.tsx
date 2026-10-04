@@ -20,7 +20,7 @@ export const MainShell = ({ children, profile }: MainShellProps) => {
   }, [pathname])
 
   return (
-    <div className="mx-3 mb-[75px] mt-[15px] min-w-[259px] min-[580px]:mb-[60px] min-[1024px]:mb-[60px] min-[1250px]:mx-auto min-[1250px]:flex min-[1250px]:max-w-[1200px] min-[1250px]:items-stretch min-[1250px]:justify-center min-[1250px]:gap-[25px]">
+    <div className="mx-3 mb-[calc(84px+env(safe-area-inset-bottom))] mt-[15px] min-w-[259px] min-[1024px]:mb-[60px] min-[1250px]:mx-auto min-[1250px]:flex min-[1250px]:max-w-[1200px] min-[1250px]:items-stretch min-[1250px]:justify-center min-[1250px]:gap-[25px]">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-gold focus:px-4 focus:py-3 focus:text-smoky-black">Skip to content</a>
       <Sidebar profile={profile} />
 

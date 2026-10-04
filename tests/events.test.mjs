@@ -22,10 +22,12 @@ function actionHarness({ authorized = true, result = { data: { id: eventId }, er
   const writes = [];
   const invalidations = [];
   const uploads = [];
+  const tagWrites = [];
   const query = {
     update(row) { writes.push({ operation: "update", row }); return this; },
     insert(row) { writes.push({ operation: "insert", row }); return this; },
     delete() { writes.push({ operation: "delete" }); return this; },
+    upsert(rows) { tagWrites.push(rows); return Promise.resolve({ error: null }); },
     eq(column, value) { writes.at(-1).filter = [column, value]; return this; },
     select() { return this; },
     async maybeSingle() { return result; },
@@ -44,7 +46,7 @@ function actionHarness({ authorized = true, result = { data: { id: eventId }, er
       revalidatePath: (path) => invalidations.push(path),
     },
   }, { File, FormData, Uint8Array })("src/lib/portfolio/event-actions.ts");
-  return { actions, writes, invalidations, uploads };
+  return { actions, writes, invalidations, uploads, tagWrites };
 }
 
 test("events reject impossible dates, unsafe URLs, duplicate photos and excessive albums", () => {
@@ -178,4 +180,38 @@ test("public event query only requests published events ordered newest first", a
 test("admin events require authorization and surface missing schema", async () => {
   await assert.rejects(() => repositoryHarness({ authorized: false }).repository.getAdminEvents(), /Unauthorized/);
   await assert.rejects(() => repositoryHarness({ result: { data: null, error: { code: "42P01" } } }).repository.getAdminEvents(), /migration/);
+});
+
+test("event rows map to camelCase and derive a slug when the column is absent", () => {
+  const { eventRowSchema, mapEventRow, resolveEventCover } = sourceLoader()("src/lib/portfolio/events.ts");
+  const parsed = eventRowSchema.parse({ ...event, id: eventId, status: "published" });
+  const mapped = mapEventRow(parsed);
+  assert.equal(mapped.slug, "campus-hackathon");
+  assert.deepEqual([...mapped.tags], []);
+  assert.equal(mapped.ogImage, "");
+
+  const withExtras = mapEventRow(eventRowSchema.parse({
+    ...event, id: eventId, slug: "custom-slug", tags: ["seoul", "seoul"],
+    og_image: "/images/cover.jpg", updated_at: "2026-09-21T00:00:00Z",
+  }));
+  assert.equal(withExtras.slug, "custom-slug");
+  assert.deepEqual([...withExtras.tags], ["seoul"]);
+  assert.equal(withExtras.updatedAt, "2026-09-21T00:00:00Z");
+  // Explicit OG image wins; otherwise the first photo is the cover.
+  assert.equal(resolveEventCover(withExtras), "/images/cover.jpg");
+  assert.equal(resolveEventCover({ ...withExtras, ogImage: "" }), event.photos[0].url);
+});
+
+test("saving an event with tags stores slugs and syncs the registry labels", async () => {
+  const { actions, writes, invalidations, tagWrites } = actionHarness();
+  const data = form({ id: eventId, status: "published" });
+  data.set("tags", JSON.stringify(["Mixroom.ai", "Seoul"]));
+  data.set("og_image", "https://example.com/cover.jpg");
+  assert.equal((await actions.upsertEventAction(data)).ok, true);
+  assert.deepEqual([...writes[0].row.tags], ["mixroom-ai", "seoul"]);
+  assert.equal(writes[0].row.og_image, "https://example.com/cover.jpg");
+  assert.ok(invalidations.includes("portfolio-tags"));
+  assert.equal(tagWrites.length, 1);
+  assert.deepEqual([...tagWrites[0]].map((row) => row.slug), ["mixroom-ai", "seoul"]);
+  assert.equal([...tagWrites[0]].find((row) => row.slug === "mixroom-ai").label, "Mixroom.ai");
 });

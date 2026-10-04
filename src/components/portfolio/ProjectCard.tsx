@@ -19,9 +19,10 @@ const GithubIcon = ({ className }: { className?: string }) => (
 
 type ProjectCardProps = {
   project: Project
+  priority?: boolean
 }
 
-export const ProjectCard = ({ project }: ProjectCardProps) => {
+export const ProjectCard = ({ project, priority = false }: ProjectCardProps) => {
   const { liveUrl, githubUrl } = getProjectLinks(project)
   const imageSrc =
     project.image.startsWith("http") || project.image.startsWith("/")
@@ -30,7 +31,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
   const media = (
     <>
-      <figure className="relative mb-4 h-[200px] w-full overflow-hidden rounded-2xl before:absolute before:inset-0 before:z-[1] before:bg-transparent before:transition-colors min-[450px]:h-auto min-[450px]:aspect-[3/2]">
+      <figure className="relative mb-4 h-[200px] w-full overflow-hidden rounded-2xl bg-eerie-black-1 before:absolute before:inset-0 before:z-[1] before:bg-transparent before:transition-colors min-[450px]:h-auto min-[450px]:aspect-[3/2]">
         <Image
           src={imageSrc}
           alt={project.title}
@@ -39,6 +40,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           sizes="(min-width:1024px) 33vw, (min-width:768px) 50vw, 100vw"
           className="h-full w-full object-cover transition-transform duration-250 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           unoptimized={imageSrc.includes("placehold.co")}
+          priority={priority}
         />
       </figure>
       <div className="ml-2.5">
@@ -61,8 +63,8 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         {(liveUrl || githubUrl) && (
           <div className="mt-3 flex flex-wrap gap-3 text-xs font-medium">
             {liveUrl ? (
-              <a href={liveUrl} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.title} website`} className="inline-flex min-h-11 items-center gap-1 text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
-                Visit website
+              <a href={liveUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} project`} className="inline-flex min-h-11 items-center gap-1 text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
+                View project
                 <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
               </a>
             ) : null}

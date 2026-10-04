@@ -81,9 +81,9 @@ export const FeaturedProjectCard = ({
                 rel="noopener noreferrer"
                 className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-gold px-4 py-2 text-sm font-medium text-smoky-black transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
                 tabIndex={0}
-                aria-label={`Visit ${project.title} website`}
+                aria-label={`View ${project.title} project`}
               >
-                Visit website
+                View project
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </a>
             ) : null}
@@ -102,7 +102,7 @@ export const FeaturedProjectCard = ({
                 aria-label={`View ${project.title} source code on GitHub`}
               >
                 <GithubIcon className="h-4 w-4" />
-                {showLive ? "Source" : "View on GitHub"}
+                Source
               </a>
             ) : null}
             <Link

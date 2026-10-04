@@ -7,7 +7,13 @@ import {
   getBlogPostBySlug,
   getPortfolio,
 } from "@/lib/portfolio/repository"
-import { OG_IMAGE, SITE_URL, twitterHandleFromUrl } from "@/lib/seo"
+import { resolveTags } from "@/lib/portfolio/tags-repository"
+import {
+  buildPageMetadata,
+  resolveOgImage,
+  SITE_URL,
+  twitterHandleFromUrl,
+} from "@/lib/seo"
 import {
   buildBreadcrumbJsonLd,
   JsonLdScript,
@@ -32,39 +38,18 @@ export const generateMetadata = async ({
   if (!post) return {}
 
   const portfolio = await getPortfolio()
-  const url = `${SITE_URL}/blog/${post.slug}`
-  const image =
-    post.image.startsWith("http") || post.image.startsWith("/")
-      ? post.image.startsWith("http")
-        ? post.image
-        : `${SITE_URL}${post.image}`
-      : OG_IMAGE.url
 
-  return {
+  return buildPageMetadata({
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: url },
-    openGraph: {
-      type: "article",
-      title: post.title,
-      description: post.excerpt,
-      url,
-      siteName: "Siyam Uddin Portfolio",
-      locale: "en_US",
-      publishedTime: post.dateTime,
-      modifiedTime: post.updatedAt,
-      images: image
-        ? [{ url: image, alt: post.title }]
-        : undefined,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title,
-      description: post.excerpt,
-      creator: twitterHandleFromUrl(portfolio.profile.socials.twitter),
-      images: image ? [image] : undefined,
-    },
-  }
+    path: `/blog/${post.slug}`,
+    openGraphType: "article",
+    publishedTime: post.dateTime,
+    modifiedTime: post.updatedAt,
+    ogImage: resolveOgImage(post.ogImage || post.image, post.title),
+    keywords: post.tags,
+    twitterCreator: twitterHandleFromUrl(portfolio.profile.socials.twitter),
+  })
 }
 
 export default async function BlogArticlePage({ params }: PageProps) {
@@ -74,13 +59,9 @@ export default async function BlogArticlePage({ params }: PageProps) {
 
   const content = await renderMdx(post.body)
   const comments = post.id ? await getApprovedComments(post.id) : []
+  const tags = await resolveTags(post.tags)
   const url = `${SITE_URL}/blog/${post.slug}`
-  const image =
-    post.image.startsWith("http")
-      ? post.image
-      : post.image.startsWith("/")
-        ? `${SITE_URL}${post.image}`
-        : OG_IMAGE.url
+  const image = resolveOgImage(post.ogImage || post.image, post.title).url
 
   const blogPosting = {
     "@context": "https://schema.org",
@@ -97,6 +78,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
     },
     mainEntityOfPage: url,
     ...(image ? { image } : {}),
+    ...(post.tags.length ? { keywords: post.tags.join(", ") } : {}),
   }
 
   return (
@@ -107,7 +89,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
           { name: "Blog", path: "/blog" },
         ])}
       />
-      <BlogArticle post={post} content={content} comments={comments} />
+      <BlogArticle post={post} content={content} comments={comments} tags={tags} />
     </>
   )
 }

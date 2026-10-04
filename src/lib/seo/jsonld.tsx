@@ -222,6 +222,117 @@ export const buildContactJsonLd = (profile: Profile) => ({
   },
 })
 
+type EventJsonLdInput = {
+  title: string
+  slug: string
+  date: string
+  description?: string
+  highlight?: string
+  location?: string
+  organizer?: string
+  url?: string
+  image?: string | null
+  tags?: string[]
+}
+
+const buildEventNode = (event: EventJsonLdInput) => {
+  const detailUrl = `${SITE_URL}/events/${event.slug}`
+  const node: Record<string, unknown> = {
+    "@type": "Event",
+    name: event.title,
+    startDate: event.date,
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    url: detailUrl,
+    mainEntityOfPage: detailUrl,
+    performer: { "@id": PERSON_ID },
+  }
+  const description = event.description?.trim() || event.highlight?.trim()
+  if (description) node.description = description
+  if (event.highlight?.trim()) node.award = event.highlight.trim()
+  if (event.location?.trim()) {
+    node.location = {
+      "@type": "Place",
+      name: event.location,
+      address: event.location,
+    }
+  }
+  if (event.organizer?.trim()) {
+    node.organizer = { "@type": "Organization", name: event.organizer }
+  }
+  if (event.image) node.image = toAbsoluteUrl(event.image)
+  if (event.url && isAbsoluteHttpUrl(event.url)) node.sameAs = event.url
+  if (event.tags?.length) node.keywords = event.tags.join(", ")
+  return node
+}
+
+export const buildEventJsonLd = (event: EventJsonLdInput) => ({
+  "@context": "https://schema.org",
+  ...buildEventNode(event),
+})
+
+export const buildEventItemListJsonLd = (events: EventJsonLdInput[]) => ({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Events & Experiences",
+  url: `${SITE_URL}/events`,
+  numberOfItems: events.length,
+  itemListElement: events.map((event, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    url: `${SITE_URL}/events/${event.slug}`,
+    item: buildEventNode(event),
+  })),
+})
+
+type TagListItem = {
+  name: string
+  url: string
+  description?: string
+  type?: "BlogPosting" | "Event" | "CreativeWork"
+}
+
+export const buildTagItemListJsonLd = (
+  tag: { slug: string; label: string },
+  items: TagListItem[]
+) => ({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: `#${tag.label}`,
+  url: `${SITE_URL}/tags/${tag.slug}`,
+  numberOfItems: items.length,
+  itemListElement: items.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    url: item.url,
+    item: {
+      "@type": item.type ?? "CreativeWork",
+      name: item.name,
+      url: item.url,
+      ...(item.description ? { description: item.description } : {}),
+    },
+  })),
+})
+
+export const buildTagsCollectionJsonLd = (
+  tags: { slug: string; label: string }[]
+) => ({
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Tags",
+  url: `${SITE_URL}/tags`,
+  mainEntity: {
+    "@type": "ItemList",
+    numberOfItems: tags.length,
+    itemListElement: tags.map((tag, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `${SITE_URL}/tags/${tag.slug}`,
+      name: `#${tag.label}`,
+    })),
+  },
+})
+
 export const JsonLdScript = ({ data }: { data: unknown }) => (
   <script
     type="application/ld+json"

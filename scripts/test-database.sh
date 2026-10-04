@@ -13,3 +13,4 @@ for migration in supabase/migrations/*.sql; do
 done
 psql "$TEST_DATABASE_URL" -Xq -v ON_ERROR_STOP=1 -f tests/sql/security.sql
 psql "$TEST_DATABASE_URL" -Xq -v ON_ERROR_STOP=1 -f tests/sql/events.sql
+psql "$TEST_DATABASE_URL" -Xq -v ON_ERROR_STOP=1 -f tests/sql/tags.sql

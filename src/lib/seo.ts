@@ -4,7 +4,16 @@ import type { NavPage } from "@/lib/types"
 
 export const SITE_URL = "https://siyamuddin.com"
 export const SITE_NAME = "Siyam Uddin Portfolio"
-export const OG_IMAGE = {
+
+export type OgImageInput = {
+  url: string
+  width?: number
+  height?: number
+  alt?: string
+  type?: string
+}
+
+export const OG_IMAGE: Required<Pick<OgImageInput, "url" | "width" | "height" | "type" | "alt">> = {
   url: `${SITE_URL}/og-image.jpg`,
   width: 1200,
   height: 630,
@@ -24,6 +33,7 @@ export const pagePaths: Record<NavPage, string> = {
 export const pathToNavPage = (pathname: string): NavPage => {
   const normalized = pathname.replace(/\/$/, "") || "/"
   if (normalized.startsWith("/blog/")) return "blog"
+  if (normalized.startsWith("/events/")) return "events"
   const entry = Object.entries(pagePaths).find(([, path]) => path === normalized)
   return (entry?.[0] as NavPage) ?? "about"
 }
@@ -37,15 +47,52 @@ export const twitterHandleFromUrl = (twitterUrl: string) => {
   }
 }
 
-type PageSeoInput = {
-  title: string
-  description: string
-  path: string
-  ogTitle?: string
-  absoluteTitle?: boolean
-  twitterCreator?: string
+/** Resolve a relative path, bare slug, or absolute URL to a canonical absolute URL. */
+export const absoluteUrl = (pathOrUrl: string) => {
+  if (!pathOrUrl) return SITE_URL
+  if (pathOrUrl.startsWith("http://") || pathOrUrl.startsWith("https://")) {
+    return pathOrUrl
+  }
+  if (pathOrUrl === "/") return SITE_URL
+  return `${SITE_URL}${pathOrUrl.startsWith("/") ? pathOrUrl : `/${pathOrUrl}`}`
 }
 
+const toOgImages = (image: OgImageInput) => [
+  {
+    url: image.url,
+    ...(image.width ? { width: image.width } : {}),
+    ...(image.height ? { height: image.height } : {}),
+    ...(image.type ? { type: image.type } : {}),
+    alt: image.alt ?? OG_IMAGE.alt,
+  },
+]
+
+export type PageSeoInput = {
+  title: string
+  description: string
+  /** Site-relative path (e.g. "/events/foo") or "/" for the home page. */
+  path: string
+  ogTitle?: string
+  /** When true, the browser title is used verbatim (bypasses the "%s | …" template). */
+  absoluteTitle?: boolean
+  twitterCreator?: string
+  /** Overrides the shared Open Graph image. Falls back to the default when omitted. */
+  ogImage?: OgImageInput
+  openGraphType?: "website" | "article" | "profile"
+  /** Article timestamps surfaced to Open Graph for blog posts and events. */
+  publishedTime?: string
+  modifiedTime?: string
+  /** Freeform keywords, typically derived from content tags. */
+  keywords?: string[]
+}
+
+/**
+ * The single metadata builder every route type plugs into. Pages describe their
+ * content (title, description, canonical path, optional overrides) and receive a
+ * complete, consistent `Metadata` object with aligned canonical, Open Graph and
+ * Twitter tags. Page-specific needs are expressed through the optional override
+ * fields rather than hand-rolled metadata.
+ */
 export const buildPageMetadata = ({
   title,
   description,
@@ -53,13 +100,23 @@ export const buildPageMetadata = ({
   ogTitle,
   absoluteTitle = false,
   twitterCreator,
+  ogImage,
+  openGraphType = "website",
+  publishedTime,
+  modifiedTime,
+  keywords,
 }: PageSeoInput): Metadata => {
-  const url = path === "/" ? SITE_URL : `${SITE_URL}${path}`
+  const url = absoluteUrl(path)
   const socialTitle = ogTitle ?? title
+  const image = ogImage ?? OG_IMAGE
+  const images = toOgImages(image)
+
+  const isArticle = openGraphType === "article"
 
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,
+    ...(keywords && keywords.length ? { keywords } : {}),
     alternates: {
       canonical: url,
     },
@@ -69,14 +126,20 @@ export const buildPageMetadata = ({
       url,
       siteName: SITE_NAME,
       locale: "en_US",
-      type: "website",
-      images: [OG_IMAGE],
+      type: openGraphType,
+      ...(isArticle && (publishedTime || modifiedTime)
+        ? {
+            publishedTime,
+            modifiedTime: modifiedTime ?? publishedTime,
+          }
+        : {}),
+      images,
     },
     twitter: {
       card: "summary_large_image",
       title: socialTitle,
       description,
-      images: [OG_IMAGE.url],
+      images: images.map((entry) => entry.url),
       creator: twitterCreator,
     },
   }
@@ -94,8 +157,10 @@ export const buildProfileAwarePageSeo = (
       title: `${profile.name} — Web Development & AI Automation`,
       description: bioExcerpt,
       path: "/",
-      ogTitle: `${profile.name} — ${profile.title}`,
+      // Open Graph title intentionally mirrors the real browser <title> so the
+      // social preview never drifts from the page title.
       absoluteTitle: true,
+      openGraphType: "profile",
       twitterCreator: creator,
     },
     resume: {
@@ -136,4 +201,28 @@ export const buildProfileAwarePageSeo = (
   }
 
   return buildPageMetadata(pages[page])
+}
+
+/** Resolve a stored image reference (absolute URL, "/path", or empty) to an OG image. */
+export const resolveOgImage = (
+  reference: string | undefined | null,
+  alt: string
+): OgImageInput => {
+  if (!reference) return { ...OG_IMAGE, alt }
+  if (reference.startsWith("http://") || reference.startsWith("https://")) {
+    return { url: reference, alt }
+  }
+  if (reference.startsWith("/")) {
+    return { url: `${SITE_URL}${reference}`, alt }
+  }
+  return { ...OG_IMAGE, alt }
+}
+
+/** Clamp a long body of text into a meta-description-friendly summary. */
+export const toMetaDescription = (value: string, maxLength = 160) => {
+  const normalized = value.replace(/\s+/g, " ").trim()
+  if (normalized.length <= maxLength) return normalized
+  const clipped = normalized.slice(0, maxLength - 1)
+  const lastSpace = clipped.lastIndexOf(" ")
+  return `${(lastSpace > 40 ? clipped.slice(0, lastSpace) : clipped).trimEnd()}…`
 }

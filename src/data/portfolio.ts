@@ -125,6 +125,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/Siyamuddin",
     highlight: "50K+ req/hr",
     description: "Full-stack flight booking platform handling 50K+ req/hr with Spring Boot, React, Redis, Docker, and AWS",
+    tags: ["spring-boot", "react", "aws"],
   },
   {
     title: "GlobalSellerket",
@@ -133,6 +134,7 @@ export const projects: Project[] = [
     url: "https://shop.setlone.com",
     highlight: "Live on AWS",
     description: "Brand & influencer e-commerce platform with blockchain-based payment module deployed on AWS",
+    tags: ["ecommerce", "aws", "blockchain"],
   },
   {
     title: "SetlOne",
@@ -141,6 +143,7 @@ export const projects: Project[] = [
     url: "https://setlone.com",
     highlight: "Real-time fintech",
     description: "Social networking + fintech platform with real-time features, WebSocket architecture, and Redis caching",
+    tags: ["fintech", "websocket", "redis"],
   },
   {
     title: "Automation Tools",
@@ -150,6 +153,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/Siyamuddin",
     highlight: "100+ users",
     description: "Agentic automation with FastAPI, Whisper ASR, RAG pipelines, and LLM integration — 100+ real users",
+    tags: ["fastapi", "llm", "rag"],
   },
   {
     title: "Spring Boot API Service",
@@ -158,6 +162,7 @@ export const projects: Project[] = [
     url: "",
     githubUrl: "https://github.com/Siyamuddin",
     description: "RESTful API service with Spring Boot, JPA, MySQL, Redis caching, and Docker containerization",
+    tags: ["spring-boot", "redis", "docker"],
   },
   {
     title: "View More on GitHub →",
@@ -166,6 +171,7 @@ export const projects: Project[] = [
     url: "https://github.com/Siyamuddin",
     githubUrl: "https://github.com/Siyamuddin",
     description: "Check out my full portfolio on GitHub",
+    tags: [],
   },
 ];
 
@@ -181,6 +187,7 @@ export const blogPosts: BlogPost[] = [
     url: "",
     slug: "agentic-ai-in-industrial-iot-security",
     status: "published",
+    tags: ["agentic-ai", "iot", "security"],
     body: `## Why agentic AI matters for IIoT
 
 Industrial IoT environments generate continuous telemetry. Traditional alert rules struggle when signals are noisy, delayed, or incomplete.
@@ -216,6 +223,7 @@ Use agents for **triage and recommendation**, not silent destructive actions, un
     url: "",
     slug: "integrating-ai-into-spring-boot-with-spring-ai",
     status: "published",
+    tags: ["spring-boot", "ai", "java"],
     body: `## Spring AI in production backends
 
 Spring AI gives you a familiar Spring Boot surface for chat models, embeddings, and vector stores.
@@ -248,6 +256,7 @@ MDX components like \`YouTube\` work here too when you register them in the app 
     url: "",
     slug: "building-production-automation-pipelines-with-n8n",
     status: "published",
+    tags: ["n8n", "automation", "docker"],
     body: `## n8n + Docker + Tunnel
 
 For internal ops workflows, n8n is a strong fit when you need visual pipelines without building a custom orchestrator.

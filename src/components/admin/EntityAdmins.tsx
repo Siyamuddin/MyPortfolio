@@ -9,6 +9,8 @@ import {
   fieldClassName,
 } from "@/components/admin/AdminForm"
 import { FileUploadField } from "@/components/admin/FileUploadField"
+import { TagsInput } from "@/components/admin/TagsInput"
+import { labelFromSlug, type Tag } from "@/lib/portfolio/tags"
 import {
   deleteItemAction,
   upsertBlogAction,
@@ -28,6 +30,11 @@ import type {
   ServiceRow,
   SkillRow,
 } from "@/lib/portfolio/types"
+
+const toDefaultTags = (
+  slugs: string[] | undefined,
+  labels: Record<string, string>
+): Tag[] => (slugs ?? []).map((slug) => ({ slug, label: labels[slug] ?? labelFromSlug(slug) }))
 
 export const ServicesAdmin = ({ items }: { items: ServiceRow[] }) => {
   const router = useRouter()
@@ -219,7 +226,13 @@ const ExperienceForm = ({
   )
 }
 
-export const ProjectsAdmin = ({ items }: { items: ProjectRow[] }) => {
+export const ProjectsAdmin = ({
+  items,
+  tagLabels = {},
+}: {
+  items: ProjectRow[]
+  tagLabels?: Record<string, string>
+}) => {
   const router = useRouter()
   const refresh = () => router.refresh()
 
@@ -244,6 +257,8 @@ export const ProjectsAdmin = ({ items }: { items: ProjectRow[] }) => {
         <FileUploadField name="image" label="Image" folder="projects" />
         <Field label="URL" name="url" defaultValue="" />
         <TextArea label="Description" name="description" />
+        <TagsInput />
+        <Field label="Social image URL (optional)" name="og_image" defaultValue="" />
         <Field label="Sort order" name="sort_order" type="number" defaultValue={items.length} />
       </AdminForm>
 
@@ -269,6 +284,8 @@ export const ProjectsAdmin = ({ items }: { items: ProjectRow[] }) => {
             <FileUploadField name="image" label="Image" folder="projects" defaultValue={item.image} />
             <Field label="URL" name="url" defaultValue={item.url} />
             <TextArea label="Description" name="description" defaultValue={item.description} />
+            <TagsInput defaultTags={toDefaultTags(item.tags, tagLabels)} />
+            <Field label="Social image URL (optional)" name="og_image" defaultValue={item.og_image ?? ""} />
             <Field label="Sort order" name="sort_order" type="number" defaultValue={item.sort_order} />
           </AdminForm>
           <DeleteButton
@@ -284,7 +301,13 @@ export const ProjectsAdmin = ({ items }: { items: ProjectRow[] }) => {
   )
 }
 
-export const BlogAdmin = ({ items }: { items: BlogPostRow[] }) => {
+export const BlogAdmin = ({
+  items,
+  tagLabels = {},
+}: {
+  items: BlogPostRow[]
+  tagLabels?: Record<string, string>
+}) => {
   const router = useRouter()
   const refresh = () => router.refresh()
 
@@ -312,6 +335,8 @@ export const BlogAdmin = ({ items }: { items: BlogPostRow[] }) => {
           </select>
         </label>
         <FileUploadField name="image" label="Image" folder="blog" />
+        <TagsInput />
+        <Field label="Social image URL (optional)" name="og_image" defaultValue="" />
         <Field label="External URL (optional)" name="url" defaultValue="" />
         <Field label="Sort order" name="sort_order" type="number" defaultValue={items.length} />
       </AdminForm>
@@ -341,6 +366,8 @@ export const BlogAdmin = ({ items }: { items: BlogPostRow[] }) => {
               </select>
             </label>
             <FileUploadField name="image" label="Image" folder="blog" defaultValue={item.image} />
+            <TagsInput defaultTags={toDefaultTags(item.tags, tagLabels)} />
+            <Field label="Social image URL (optional)" name="og_image" defaultValue={item.og_image ?? ""} />
             <Field label="External URL (optional)" name="url" defaultValue={item.url} />
             <Field label="Sort order" name="sort_order" type="number" defaultValue={item.sort_order} />
           </AdminForm>

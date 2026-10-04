@@ -8,6 +8,8 @@ The per-file limit leaves room for multipart form fields within [Vercel's 4.5 MB
 
 Publish when the story is ready. Only published event records are readable by visitors, including visitors signed into a non-admin account. Draft photo files use the same public bucket as other portfolio images, so anyone who already knows a photo's URL can retrieve it.
 
+Each published event also has its own crawlable detail page at `/events/[slug]`, with `Event` structured data, a canonical URL, and tags. See [`docs/seo-events.md`](./seo-events.md) for the full SEO architecture and the checklist for every new event.
+
 ## Database setup
 
 Apply `supabase/migrations/20261003111642_portfolio_events.sql` after the existing portfolio migrations. It adds only the `events` table, its index, grants and owner-only write policies. It depends on `private.is_portfolio_admin()` from the portfolio security migration and reuses the existing Storage bucket; no additional environment variables are required. This migration is already applied to the portfolio's existing Supabase project; its filename matches the recorded remote migration version.

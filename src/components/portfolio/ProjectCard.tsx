@@ -1,8 +1,10 @@
 import { ArrowUpRight } from "lucide-react"
 import { ContentImage as Image } from "@/components/portfolio/ContentImage"
+import { TagChips } from "@/components/ui/TagChips"
 import type { Project } from "@/lib/types"
 import { projectPlaceholderSrc } from "@/lib/portfolio/project-image"
 import { getProjectLinks } from "@/lib/portfolio/project-links"
+import { labelFromSlug } from "@/lib/portfolio/tags"
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg
@@ -72,6 +74,13 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             ) : null}
           </div>
         )}
+        {project.tags?.length ? (
+          <TagChips
+            className="mt-3"
+            tags={project.tags.map((slug) => ({ slug, label: labelFromSlug(slug) }))}
+            label={`Tags for ${project.title}`}
+          />
+        ) : null}
       </div>
     </>
   )

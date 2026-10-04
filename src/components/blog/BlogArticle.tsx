@@ -7,18 +7,21 @@ import {
   showGiscusComments,
   showNativeComments,
 } from "@/lib/comments/config"
+import { TagChips } from "@/components/ui/TagChips"
+import type { Tag } from "@/lib/portfolio/tags"
 import type { BlogComment, BlogPost } from "@/lib/types"
 
 type BlogArticleProps = {
   post: BlogPost
   content: React.ReactNode
   comments: BlogComment[]
+  tags?: Tag[]
 }
 
 const placeholderSrc = (title: string) =>
   `https://placehold.co/1200x630/1a1a1e/ffdb70?text=${encodeURIComponent(title.slice(0, 28))}`
 
-export const BlogArticle = ({ post, content, comments }: BlogArticleProps) => {
+export const BlogArticle = ({ post, content, comments, tags = [] }: BlogArticleProps) => {
   const imageSrc =
     post.image.startsWith("http") || post.image.startsWith("/")
       ? post.image
@@ -79,6 +82,13 @@ export const BlogArticle = ({ post, content, comments }: BlogArticleProps) => {
       </figure>
 
       <div className="mdx-content">{content}</div>
+
+      {tags.length ? (
+        <div className="mt-8 border-t border-jet pt-6">
+          <h2 className="mb-3 text-sm font-medium text-white-2">Tags</h2>
+          <TagChips tags={tags} label={`Tags for ${post.title}`} />
+        </div>
+      ) : null}
 
       {nativeEnabled && post.id ? (
         <NativeComments postId={post.id} comments={comments} />

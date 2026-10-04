@@ -81,6 +81,8 @@ export type ProjectRow = {
   url: string
   description: string
   sort_order: number
+  tags?: string[]
+  og_image?: string
 }
 
 export type BlogPostRow = {
@@ -97,6 +99,8 @@ export type BlogPostRow = {
   status: "draft" | "published"
   sort_order: number
   updated_at?: string
+  tags?: string[]
+  og_image?: string
 }
 
 export type FaqRow = {

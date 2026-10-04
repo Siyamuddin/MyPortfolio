@@ -5,13 +5,18 @@ import { requireAdmin } from "@/lib/portfolio/auth-actions"
 import {
   EVENTS_CACHE_TAG,
   EVENTS_SETUP_MESSAGE,
+  eventRowSchema,
   isMissingEventsTable,
-  portfolioEventSchema,
+  mapEventRow,
   type PortfolioEvent,
 } from "@/lib/portfolio/events"
 import { getSupabaseEnv, isSupabaseConfigured } from "@/lib/supabase/env"
 
-const EVENT_COLUMNS = "id,title,category,date,location,organizer,description,highlight,url,status,photos"
+const EVENT_COLUMNS =
+  "id,slug,title,category,date,location,organizer,description,highlight,url,status,photos,tags,og_image,updated_at"
+
+const parseEvents = (data: unknown): PortfolioEvent[] =>
+  eventRowSchema.array().parse(data ?? []).map(mapEventRow)
 
 const getCachedPublishedEvents = unstable_cache(
   async (): Promise<PortfolioEvent[]> => {
@@ -31,7 +36,7 @@ const getCachedPublishedEvents = unstable_cache(
       console.error("[events] Could not load published events", error)
       throw new Error("Events are temporarily unavailable. Please try again shortly.")
     }
-    return portfolioEventSchema.array().parse(data ?? [])
+    return parseEvents(data)
   },
   ["published-portfolio-events"],
   { tags: [EVENTS_CACHE_TAG], revalidate: 3600 }
@@ -41,6 +46,14 @@ export const getPublishedEvents = cache(async (): Promise<PortfolioEvent[]> => {
   if (!isSupabaseConfigured()) return []
   return getCachedPublishedEvents()
 })
+
+export const getPublishedEventBySlug = cache(
+  async (slug: string): Promise<PortfolioEvent | null> => {
+    if (!isSupabaseConfigured() || !slug) return null
+    const events = await getCachedPublishedEvents()
+    return events.find((event) => event.slug === slug) ?? null
+  }
+)
 
 export const getAdminEvents = async (): Promise<PortfolioEvent[]> => {
   const { supabase } = await requireAdmin()
@@ -54,5 +67,5 @@ export const getAdminEvents = async (): Promise<PortfolioEvent[]> => {
     if (isMissingEventsTable(error)) throw new Error(EVENTS_SETUP_MESSAGE)
     throw new Error("Could not load events. Please reload and try again.")
   }
-  return portfolioEventSchema.array().parse(data ?? [])
+  return parseEvents(data)
 }

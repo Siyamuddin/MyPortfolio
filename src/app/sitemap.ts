@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next"
 import { getPortfolio, getPortfolioFreshness } from "@/lib/portfolio/repository"
+import { getPublishedEvents } from "@/lib/portfolio/events-repository"
+import { getTagsWithCounts } from "@/lib/portfolio/tags-repository"
 import { SITE_URL } from "@/lib/seo"
 
 const toLastModified = (value: string | Date | undefined) => {
@@ -12,9 +14,11 @@ const toLastModified = (value: string | Date | undefined) => {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [siteFreshness, portfolio] = await Promise.all([
+  const [siteFreshness, portfolio, events, tags] = await Promise.all([
     getPortfolioFreshness(),
     getPortfolio(),
+    getPublishedEvents(),
+    getTagsWithCounts(),
   ])
   const lastModified = toLastModified(siteFreshness)
 
@@ -26,6 +30,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: 0.65,
     }))
+
+  // Each published event is a crawlable detail URL with its own freshness.
+  const eventEntries = events.map((event) => ({
+    url: `${SITE_URL}/events/${event.slug}`,
+    lastModified: toLastModified(event.updatedAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }))
+
+  const tagEntries = tags.map((tag) => ({
+    url: `${SITE_URL}/tags/${tag.slug}`,
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: 0.4,
+  }))
+
+  const tagsIndexEntry = tags.length
+    ? [
+        {
+          url: `${SITE_URL}/tags`,
+          lastModified,
+          changeFrequency: "weekly" as const,
+          priority: 0.5,
+        },
+      ]
+    : []
 
   return [
     {
@@ -58,7 +88,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    ...eventEntries,
     ...articleEntries,
+    ...tagsIndexEntry,
+    ...tagEntries,
     {
       url: `${SITE_URL}/contact`,
       lastModified,

@@ -28,7 +28,7 @@ export const featuredProjectTitle = "AirSeoul";
 export const services: Service[] = [
     {
     title: "AI/ML Solutions",
-    description: "Intelligent automation, Building Scalable AI agents, LLM integration/Tuning, and workflow automation with n8n,Open-claw, Hermes.",
+    description: "Intelligent automation, building scalable AI agents, LLM integration and tuning, and workflow automation with n8n, Open-claw, and Hermes.",
     icon: "Sparkles",
   },
   {

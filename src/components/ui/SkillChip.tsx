@@ -39,7 +39,7 @@ export const SkillChip = ({ skill }: { skill: Skill }) => {
   }, [position])
 
   const className = "flex h-16 w-16 items-center justify-center rounded-xl bg-onyx transition-transform hover:scale-110 motion-reduce:transform-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold"
-  const icon = skill.icon ? <Image src={skill.icon.startsWith("http") || skill.icon.startsWith("/") ? skill.icon : `/images/skills/${skill.icon}.svg`} alt="" width={32} height={32} unoptimized className="h-8 w-8" /> : <span style={{ color: skill.color }}>{skill.name.slice(0, 2)}</span>
+  const icon = skill.icon ? <Image src={skill.icon.startsWith("http") || skill.icon.startsWith("/") ? skill.icon : `/images/skills/${skill.icon}.svg`} alt={`${skill.name} logo`} width={32} height={32} unoptimized aria-hidden="true" className="h-8 w-8" /> : <span style={{ color: skill.color }} aria-hidden="true">{skill.name.slice(0, 2)}</span>
   return (
     <li ref={anchor} onMouseEnter={show} onMouseLeave={scheduleClose} onFocus={show} onBlur={scheduleClose}>
       {meta?.url ? <a href={meta.url} target="_blank" rel="noopener noreferrer" className={className} aria-label={`${skill.name} official website`} aria-describedby={position ? id : undefined}>{icon}</a> : <button type="button" className={className} aria-label={skill.name} aria-describedby={position ? id : undefined} onClick={() => position ? setPosition(null) : show()}>{icon}</button>}

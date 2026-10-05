@@ -1,10 +1,17 @@
 import type { Metadata } from "next"
-import { Poppins } from "next/font/google"
+import { JetBrains_Mono, Poppins } from "next/font/google"
 import { SITE_URL, buildPageMetadata } from "@/lib/seo"
 import "./globals.css"
 
 const poppins = Poppins({
   variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   display: "swap",
@@ -68,7 +75,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} font-sans antialiased`}>
+      <head>
+        <noscript>
+          {/* Never leave scroll-reveal content hidden without scripting. */}
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
+      </head>
+      <body
+        className={`${poppins.variable} ${jetbrainsMono.variable} font-sans antialiased`}
+      >
         {children}
       </body>
     </html>

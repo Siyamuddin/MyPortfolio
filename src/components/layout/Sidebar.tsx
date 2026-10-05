@@ -1,9 +1,11 @@
 "use client"
 
 import Image from "next/image"
-import { ChevronDown, Mail, MapPin } from "lucide-react"
+import { useState } from "react"
+import { Check, ChevronDown, Copy, Mail, MapPin } from "lucide-react"
 import { IconBox } from "@/components/ui/IconBox"
 import { Separator } from "@/components/ui/Separator"
+import { CommandPaletteTrigger } from "@/components/command/CommandPaletteTrigger"
 import { useSidebarToggle } from "@/hooks/useSidebarToggle"
 import { cn } from "@/lib/cn"
 import type { Profile } from "@/lib/types"
@@ -113,6 +115,17 @@ type SidebarProps = {
 
 export const Sidebar = ({ profile }: SidebarProps) => {
   const { isExpanded, handleToggle, label } = useSidebarToggle()
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(profile.email)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1400)
+    } catch {
+      /* Clipboard unavailable — the mailto link remains the fallback. */
+    }
+  }
 
   return (
     <aside
@@ -144,6 +157,11 @@ export const Sidebar = ({ profile }: SidebarProps) => {
             {profile.title}
           </p>
         </div>
+
+        <CommandPaletteTrigger
+          variant="icon"
+          className="ml-auto self-center min-[1024px]:hidden"
+        />
 
         <button
           type="button"
@@ -180,19 +198,45 @@ export const Sidebar = ({ profile }: SidebarProps) => {
             <IconBox>
               <Mail className="h-4 w-4" />
             </IconBox>
-            <div className="w-[calc(100%-46px)] max-w-[calc(100%-46px)]">
-              <p className="mb-0.5 text-[11px] uppercase text-light-gray-70">
-                Email
-              </p>
-              <a
-                href={`mailto:${profile.email}`}
-                className="block text-[13px] text-white-2 transition-colors [overflow-wrap:anywhere] hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold min-[580px]:text-[15px] min-[1250px]:text-sm min-[1250px]:font-light"
-                tabIndex={0}
-                title={profile.email}
-                aria-label={`Email ${profile.email}`}
+            <div className="flex w-[calc(100%-46px)] max-w-[calc(100%-46px)] items-start gap-2">
+              <div className="min-w-0 flex-1">
+                <p className="mb-0.5 text-[11px] uppercase text-light-gray-70">
+                  Email
+                </p>
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="block text-[13px] text-white-2 transition-colors [overflow-wrap:anywhere] hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold min-[580px]:text-[15px] min-[1250px]:text-sm min-[1250px]:font-light"
+                  tabIndex={0}
+                  title={profile.email}
+                  aria-label={`Email ${profile.email}`}
+                >
+                  {profile.email}
+                </a>
+              </div>
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                aria-label={copied ? "Email copied" : "Copy email address"}
+                className="relative mt-3.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-jet text-light-gray-70 transition-colors hover:border-gold/50 hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
               >
-                {profile.email}
-              </a>
+                <Copy
+                  className={cn(
+                    "h-3.5 w-3.5 transition-[opacity,transform] duration-200",
+                    copied && "scale-50 opacity-0"
+                  )}
+                  aria-hidden="true"
+                />
+                <Check
+                  className={cn(
+                    "absolute h-3.5 w-3.5 text-diff-green transition-[opacity,transform] duration-200",
+                    copied ? "scale-100 opacity-100" : "scale-50 opacity-0"
+                  )}
+                  aria-hidden="true"
+                />
+              </button>
+              <span role="status" aria-live="polite" className="sr-only">
+                {copied ? "Email copied to clipboard" : ""}
+              </span>
             </div>
           </li>
 
@@ -220,7 +264,7 @@ export const Sidebar = ({ profile }: SidebarProps) => {
                 href={profile.socials[key]}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-lg text-light-gray-70 transition-colors hover:text-light-gray focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                className="block text-lg text-light-gray-70 transition-[color,transform] duration-150 hover:-translate-y-px hover:text-gold motion-reduce:hover:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
                 tabIndex={0}
                 aria-label={label}
               >

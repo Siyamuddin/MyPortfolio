@@ -35,7 +35,6 @@ const navItems = [
   { href: "/admin/faq", label: "FAQ" },
   { href: "/admin/comments", label: "Comments" },
   { href: "/admin/messages", label: "Messages" },
-  { href: "/admin/finance", label: "Finance" },
 ]
 
 export default async function AdminProtectedLayout({

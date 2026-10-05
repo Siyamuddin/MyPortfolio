@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { Line } from "@react-three/drei"
 import * as THREE from "three"
@@ -12,12 +12,14 @@ const NODE_COUNT = 22
 const LINK_DISTANCE = 2.35
 
 type PointerRef = React.RefObject<{ x: number; y: number }>
+type RunningRef = React.RefObject<boolean>
 
 type NetworkProps = {
   pointer: PointerRef
+  running: RunningRef
 }
 
-const Network = ({ pointer }: NetworkProps) => {
+const Network = ({ pointer, running }: NetworkProps) => {
   const groupRef = useRef<THREE.Group>(null)
   const pulseRef = useRef(0)
 
@@ -50,6 +52,8 @@ const Network = ({ pointer }: NetworkProps) => {
   }, [])
 
   useFrame((state, delta) => {
+    // Pause the render loop when the hero is offscreen or the tab is hidden.
+    if (running.current === false) return
     if (!groupRef.current) return
     const aim = pointer.current ?? { x: 0, y: 0 }
     pulseRef.current = state.clock.elapsedTime
@@ -105,6 +109,39 @@ export const AgenticNetworkBackground = ({
   pointer,
 }: AgenticNetworkBackgroundProps) => {
   const prefersReducedMotion = usePrefersReducedMotion()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const intersectingRef = useRef(true)
+  const runningRef = useRef(true)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    // Fade in on mount (the chunk is deferred, so this avoids a hard pop).
+    setVisible(true)
+
+    const element = containerRef.current
+    const update = () => {
+      runningRef.current = intersectingRef.current && !document.hidden
+    }
+
+    const observer =
+      element && "IntersectionObserver" in window
+        ? new IntersectionObserver(
+            ([entry]) => {
+              intersectingRef.current = entry.isIntersecting
+              update()
+            },
+            { threshold: 0.01 }
+          )
+        : null
+
+    if (element && observer) observer.observe(element)
+    document.addEventListener("visibilitychange", update)
+
+    return () => {
+      observer?.disconnect()
+      document.removeEventListener("visibilitychange", update)
+    }
+  }, [])
 
   if (prefersReducedMotion) {
     return (
@@ -116,17 +153,26 @@ export const AgenticNetworkBackground = ({
   }
 
   return (
-    <div className={cn("pointer-events-none absolute inset-0", className)} aria-hidden="true">
-      <Canvas
-        camera={{ position: [0, 0, 6.5], fov: 42 }}
-        dpr={[1, 1.5]}
-        gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
-        className="h-full w-full"
+    <div
+      ref={containerRef}
+      className={cn("pointer-events-none absolute inset-0", className)}
+      aria-hidden="true"
+    >
+      <div
+        className="h-full w-full transition-opacity duration-[600ms] ease-[cubic-bezier(.22,1,.36,1)]"
+        style={{ opacity: visible ? 1 : 0 }}
       >
-        <ambientLight intensity={0.35} />
-        <pointLight position={[4, 4, 4]} intensity={0.6} color={GOLD} />
-        <Network pointer={pointer} />
-      </Canvas>
+        <Canvas
+          camera={{ position: [0, 0, 6.5], fov: 42 }}
+          dpr={[1, 1.5]}
+          gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
+          className="h-full w-full"
+        >
+          <ambientLight intensity={0.35} />
+          <pointLight position={[4, 4, 4]} intensity={0.6} color={GOLD} />
+          <Network pointer={pointer} running={runningRef} />
+        </Canvas>
+      </div>
     </div>
   )
 }

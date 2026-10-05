@@ -24,7 +24,7 @@ export const TagChips = ({ tags, label = "Tags", className = "" }: TagChipsProps
         <li key={tag.slug}>
           <Link
             href={`/tags/${tag.slug}`}
-            className="inline-flex min-h-[32px] items-center rounded-full border border-jet bg-onyx px-3 py-1 text-xs font-light text-light-gray transition-colors hover:border-gold hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+            className="inline-flex min-h-[32px] items-center rounded-full border border-jet bg-onyx px-3 py-1 text-xs font-light text-light-gray transition-colors duration-150 hover:border-gold hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
             tabIndex={0}
             aria-label={`View all content tagged ${tag.label}`}
           >

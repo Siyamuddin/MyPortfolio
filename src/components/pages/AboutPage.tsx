@@ -6,6 +6,7 @@ import { SkillsGrid } from "@/components/pages/SkillsGrid"
 import { FeaturedEventCard } from "@/components/events/FeaturedEventCard"
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow"
 import { SectionTitle } from "@/components/ui/SectionTitle"
+import { Reveal } from "@/components/ui/Reveal"
 import { getBlogPostHref } from "@/lib/portfolio/blog"
 import type { PortfolioEvent } from "@/lib/portfolio/events"
 import type { BlogPost, Faq, Profile, Service, Skill } from "@/lib/types"
@@ -85,27 +86,29 @@ export const AboutPage = ({
         <SectionEyebrow>Services</SectionEyebrow>
         <SectionTitle section>What I&apos;m Doing</SectionTitle>
         <ul className="grid grid-cols-1 gap-5 min-[580px]:gap-[20px] min-[1024px]:grid-cols-2 min-[1024px]:gap-x-[25px] min-[1024px]:gap-y-5">
-          {services.map((service) => {
+          {services.map((service, index) => {
             const Icon =
               serviceIcons[service.icon as keyof typeof serviceIcons] ?? Code2
 
             return (
-              <li
+              <Reveal
+                as="li"
                 key={service.title}
-                className="gradient-border-card p-5 shadow-[var(--shadow-2)] min-[580px]:flex min-[580px]:items-start min-[580px]:justify-start min-[580px]:gap-[18px] min-[580px]:p-[30px]"
+                delay={index * 60}
+                className="group gradient-border-card p-5 shadow-[var(--shadow-2)] transition-[transform,box-shadow] duration-200 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.3)] motion-reduce:transform-none min-[580px]:flex min-[580px]:items-start min-[580px]:justify-start min-[580px]:gap-[18px] min-[580px]:p-[30px]"
               >
-                <div className="mb-2.5 flex h-12 w-12 items-center justify-center text-2xl text-gold min-[580px]:mb-0 min-[580px]:mt-1">
+                <div className="mx-auto mb-2.5 flex h-12 w-12 items-center justify-center rounded-xl text-2xl text-gold transition-[background,box-shadow] duration-200 group-hover:bg-gold/5 group-hover:shadow-[0_0_20px_rgba(255,219,112,0.12)] min-[580px]:mx-0 min-[580px]:mb-0 min-[580px]:mt-1">
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </div>
                 <div className="text-center min-[580px]:text-left">
-                  <h3 className="mb-1.5 text-base capitalize text-white-2 min-[580px]:text-lg">
+                  <h3 className="mb-1.5 text-base capitalize text-white-2 transition-colors group-hover:text-gold min-[580px]:text-lg">
                     {service.title}
                   </h3>
                   <p className="text-sm font-light leading-relaxed text-light-gray min-[580px]:text-[15px]">
                     {service.description}
                   </p>
                 </div>
-              </li>
+              </Reveal>
             )
           })}
         </ul>
@@ -124,23 +127,27 @@ export const AboutPage = ({
             <span id="recent-writing-title">Recent Writing</span>
           </SectionTitle>
           <ul className="space-y-3">
-            {writingLinks.map((post) => (
-              <li key={post.href}>
+            {writingLinks.map((post, index) => (
+              <Reveal as="li" key={post.href} delay={index * 60}>
                 <Link
                   href={post.href}
-                  className="group block rounded-xl border border-jet bg-eerie-black-1 px-4 py-3 transition-colors hover:border-gold/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                  className="group relative block overflow-hidden rounded-xl border border-jet bg-eerie-black-1 px-4 py-3 transition-colors duration-[160ms] ease-[cubic-bezier(.22,1,.36,1)] hover:border-gold/50 hover:bg-onyx focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
                   tabIndex={0}
                   aria-label={`Read blog post: ${post.title}`}
                 >
-                  <p className="text-sm font-medium text-white-2 transition-colors group-hover:text-gold min-[580px]:text-[15px]">
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-y-0 left-0 w-0.5 origin-top scale-y-0 bg-gold transition-transform duration-[160ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-y-100 motion-reduce:hidden"
+                  />
+                  <p className="text-sm font-medium text-white-2 transition-[color,transform] duration-[160ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:translate-x-1 group-hover:text-gold motion-reduce:group-hover:translate-x-0 min-[580px]:text-[15px]">
                     {post.title}
                   </p>
-                  <p className="mt-1 text-xs text-light-gray-70">
+                  <p className="mt-1 font-mono text-[11px] tabular-nums text-light-gray-70">
                     {post.category}
                     {post.date ? ` · ${post.date}` : ""}
                   </p>
                 </Link>
-              </li>
+              </Reveal>
             ))}
           </ul>
           <p className="mt-4 text-sm text-light-gray-70">

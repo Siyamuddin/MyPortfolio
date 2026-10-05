@@ -20,9 +20,10 @@ const GithubIcon = ({ className }: { className?: string }) => (
 type ProjectCardProps = {
   project: Project
   priority?: boolean
+  enter?: boolean
 }
 
-export const ProjectCard = ({ project, priority = false }: ProjectCardProps) => {
+export const ProjectCard = ({ project, priority = false, enter = false }: ProjectCardProps) => {
   const { liveUrl, githubUrl } = getProjectLinks(project)
   const imageSrc =
     project.image.startsWith("http") || project.image.startsWith("/")
@@ -38,7 +39,7 @@ export const ProjectCard = ({ project, priority = false }: ProjectCardProps) => 
           width={600}
           height={400}
           sizes="(min-width:1024px) 33vw, (min-width:768px) 50vw, 100vw"
-          className="h-full w-full object-cover transition-transform duration-250 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+          className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           unoptimized={imageSrc.includes("placehold.co")}
           priority={priority}
         />
@@ -65,7 +66,7 @@ export const ProjectCard = ({ project, priority = false }: ProjectCardProps) => 
             {liveUrl ? (
               <a href={liveUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} project`} className="inline-flex min-h-11 items-center gap-1 text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
                 View project
-                <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-[180ms] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none" aria-hidden="true" />
               </a>
             ) : null}
             {githubUrl && githubUrl !== liveUrl ? (
@@ -87,5 +88,12 @@ export const ProjectCard = ({ project, priority = false }: ProjectCardProps) => 
     </>
   )
 
-  return <li className="group scale-up motion-reduce:animate-none">{media}</li>
+  return (
+    <li
+      data-flip={project.title}
+      className={`group ${enter ? "project-enter" : ""}`}
+    >
+      {media}
+    </li>
+  )
 }

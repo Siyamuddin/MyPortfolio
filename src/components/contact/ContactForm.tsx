@@ -70,8 +70,8 @@ export const ContactForm = () => {
     >
       <p id="message-guidance" className="mb-6 text-sm leading-relaxed text-light-gray">Tell me your project goal and timeline. Include a budget if you have one in mind.</p>
       <div className="mb-6 grid grid-cols-1 gap-6 min-[580px]:mb-8 min-[580px]:grid-cols-2 min-[580px]:gap-[30px]">
-        <div>
-          <label htmlFor="fullname" className="mb-2 block text-sm text-white-2">
+        <div className="group/field">
+          <label htmlFor="fullname" className="mb-2 block text-sm text-white-2 transition-transform duration-150 group-focus-within/field:-translate-y-px motion-reduce:transform-none">
             Full name
           </label>
           <input
@@ -95,8 +95,8 @@ export const ContactForm = () => {
           ) : null}
         </div>
 
-        <div>
-          <label htmlFor="email" className="mb-2 block text-sm text-white-2">
+        <div className="group/field">
+          <label htmlFor="email" className="mb-2 block text-sm text-white-2 transition-transform duration-150 group-focus-within/field:-translate-y-px motion-reduce:transform-none">
             Email address
           </label>
           <input
@@ -121,8 +121,8 @@ export const ContactForm = () => {
         </div>
       </div>
 
-      <div className="mb-6 min-[580px]:mb-8">
-        <label htmlFor="message" className="mb-2 block text-sm text-white-2">
+      <div className="group/field mb-6 min-[580px]:mb-8">
+        <label htmlFor="message" className="mb-2 block text-sm text-white-2 transition-transform duration-150 group-focus-within/field:-translate-y-px motion-reduce:transform-none">
           Your message
         </label>
         <textarea
@@ -162,13 +162,26 @@ export const ContactForm = () => {
       {status !== "idle" ? (
         <p
           className={cn(
-            "mt-4 text-sm",
-            status === "success" ? "text-gold" : "text-red-400"
+            "mt-4 flex items-center gap-2 text-sm",
+            status === "success" ? "font-mono text-diff-green" : "text-red-400"
           )}
           role="status"
           aria-live="polite"
         >
-          {serverMessage}
+          {status === "success" ? (
+            <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" aria-hidden="true">
+              <path
+                d="M5 12.5 9.5 17 19 7.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="check-draw"
+              />
+            </svg>
+          ) : null}
+          {status === "success" ? `// ${serverMessage || "message sent"}` : serverMessage}
         </p>
       ) : null}
     </form>

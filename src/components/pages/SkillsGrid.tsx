@@ -8,6 +8,7 @@ type SkillsGridProps = {
 
 export const SkillsGrid = ({ skills }: SkillsGridProps) => {
   const groups = groupSkills(skills)
+  let flatIndex = -1
 
   return (
     <div className="space-y-8">
@@ -17,9 +18,16 @@ export const SkillsGrid = ({ skills }: SkillsGridProps) => {
             {group.label}
           </h3>
           <ul className="flex flex-wrap items-center justify-center gap-4 min-[580px]:justify-start">
-            {group.skills.map((skill) => (
-              <SkillChip key={skill.name} skill={skill} />
-            ))}
+            {group.skills.map((skill) => {
+              flatIndex += 1
+              return (
+                <SkillChip
+                  key={skill.name}
+                  skill={skill}
+                  delay={Math.min(flatIndex * 30, 400)}
+                />
+              )
+            })}
           </ul>
         </div>
       ))}

@@ -248,7 +248,7 @@ const CommandPalette = ({
         if (event.target === event.currentTarget) onClose()
       }}
       onKeyDown={handleKeyDown}
-      className="m-0 mt-[12vh] w-[min(560px,calc(100vw-24px))] max-w-none translate-x-[-50%] left-1/2 rounded-2xl border border-jet bg-eerie-black-2/95 p-0 text-light-gray shadow-[var(--shadow-5)] backdrop:bg-black/70 backdrop:backdrop-blur-sm motion-safe:animate-[panelIn_160ms_var(--ease-out)] motion-safe:backdrop:animate-[overlayFade_120ms_linear]"
+      className="mx-auto mt-[12vh] mb-auto w-[min(560px,calc(100vw-24px))] max-w-none rounded-2xl border border-jet bg-eerie-black-2/95 p-0 text-light-gray shadow-[var(--shadow-5)] backdrop:bg-black/70 backdrop:backdrop-blur-sm motion-safe:animate-[panelIn_160ms_var(--ease-out)] motion-safe:backdrop:animate-[overlayFade_120ms_linear]"
     >
       <div className="flex items-center gap-3 border-b border-jet px-4 py-3">
         <Search className="h-4 w-4 shrink-0 text-light-gray-70" aria-hidden="true" />

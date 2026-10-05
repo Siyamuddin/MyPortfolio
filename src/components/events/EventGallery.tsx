@@ -24,7 +24,11 @@ export function EventGallery({ title, photos }: { title: string; photos: EventPh
       </h2>
       <ul className="grid grid-cols-2 gap-3 min-[580px]:grid-cols-3">
         {photos.map((photo, index) => (
-          <li key={photo.id} className="min-w-0">
+          <li
+            key={photo.id}
+            className="min-w-0 motion-safe:animate-[fadeIn_var(--dur-4)_var(--ease-out)_backwards]"
+            style={{ animationDelay: `${Math.min(index * 40, 400)}ms` }}
+          >
             <button
               type="button"
               onClick={() => setOpenIndex(index)}
@@ -66,10 +70,14 @@ function Lightbox({
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [index, setIndex] = useState(startIndex)
+  const [direction, setDirection] = useState<1 | -1>(1)
   const touchStart = useRef<{ x: number; y: number } | null>(null)
   const count = photos.length
   const photo = photos[index]
-  const move = (direction: number) => setIndex((current) => (current + direction + count) % count)
+  const move = (next: number) => {
+    setDirection(next > 0 ? 1 : -1)
+    setIndex((current) => (current + next + count) % count)
+  }
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -128,7 +136,9 @@ function Lightbox({
             touchStart.current = null
           }}
         >
-          <EventImage photo={photo} title={title} sizes="(max-width: 768px) 100vw, 1000px" priority />
+          <div key={`${index}-${direction}`} className={direction > 0 ? styles.slideNext : styles.slidePrev}>
+            <EventImage photo={photo} title={title} sizes="(max-width: 768px) 100vw, 1000px" priority />
+          </div>
           {count > 1 ? (
             <div className={styles.albumArrows}>
               <button type="button" className={styles.iconButton} aria-label="Previous photo" onClick={() => move(-1)}>

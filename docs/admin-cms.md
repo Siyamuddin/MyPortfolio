@@ -85,7 +85,7 @@ Use `/admin` sections:
 - **FAQ** — About page accordion + FAQPage schema
 - **Comments** — approve/reject native comments
 - **Messages** — read/archive/delete contact form submissions
-- **Dashboard → Visitors** — page views + unique visitors by day / month / year
+- **Dashboard → Visitors** — page views and unique visitors for today, this month, and this year
 
 Uploads go to the `portfolio` Storage bucket (`avatars/`, `projects/`, `blog/`, `skills/`, `resume/`).
 
@@ -98,7 +98,7 @@ Privacy-friendly first-party tracking (no third-party cookies):
 1. Public pages send a beacon to `/api/analytics/collect` on each navigation
 2. The API stores `path` + a SHA-256 `visitor_hash` of `ANALYTICS_SALT + IP + User-Agent` (never the raw IP)
 3. `/admin` and `/api` paths are ignored; obvious bots are skipped
-4. Admin dashboard shows today / this month / this year summaries, plus tables by day (30d), month (12m), and year
+4. Admin dashboard shows today, this month, and this year summaries (page views and unique visitors)
 
 Unique visitors for a month or year use `COUNT(DISTINCT visitor_hash)` over that period (not a sum of daily uniques).
 

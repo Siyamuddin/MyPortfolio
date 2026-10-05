@@ -53,7 +53,7 @@ export const CommandPaletteTrigger = ({
       )}
     >
       <Search className="h-3.5 w-3.5" aria-hidden="true" />
-      <span className="text-xs">Search</span>
+      <span className="sr-only">Search</span>
       <kbd className="rounded border border-jet bg-eerie-black-1 px-1 py-0.5 font-mono text-[10px] text-light-gray-70 transition-colors group-hover:text-gold">
         {modifier} K
       </kbd>

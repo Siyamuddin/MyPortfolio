@@ -37,7 +37,7 @@ export const BlogArticle = ({ post, content, comments, tags = [] }: BlogArticleP
       aria-labelledby="article-title"
     >
       <ReadingProgress />
-      <nav className="mb-6 text-sm text-light-gray-70 min-[1024px]:pr-[360px]" aria-label="Breadcrumb">
+      <nav className="mb-6 text-sm text-light-gray-70 min-[1024px]:mt-16" aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-2">
           <li>
             <Link

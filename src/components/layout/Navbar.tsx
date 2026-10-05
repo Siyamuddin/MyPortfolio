@@ -50,13 +50,13 @@ export const Navbar = () => {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 z-[5] w-full rounded-t-xl border border-jet bg-[rgba(43,43,44,0.75)] pb-[env(safe-area-inset-bottom)] shadow-[var(--shadow-2)] backdrop-blur-[10px] min-[580px]:rounded-t-[20px] min-[1024px]:absolute min-[1024px]:inset-[0_0_auto_auto] min-[1024px]:flex min-[1024px]:w-max min-[1024px]:items-center min-[1024px]:gap-2 min-[1024px]:rounded-tr-[20px] min-[1024px]:rounded-bl-none min-[1024px]:rounded-br-none min-[1024px]:rounded-tl-none min-[1024px]:border min-[1024px]:border-jet min-[1024px]:bg-eerie-black-2 min-[1024px]:px-4 min-[1024px]:pb-0 min-[1024px]:shadow-none min-[1024px]:backdrop-blur-none"
+      className="fixed bottom-0 left-0 z-[5] w-full rounded-t-xl border border-jet bg-[rgba(43,43,44,0.75)] pb-[env(safe-area-inset-bottom)] shadow-[var(--shadow-2)] backdrop-blur-[10px] min-[580px]:rounded-t-[20px] min-[1024px]:absolute min-[1024px]:inset-[0_0_auto_auto] min-[1024px]:flex min-[1024px]:w-max min-[1024px]:items-center min-[1024px]:gap-1.5 min-[1024px]:rounded-tr-[20px] min-[1024px]:rounded-bl-none min-[1024px]:rounded-br-none min-[1024px]:rounded-tl-none min-[1024px]:border min-[1024px]:border-jet min-[1024px]:bg-eerie-black-2 min-[1024px]:px-3 min-[1024px]:pb-0 min-[1024px]:shadow-none min-[1024px]:backdrop-blur-none"
       aria-label="Primary"
     >
       <CommandPaletteTrigger className="hidden min-[1024px]:inline-flex" />
       <ul
         ref={listRef}
-        className="relative grid grid-cols-6 items-center px-1 text-center min-[580px]:flex min-[580px]:justify-center min-[580px]:gap-5 min-[1024px]:gap-[30px] min-[1024px]:px-3"
+        className="relative grid grid-cols-6 items-center px-1 text-center min-[580px]:flex min-[580px]:justify-center min-[580px]:gap-5 min-[1024px]:gap-4 min-[1024px]:px-2"
       >
         {indicator ? (
           <span
@@ -84,7 +84,7 @@ export const Navbar = () => {
               <Link
                 href={href}
                 className={cn(
-                  "relative block px-1 py-5 text-[11px] text-light-gray transition-colors duration-250 hover:text-light-gray-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold min-[580px]:px-[7px] min-[580px]:text-sm min-[768px]:text-[15px] min-[1024px]:font-medium",
+                  "relative block px-1 py-5 text-[11px] text-light-gray transition-[color,transform] duration-200 ease-[cubic-bezier(.22,1,.36,1)] hover:text-light-gray-70 active:scale-[0.96] motion-reduce:active:scale-100 min-[1024px]:active:scale-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold min-[580px]:px-[7px] min-[580px]:text-sm min-[768px]:text-[15px] min-[1024px]:px-1 min-[1024px]:font-medium",
                   isActive && "text-gold"
                 )}
                 aria-current={isActive ? "page" : undefined}

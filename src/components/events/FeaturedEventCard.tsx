@@ -12,7 +12,7 @@ export const FeaturedEventCard = ({ event }: FeaturedEventCardProps) => {
   const photoCount = event.photos.length
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-jet bg-eerie-black-1 shadow-[var(--shadow-3)]">
+    <article className="group/card overflow-hidden rounded-2xl border border-jet bg-eerie-black-1 shadow-[var(--shadow-3)] transition-colors duration-200 hover:border-gold/40">
       <div className="grid min-[768px]:grid-cols-2">
         <Link
           href={eventHref}
@@ -20,11 +20,15 @@ export const FeaturedEventCard = ({ event }: FeaturedEventCardProps) => {
           tabIndex={0}
           aria-label={`View event: ${event.title}`}
         >
-          <EventImage
-            photo={event.photos[0]}
-            title={event.title}
-            sizes="(min-width:768px) 50vw, 100vw"
-          />
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="relative h-full w-full transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100">
+              <EventImage
+                photo={event.photos[0]}
+                title={event.title}
+                sizes="(min-width:768px) 50vw, 100vw"
+              />
+            </div>
+          </div>
           {photoCount > 0 ? (
             <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-smoky-black/70 px-2.5 py-1 text-[11px] font-medium text-white-2 backdrop-blur">
               <Images className="h-3.5 w-3.5" aria-hidden="true" />
@@ -59,12 +63,15 @@ export const FeaturedEventCard = ({ event }: FeaturedEventCardProps) => {
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href={eventHref}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-gold px-4 py-2 text-sm font-medium text-smoky-black transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+              className="group/cta inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-gold px-4 py-2 text-sm font-medium text-smoky-black transition-[opacity,transform] duration-150 hover:opacity-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
               tabIndex={0}
               aria-label={`View event: ${event.title}`}
             >
               {photoCount ? "View event" : "Read story"}
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowUpRight
+                className="h-4 w-4 transition-transform duration-[180ms] group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5 motion-reduce:transform-none"
+                aria-hidden="true"
+              />
             </Link>
             <Link
               href="/events"

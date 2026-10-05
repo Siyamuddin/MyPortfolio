@@ -31,7 +31,24 @@
 
   /* Transitions */
   --transition-1: 0.25s ease;
-  --transition-2: 0.5s ease-in-out;
+  --transition-2: 0.32s cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ── Motion system ──────────────────────────────────────
+     Animate transform & opacity only. One gold emphasis per
+     viewport. Every usage has a reduced-motion fallback. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* enters, reveals */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* moves, morphs, layout */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1); /* exits */
+  --dur-1: 120ms;
+  --dur-2: 180ms;
+  --dur-3: 240ms;
+  --dur-4: 320ms;
+  --dur-5: 480ms;
+  --rise: 8px; /* largest translate for a reveal; never more than 16px */
+
+  /* Developer-flavored accent used for diff-green touches */
+  --diff-green: #3fb950;
+  --diff-green-bg: rgba(46, 160, 67, 0.16);
 }
 
 @theme inline {
@@ -46,7 +63,10 @@
   --color-light-gray-70: var(--light-gray-70);
   --color-gold: var(--orange-yellow-crayola);
   --color-gold-dark: #e8b84b;
+  --color-diff-green: var(--diff-green);
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, "SF Mono",
+    Menlo, Consolas, monospace;
 }
 
 /* ============================================
@@ -55,7 +75,18 @@
 body {
   background: var(--smoky-black);
   color: var(--light-gray);
-  font-family: var(--font-sans);
+  /* `@theme inline` does not emit `--font-sans` to :root, so reference the
+     next/font variable directly to guarantee Poppins actually applies. */
+  font-family: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-mono,
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, "SF Mono",
+    Menlo, Consolas, monospace;
 }
 
 ::selection {
@@ -86,6 +117,23 @@ body {
   height: 3px;
   background: var(--text-gradient-yellow);
   border-radius: 3px;
+  transform-origin: left center;
+}
+
+/* Page/section titles draw their gold underline in once on mount. */
+@media (prefers-reduced-motion: no-preference) {
+  .gold-underline::after {
+    animation: underlineDraw var(--dur-4) var(--ease-out) 0.2s backwards;
+  }
+}
+
+@keyframes underlineDraw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 /* ============================================
@@ -168,13 +216,13 @@ body {
    ANIMATIONS
    ============================================ */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(var(--rise)); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes scaleUp {
-  from { transform: scale(0.5); }
-  to { transform: scale(1); }
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes slideInRight {
@@ -182,24 +230,232 @@ body {
   to { transform: translateX(0); opacity: 1; }
 }
 
+/* Route/page transition: subtle rise + crossfade on the main card. */
 .fade-in {
-  animation: fadeIn 0.45s ease backwards;
+  animation: fadeIn var(--dur-4) var(--ease-out) backwards;
 }
 
+.scale-up {
+  animation: scaleUp var(--dur-3) var(--ease-out) backwards;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .project-enter {
+    animation: scaleUp var(--dur-3) var(--ease-out);
+  }
+}
+
+/* ── Reveal-on-scroll ────────────────────────────────────
+   Elements with [data-reveal] start hidden and animate once
+   when scrolled into view (JS toggles .is-visible). Only
+   active when motion is allowed; reduced-motion + no-JS keep
+   content fully visible. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(var(--rise));
+    transition:
+      opacity var(--dur-4) var(--ease-out),
+      transform var(--dur-4) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Blinking caret (hero) ──────────────────────────────── */
+@keyframes caretBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes caretSettle {
+  to { opacity: 0; }
+}
+.hero-caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  margin-left: 4px;
+  vertical-align: text-bottom;
+  border-radius: 2px;
+  background: var(--text-gradient-yellow);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-caret {
+    /* blink ~twice at 530ms, then settle (fade) out */
+    animation:
+      caretBlink 530ms steps(1) 2,
+      caretSettle 200ms var(--ease-in) 1060ms forwards;
+  }
+}
+
+/* ── Hero entrance stagger (above the fold → runs on mount) ─ */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-enter {
+    opacity: 0;
+    animation: fadeIn var(--dur-4) var(--ease-out) var(--enter-delay, 0ms) forwards;
+  }
+}
+
+/* ── Low-contrast shimmer for skeletons ─────────────────── */
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+.shimmer {
+  background-image: linear-gradient(
+    90deg,
+    var(--eerie-black-1) 25%,
+    var(--onyx) 50%,
+    var(--eerie-black-1) 75%
+  );
+  background-size: 200% 100%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .shimmer {
+    animation: shimmer 1.2s linear infinite;
+  }
+}
+
+/* ── Cover image clip-path reveal (event detail / articles) ─ */
+@keyframes coverReveal {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cover-reveal {
+    animation: coverReveal var(--dur-5) var(--ease-out) backwards;
+  }
+}
+
+/* ── Success check draw (contact form) ──────────────────── */
+@keyframes checkDraw {
+  to { stroke-dashoffset: 0; }
+}
+.check-draw {
+  stroke-dasharray: 26;
+  stroke-dashoffset: 26;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .check-draw {
+    animation: checkDraw 400ms var(--ease-out) forwards;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .check-draw {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── Command palette + dialog scale-in ──────────────────── */
+@keyframes overlayFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes panelIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Reduced-motion: neutralize transforms, keep only short fades/colors. */
 @media (prefers-reduced-motion: reduce) {
   .fade-in,
-  .scale-up {
+  .scale-up,
+  .hero-enter,
+  .cover-reveal {
     animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
-
+  .hero-caret {
+    display: none;
+  }
   .group-hover\:scale-110,
   .hover\:scale-110 {
     transform: none !important;
   }
 }
 
-.scale-up {
-  animation: scaleUp 0.25s ease forwards;
+/* No-JS safety lives in a <noscript> block in the root layout so reveal
+   content is never left hidden when scripting is unavailable. */
+
+/* ── Reading progress (blog) ────────────────────────────── */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  height: 2px;
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: var(--text-gradient-yellow);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .reading-progress {
+      animation: readingProgress linear;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+@keyframes readingProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reading-progress {
+    transform: scaleX(1);
+    opacity: 0.45;
+  }
+}
+
+/* Heading anchors inside articles */
+.heading-anchor {
+  margin-right: 0.4em;
+  color: var(--orange-yellow-crayola);
+  font-weight: 500;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease-out);
+}
+:is(h1, h2, h3, h4):hover > .heading-anchor,
+.heading-anchor:focus-visible {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .heading-anchor { transition: none; }
+}
+
+/* Resume timeline draw */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .timeline-item::before {
+      transform-origin: top center;
+      transform: scaleY(0);
+      animation: timelineDraw linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+    }
+    .timeline-item::after {
+      animation: dotPop 220ms var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 50%;
+    }
+  }
+}
+@keyframes timelineDraw {
+  to { transform: scaleY(1); }
+}
+@keyframes dotPop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 
 /* Static glow fallback when reduced motion is enabled */

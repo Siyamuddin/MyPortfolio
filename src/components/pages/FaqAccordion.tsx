@@ -57,7 +57,8 @@ export const FaqAccordion = ({ faqs }: FaqAccordionProps) => {
                   {faq.question}
                 </span>
                 <ChevronDown
-                  className={`h-4 w-4 shrink-0 text-gold transition-transform ${isOpen ? "rotate-180" : ""}`}
+                  className="h-4 w-4 shrink-0 text-gold transition-transform duration-200 ease-[cubic-bezier(.65,0,.35,1)] motion-reduce:transition-none"
+                  style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
                   aria-hidden="true"
                 />
               </button>
@@ -65,10 +66,18 @@ export const FaqAccordion = ({ faqs }: FaqAccordionProps) => {
                 id={`faq-panel-${id}`}
                 role="region"
                 aria-labelledby={`faq-button-${id}`}
-                hidden={!isOpen}
-                className="border-t border-jet px-4 py-3 text-sm font-light leading-relaxed text-light-gray min-[580px]:text-[15px]"
+                className="grid transition-[grid-template-rows] duration-[240ms] ease-[cubic-bezier(.65,0,.35,1)] motion-reduce:transition-none"
+                style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
               >
-                {faq.answer}
+                <div className="overflow-hidden">
+                  <p
+                    className={`border-t border-jet px-4 py-3 text-sm font-light leading-relaxed text-light-gray transition-opacity duration-[160ms] ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none min-[580px]:text-[15px] ${
+                      isOpen ? "opacity-100 delay-[60ms]" : "opacity-0 delay-0"
+                    }`}
+                  >
+                    {faq.answer}
+                  </p>
+                </div>
               </div>
             </li>
           )

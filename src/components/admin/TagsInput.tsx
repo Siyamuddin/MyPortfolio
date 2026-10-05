@@ -9,13 +9,14 @@ type TagsInputProps = {
   name?: string
   label?: string
   defaultTags?: Tag[]
+  onChange?: (tags: Tag[]) => void
 }
 
 /**
  * Admin tag editor. Emits a JSON array of labels under a hidden field; the
  * server action slugifies, dedupes and syncs the shared tag registry.
  */
-export const TagsInput = ({ name = "tags", label = "Tags", defaultTags = [] }: TagsInputProps) => {
+export const TagsInput = ({ name = "tags", label = "Tags", defaultTags = [], onChange }: TagsInputProps) => {
   const [tags, setTags] = useState<Tag[]>(() => {
     const seen = new Set<string>()
     return defaultTags.filter((tag) => {
@@ -28,16 +29,17 @@ export const TagsInput = ({ name = "tags", label = "Tags", defaultTags = [] }: T
 
   const serialized = useMemo(() => JSON.stringify(tags.map((tag) => tag.label)), [tags])
 
+  const commitTags = (next: Tag[]) => {
+    setTags(next)
+    onChange?.(next)
+  }
+
   const addDraft = () => {
     const next = normalizeTag(draft)
     setDraft("")
     if (!next) return
-    setTags((current) => {
-      if (current.length >= MAX_TAGS_PER_ITEM || current.some((tag) => tag.slug === next.slug)) {
-        return current
-      }
-      return [...current, next]
-    })
+    if (tags.length >= MAX_TAGS_PER_ITEM || tags.some((tag) => tag.slug === next.slug)) return
+    commitTags([...tags, next])
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -47,12 +49,11 @@ export const TagsInput = ({ name = "tags", label = "Tags", defaultTags = [] }: T
       return
     }
     if (event.key === "Backspace" && !draft && tags.length) {
-      setTags((current) => current.slice(0, -1))
+      commitTags(tags.slice(0, -1))
     }
   }
 
-  const removeTag = (slug: string) =>
-    setTags((current) => current.filter((tag) => tag.slug !== slug))
+  const removeTag = (slug: string) => commitTags(tags.filter((tag) => tag.slug !== slug))
 
   return (
     <div className="block text-sm text-light-gray-70">

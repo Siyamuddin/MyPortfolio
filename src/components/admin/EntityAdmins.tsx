@@ -13,7 +13,6 @@ import { TagsInput } from "@/components/admin/TagsInput"
 import { labelFromSlug, type Tag } from "@/lib/portfolio/tags"
 import {
   deleteItemAction,
-  upsertBlogAction,
   upsertEducationAction,
   upsertExperienceAction,
   upsertFaqAction,
@@ -22,7 +21,6 @@ import {
   upsertSkillAction,
 } from "@/lib/portfolio/admin-actions"
 import type {
-  BlogPostRow,
   EducationRow,
   ExperienceRow,
   FaqRow,
@@ -291,89 +289,6 @@ export const ProjectsAdmin = ({
           <DeleteButton
             onDelete={async () => {
               const result = await deleteItemAction("projects", item.id)
-              if (result.ok) refresh()
-              return result
-            }}
-          />
-        </div>
-      ))}
-    </div>
-  )
-}
-
-export const BlogAdmin = ({
-  items,
-  tagLabels = {},
-}: {
-  items: BlogPostRow[]
-  tagLabels?: Record<string, string>
-}) => {
-  const router = useRouter()
-  const refresh = () => router.refresh()
-
-  return (
-    <div className="space-y-6">
-      <AdminForm title="Add blog post" action={upsertBlogAction} onSuccess={refresh}>
-        <Field label="Title" name="title" required />
-        <Field label="Slug" name="slug" required />
-        <Field label="Category" name="category" />
-        <Field label="Date label" name="date" defaultValue="Mar 2026" />
-        <Field label="Date time (YYYY-MM)" name="date_time" defaultValue="2026-03" />
-        <TextArea label="Excerpt" name="excerpt" />
-        <TextArea label="Body (MDX)" name="body" rows={16} />
-        <label className="block text-sm text-light-gray-70">
-          Status
-          <select
-            name="status"
-            defaultValue="draft"
-            className={fieldClassName}
-            aria-label="Status"
-            tabIndex={0}
-          >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-          </select>
-        </label>
-        <FileUploadField name="image" label="Image" folder="blog" />
-        <TagsInput />
-        <Field label="Social image URL (optional)" name="og_image" defaultValue="" />
-        <Field label="External URL (optional)" name="url" defaultValue="" />
-        <Field label="Sort order" name="sort_order" type="number" defaultValue={items.length} />
-      </AdminForm>
-
-      {items.map((item) => (
-        <div key={item.id} className="space-y-2">
-          <AdminForm title={`Edit: ${item.title}`} action={upsertBlogAction} onSuccess={refresh}>
-            <input type="hidden" name="id" value={item.id} />
-            <Field label="Title" name="title" defaultValue={item.title} required />
-            <Field label="Slug" name="slug" defaultValue={item.slug} required />
-            <Field label="Category" name="category" defaultValue={item.category} />
-            <Field label="Date label" name="date" defaultValue={item.date} />
-            <Field label="Date time" name="date_time" defaultValue={item.date_time} />
-            <TextArea label="Excerpt" name="excerpt" defaultValue={item.excerpt} />
-            <TextArea label="Body (MDX)" name="body" defaultValue={item.body ?? ""} rows={16} />
-            <label className="block text-sm text-light-gray-70">
-              Status
-              <select
-                name="status"
-                defaultValue={item.status ?? "draft"}
-                className={fieldClassName}
-                aria-label="Status"
-                tabIndex={0}
-              >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-              </select>
-            </label>
-            <FileUploadField name="image" label="Image" folder="blog" defaultValue={item.image} />
-            <TagsInput defaultTags={toDefaultTags(item.tags, tagLabels)} />
-            <Field label="Social image URL (optional)" name="og_image" defaultValue={item.og_image ?? ""} />
-            <Field label="External URL (optional)" name="url" defaultValue={item.url} />
-            <Field label="Sort order" name="sort_order" type="number" defaultValue={item.sort_order} />
-          </AdminForm>
-          <DeleteButton
-            onDelete={async () => {
-              const result = await deleteItemAction("blog_posts", item.id)
               if (result.ok) refresh()
               return result
             }}

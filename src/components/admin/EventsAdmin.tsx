@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useEffect, useRef, useState, type FormEvent } from "react"
+import { useRef, useState, type FormEvent } from "react"
 import {
   ArrowDown, ArrowUp, CalendarDays, Camera, Check, ExternalLink,
   ImagePlus, LoaderCircle, MapPin, Pencil, Plus, Trash2, X,
@@ -16,8 +16,10 @@ import {
 } from "@/lib/portfolio/event-actions"
 import { labelFromSlug, type Tag } from "@/lib/portfolio/tags"
 import { TagsInput } from "@/components/admin/TagsInput"
+import { DeleteConfirmDialog, StudioEmpty, StudioFilter, StudioNotice } from "@/components/admin/studio/StudioChrome"
+import { useModalDialog } from "@/components/admin/studio/useModalDialog"
 import { EventImage } from "@/components/events/EventImage"
-import styles from "./EventsAdmin.module.css"
+import styles from "./studio/AdminStudio.module.css"
 
 type EventFilter = "all" | "published" | "draft"
 const maximumPhotoSizeLabel = `${MAX_EVENT_PHOTO_BYTES / (1024 * 1024)} MB`
@@ -64,36 +66,37 @@ export function EventsAdmin({ items, tagLabels = {} }: { items: PortfolioEvent[]
         </div>
       </div>
 
-      {notice ? <p className={styles.notice} role="status"><Check size={17} aria-hidden="true" />{notice}</p> : null}
+      {notice ? <StudioNotice>{notice}</StudioNotice> : null}
 
-      <div className={styles.toolbar}>
-        <div className={styles.segmentedControl} role="group" aria-label="Filter events by visibility">
-          {([['all', 'All events'], ['published', 'Published'], ['draft', 'Drafts']] as const).map(([value, label]) => (
-            <button key={value} type="button" aria-pressed={filter === value} onClick={() => setFilter(value)}>
-              {label}<span>{counts[value]}</span>
-            </button>
-          ))}
-        </div>
-        <p className={styles.muted}>{counts.published} on your portfolio</p>
-      </div>
+      <StudioFilter
+        label="Filter events by visibility"
+        value={filter}
+        onChange={setFilter}
+        options={[
+          { value: "all", label: "All events", count: counts.all },
+          { value: "published", label: "Published", count: counts.published },
+          { value: "draft", label: "Drafts", count: counts.draft },
+        ]}
+        summary={`${counts.published} on your portfolio`}
+      />
 
       {visibleEvents.length ? (
-        <div className={styles.eventList}>
+        <div className={styles.itemList}>
           {visibleEvents.map((event) => (
-            <article key={event.id} className={styles.eventCard}>
-              <div className={styles.eventCover}>
+            <article key={event.id} className={styles.itemCard}>
+              <div className={styles.itemCover}>
                 {event.photos[0] ? (
                   <EventImage photo={event.photos[0]} title={event.title} sizes="160px" />
                 ) : <Camera size={30} strokeWidth={1.3} aria-hidden="true" />}
                 {event.photos.length ? <span className={styles.photoCount}><Camera size={12} aria-hidden="true" />{event.photos.length}</span> : null}
               </div>
-              <div className={styles.eventInfo}>
-                <div className={styles.eventTags}>
+              <div className={styles.itemInfo}>
+                <div className={styles.itemTags}>
                   <span className={styles.category}>{event.category}</span>
                   <span className={styles.status} data-published={event.status === "published"}>{event.status === "published" ? "Published" : "Draft"}</span>
                 </div>
                 <h3>{event.title}</h3>
-                <div className={styles.eventMeta}>
+                <div className={styles.itemMeta}>
                   <span><CalendarDays size={14} aria-hidden="true" /><time dateTime={event.date}>{displayDate(event.date)}</time></span>
                   {event.location ? <span><MapPin size={14} aria-hidden="true" />{event.location}</span> : null}
                 </div>
@@ -110,12 +113,13 @@ export function EventsAdmin({ items, tagLabels = {} }: { items: PortfolioEvent[]
           ))}
         </div>
       ) : (
-        <div className={styles.empty}>
-          <div className={styles.emptyIcon}><Camera size={32} strokeWidth={1.3} aria-hidden="true" /></div>
-          <h3>{filter === "all" ? "Every event has a story." : `No ${filter === "draft" ? "drafts" : "published events"} yet.`}</h3>
-          <p>{filter === "all" ? "Start with a hackathon, a campus moment, or a community gathering. Add your photos and make it yours." : "Choose All events to see your collection, or start a new story."}</p>
-          <button type="button" className={styles.primaryButton} onClick={startNewEvent}><Plus size={17} aria-hidden="true" />{filter === "all" ? "Add your first event" : "Add event"}</button>
-        </div>
+        <StudioEmpty
+          icon={<Camera size={32} strokeWidth={1.3} aria-hidden="true" />}
+          title={filter === "all" ? "Every event has a story." : `No ${filter === "draft" ? "drafts" : "published events"} yet.`}
+          description={filter === "all" ? "Start with a hackathon, a campus moment, or a community gathering. Add your photos and make it yours." : "Choose All events to see your collection, or start a new story."}
+          actionLabel={filter === "all" ? "Add your first event" : "Add event"}
+          onAction={startNewEvent}
+        />
       )}
 
       {editing ? <EventEditor key={editing === "new" ? "new" : editing.id} event={editing === "new" ? undefined : editing} tagLabels={tagLabels} onClose={() => setEditing(null)} onSaved={(status) => {
@@ -133,31 +137,13 @@ export function EventsAdmin({ items, tagLabels = {} }: { items: PortfolioEvent[]
   )
 }
 
-function useModalDialog() {
-  const ref = useRef<HTMLDialogElement>(null)
-  useEffect(() => {
-    const dialog = ref.current
-    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
-    const previousOverflow = document.body.style.overflow
-    dialog?.showModal()
-    document.body.style.overflow = "hidden"
-    return () => {
-      dialog?.close()
-      document.body.style.overflow = previousOverflow
-      const focusTarget = previousFocus?.isConnected ? previousFocus : document.getElementById("event-add-button")
-      focusTarget?.focus({ preventScroll: true })
-    }
-  }, [])
-  return ref
-}
-
 function EventEditor({ event, tagLabels, onClose, onSaved }: {
   event?: PortfolioEvent
   tagLabels: Record<string, string>
   onClose: () => void
   onSaved: (status: "draft" | "published") => void
 }) {
-  const dialogRef = useModalDialog()
+  const dialogRef = useModalDialog("event-add-button")
   const defaultTags: Tag[] = (event?.tags ?? []).map((slug) => ({
     slug,
     label: tagLabels[slug] ?? labelFromSlug(slug),
@@ -345,30 +331,20 @@ function EventEditor({ event, tagLabels, onClose, onSaved }: {
 }
 
 function DeleteEventDialog({ event, onClose, onDeleted }: { event: PortfolioEvent; onClose: () => void; onDeleted: () => void }) {
-  const ref = useModalDialog()
-  const busyRef = useRef(false)
-  const [pending, setPending] = useState(false)
-  const [error, setError] = useState("")
-  async function deleteEvent() {
-    if (busyRef.current) return
-    busyRef.current = true
-    setPending(true)
-    setError("")
-    try {
-      const result = await deleteEventAction(event.id)
-      if (result.ok) onDeleted()
-      else setError(result.error ?? "Couldn’t delete this event. Please try again.")
-    } catch { setError("Couldn’t delete this event. Check your connection and try again.") }
-    finally { busyRef.current = false; setPending(false) }
-  }
-  return <dialog ref={ref} className={`${styles.dialog} ${styles.deleteDialog}`} aria-labelledby="delete-event-title" aria-describedby="delete-event-description" onCancel={(e) => { e.preventDefault(); if (!busyRef.current) onClose() }}>
-    <div className={styles.deleteIcon}><Trash2 size={24} aria-hidden="true" /></div>
-    <h2 id="delete-event-title">Delete this event?</h2>
-    <p id="delete-event-description">“{event.title}” and its captions will be removed from your showcase. This cannot be undone.</p>
-    {error ? <p className={styles.error} role="alert">{error}</p> : null}
-    <div className={styles.deleteActions}>
-      <button type="button" autoFocus className={styles.secondaryButton} disabled={pending} onClick={onClose}>Keep event</button>
-      <button type="button" className={styles.dangerButton} disabled={pending} onClick={() => { void deleteEvent() }}>{pending ? "Deleting…" : "Delete event"}</button>
-    </div>
-  </dialog>
+  return (
+    <DeleteConfirmDialog
+      titleId="delete-event-title"
+      descriptionId="delete-event-description"
+      title="Delete this event?"
+      description={`“${event.title}” and its captions will be removed from your showcase. This cannot be undone.`}
+      cancelLabel="Keep event"
+      confirmLabel="Delete event"
+      restoreFocusId="event-add-button"
+      fallbackError="Couldn’t delete this event. Please try again."
+      networkError="Couldn’t delete this event. Check your connection and try again."
+      onClose={onClose}
+      onDeleted={onDeleted}
+      onConfirm={() => deleteEventAction(event.id)}
+    />
+  )
 }

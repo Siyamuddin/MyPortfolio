@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react"
 import Link from "next/link"
 import { ArrowLeft, ArrowUpRight, CalendarDays, MapPin, Sparkles, Users } from "lucide-react"
 import { EventImage } from "@/components/events/EventImage"
@@ -15,7 +16,7 @@ export function EventDetail({ event, tags }: { event: PortfolioEvent; tags: Tag[
       className="rounded-[20px] border border-jet bg-eerie-black-2 p-[15px] shadow-[var(--shadow-1)] min-[580px]:mx-auto min-[580px]:w-[520px] min-[580px]:p-[30px] min-[768px]:w-[700px] min-[1024px]:w-[950px] min-[1024px]:shadow-[var(--shadow-5)] min-[1250px]:w-auto"
       aria-labelledby="event-title"
     >
-      <nav className="mb-6 text-sm text-light-gray-70" aria-label="Breadcrumb">
+      <nav className="mb-6 text-sm text-light-gray-70 min-[1024px]:mt-16" aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-2">
           <li>
             <Link
@@ -63,7 +64,7 @@ export function EventDetail({ event, tags }: { event: PortfolioEvent; tags: Tag[
       </header>
 
       {coverPhoto ? (
-        <figure className="relative mb-6 aspect-[16/9] overflow-hidden rounded-xl border border-jet bg-eerie-black-1">
+        <figure className="cover-reveal relative mb-6 aspect-[16/9] overflow-hidden rounded-xl border border-jet bg-eerie-black-1">
           <EventImage
             photo={coverPhoto}
             title={event.title}
@@ -74,7 +75,7 @@ export function EventDetail({ event, tags }: { event: PortfolioEvent; tags: Tag[
       ) : null}
 
       {event.highlight ? (
-        <p className="mb-6 flex items-start gap-2 rounded-xl border border-gold/20 bg-gold/5 p-4 text-sm leading-relaxed text-gold">
+        <p className="hero-enter mb-6 flex items-start gap-2 rounded-xl border border-gold/20 bg-gold/5 p-4 text-sm leading-relaxed text-gold" style={{ "--enter-delay": "120ms" } as CSSProperties}>
           <Sparkles size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
           {event.highlight}
         </p>

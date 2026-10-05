@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+import { ReadingProgress } from "@/components/blog/ReadingProgress"
 import { NativeComments } from "@/components/blog/NativeComments"
 import { GiscusComments } from "@/components/blog/GiscusComments"
 import {
@@ -31,10 +32,12 @@ export const BlogArticle = ({ post, content, comments, tags = [] }: BlogArticleP
 
   return (
     <article
+      data-reading-root
       className="rounded-[20px] border border-jet bg-eerie-black-2 p-[15px] shadow-[var(--shadow-1)] min-[580px]:mx-auto min-[580px]:w-[520px] min-[580px]:p-[30px] min-[768px]:w-[700px] min-[1024px]:w-[950px] min-[1024px]:shadow-[var(--shadow-5)] min-[1250px]:w-auto"
       aria-labelledby="article-title"
     >
-      <nav className="mb-6 text-sm text-light-gray-70" aria-label="Breadcrumb">
+      <ReadingProgress />
+      <nav className="mb-6 text-sm text-light-gray-70 min-[1024px]:mt-16" aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-2">
           <li>
             <Link

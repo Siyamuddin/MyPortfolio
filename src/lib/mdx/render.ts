@@ -17,10 +17,12 @@ export const renderMdx = async (source: string) => {
           [
             rehypeAutolinkHeadings,
             {
-              behavior: "wrap",
+              behavior: "prepend",
               properties: {
-                className: ["no-underline"],
+                className: ["heading-anchor"],
+                ariaLabel: "Link to this section",
               },
+              content: { type: "text", value: "#" },
             },
           ],
         ],

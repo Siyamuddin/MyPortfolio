@@ -40,7 +40,7 @@ export const BlogPage = ({ blogPosts }: BlogPageProps) => {
                     width={800}
                     height={460}
                     sizes="(min-width:768px) 50vw, 100vw"
-                    className="h-full w-full object-cover transition-transform duration-250 group-hover:scale-110"
+                    className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                     unoptimized={imageSrc.includes("placehold.co")}
                   />
                 </figure>

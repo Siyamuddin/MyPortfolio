@@ -2,12 +2,13 @@ import { Profile, Service, Skill, Education, Experience, Project, BlogPost, Faq 
 
 export const profile: Profile = {
   name: "Siyam Uddin",
-  title: "Software Engineer",
+  title: "Flutter Dev @ Mixroom.ai",
   email: "business@siyamuddin.com",
   location: "Seoul, South Korea",
   bio: [
-    "Results-driven Software Engineer with 3+ years of hands-on experience designing and operating large-scale production systems using Python, FastAPI, Java Spring Boot, React, and TypeScript. Proven track record of end-to-end delivery across AWS deployments, CI/CD automation, Redis caching, real-time WebSocket architecture, and JWT/OAuth2 security. Experienced integrating AI/ML technologies — including LangChain, RAG pipelines, and Whisper ASR — directly into production services.",
-    "Currently completing a B.Eng. in Computer Science & Engineering at Sejong University (graduating August 2026). Researching Agentic AI in Industrial IoT Security.",
+    "Independent IT & AI solutions provider helping businesses build production-grade software, automation pipelines, and AI-powered systems. I help businesses automate workflows with AI by building intelligent agents, orchestration pipelines, and full-stack applications using LangChain, n8n, Spring Boot, React, Docker, AWS, and Cloudflare.",
+    "My research in Depression Detection using Multimodal clinical Data and Agentic AI for Industrial IoT Security keeps me at the frontier of autonomous systems, while my hands-on engineering delivers real products. Whether you need an AI automation or full-stack web application, an AI integration layer, a DevOps pipeline, or a custom automation workflow, I design, build, and ship it.",
+    "I currently work as a Flutter Developer at Mixroom.ai, an AI-based digital audio workstation (DAW). Based in Seoul, working with clients globally.",
   ],
   bioHighlight: "Agentic AI in Industrial IoT Security",
   socials: {
@@ -87,32 +88,42 @@ export const education: Education[] = [
 
 export const experience: Experience[] = [
   {
+    role: "Flutter Developer",
+    company: "Mixroom.ai",
+    period: "Aug 2026 — Present",
+    location: "Seoul, South Korea",
+    highlights: [
+      "Building the Flutter app for Mixroom.ai, an AI-based digital audio workstation (DAW)",
+      "Tech: Flutter, Dart, AI audio",
+    ],
+  },
+  {
+    role: "Founder & IT/AI Solutions Architect",
+    company: "Solopreneur",
+    period: "2025-present ",
+    location: "Seoul, South Korea",
+    highlights: [
+      "Run an independent IT & AI solutions practice delivering full-stack development, AI agent pipelines, automation infrastructure, and technical consulting to clients globally",
+      "Built and maintain hermes agent a production automation dashboard with n8n, Cloudflare Tunnel, cron jobs, Telegram integration, and scheduled SVG report generation",
+      "Developed AI agent systems using LangChain, Spring AI, and multi-agent architectures for production deployments",
+      "Designed and deployed Docker Compose stacks with PostgreSQL, n8n, Cloudflare Tunnel, and monitoring for always-on infrastructure",
+      "Created YouTube SEO automation workflows handling tag generation, playlist management, and thumbnail processing for @siyamuddin channel (1,450+ subscribers)",
+      "Provide end-to-end technical consulting: architecture design, stack selection, AI feasibility, and production deployment",
+    ],
+  },
+  {
     role: "Full-Stack Engineer (Sellerket)",
     company: "Sellerket LTD",
     period: "2024 — 2026",
-    location: "Seoul, South Korea",
-    highlights: [
-      "Led zero-downtime migration of legacy platform to modern full-stack architecture using React 19 and Java Spring Boot",
-      "Architected and deployed flight booking platform handling 50,000+ API requests per hour reliably",
-      "Eliminated concurrent booking race conditions through Redis rate limiting and REPEATABLE_READ transaction isolation",
-      "Implemented JWT refresh token rotation, OAuth2 (Google), RBAC, CSRF/XSS/HSTS security headers, and audit logging",
-      "Integrated TossPay payment gateway with idempotency checks and webhook signature validation",
-      "Set up full observability stack: Prometheus, Grafana, Loki + Promtail; containerized all services with Docker Compose",
-      "Delivered PWA with i18n multi-language support, keyboard accessibility, and Flyway auto-migration",
-    ],
+    location: "",
+    highlights: [],
   },
   {
     role: "Full-Stack Developer",
     company: "Sellerket LTD",
     period: "2024 — 2026",
-    location: "Seoul, South Korea",
-    highlights: [
-      "Built GlobalSellerket (brand-influencer e-commerce) and SetlOne (social networking + fintech) platforms deployed to AWS production",
-      "Transformed legacy PHP 7 codebase to modern Java, Spring Boot, React, TypeScript monolithic architecture",
-      "Developed Agentic Automation tool using FastAPI, Whisper ASR, Groq API, LLaMA 3.1, and RAG pipeline — acquired 100+ real users",
-      "Built cross-platform iOS and Android mobile apps from single React codebase using Capacitor",
-      "Developed automated image and video generation tools for marketing team; delivered multiple investor-facing MVPs",
-    ],
+    location: "",
+    highlights: [],
   },
 ];
 

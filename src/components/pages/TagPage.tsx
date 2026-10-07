@@ -100,7 +100,6 @@ export function TagPage({ tag, content }: { tag: Tag; content: TagContent }) {
       href: external ? project.url : "/portfolio",
       external,
       kind: project.category,
-      meta: project.highlight,
     }
   })
 

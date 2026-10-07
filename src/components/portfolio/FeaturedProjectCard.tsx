@@ -62,11 +62,6 @@ export const FeaturedProjectCard = ({
           )}
         </figure>
         <div className="flex flex-col justify-center p-5 min-[580px]:p-6">
-          {project.highlight ? (
-            <p className="mb-2 w-max rounded-lg bg-onyx px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-gold">
-              {project.highlight}
-            </p>
-          ) : null}
           <h3 className="mb-2 text-lg font-medium text-white-2 min-[580px]:text-xl">
             {project.title}
           </h3>

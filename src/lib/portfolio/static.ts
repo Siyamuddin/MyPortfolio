@@ -3,7 +3,6 @@ import {
   education,
   experience,
   faqs,
-  featuredProjectTitle,
   navPages,
   profile,
   projects,
@@ -11,7 +10,6 @@ import {
   skills,
 } from "@/data/portfolio"
 import { sortBlogPostsByNewest } from "@/lib/portfolio/blog"
-import { resolveFeaturedProject } from "@/lib/portfolio/featured-project"
 import type { PortfolioData } from "@/lib/portfolio/types"
 
 export const getStaticPortfolio = (): PortfolioData => ({
@@ -21,7 +19,6 @@ export const getStaticPortfolio = (): PortfolioData => ({
   education,
   experience,
   projects,
-  featuredProject: resolveFeaturedProject(projects, null, featuredProjectTitle),
   blogPosts: sortBlogPostsByNewest(
     blogPosts.filter((post) => post.status === "published")
   ),

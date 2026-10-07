@@ -135,6 +135,7 @@ export const upsertProfileAction = async (
 ): Promise<ActionResult> => {
   try {
     const { supabase } = await requireAdmin()
+    const submittedFeaturedProject = formData.has("featured_project_id")
     const payload = profileSchema.parse({
       id: formData.get("id") || undefined,
       name: formData.get("name"),
@@ -153,7 +154,9 @@ export const upsertProfileAction = async (
       }),
       avatar: formData.get("avatar") ?? "",
       resume_url: formData.get("resume_url") || null,
-      featured_project_id: formData.get("featured_project_id") ?? null,
+      ...(submittedFeaturedProject
+        ? { featured_project_id: formData.get("featured_project_id") }
+        : {}),
       featured_event_id: formData.get("featured_event_id") ?? null,
     })
 
@@ -167,7 +170,9 @@ export const upsertProfileAction = async (
       socials: payload.socials,
       avatar: payload.avatar,
       resume_url: payload.resume_url,
-      featured_project_id: payload.featured_project_id,
+      ...(submittedFeaturedProject
+        ? { featured_project_id: payload.featured_project_id }
+        : {}),
       featured_event_id: payload.featured_event_id,
       updated_at: new Date().toISOString(),
     }

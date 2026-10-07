@@ -72,6 +72,7 @@ export const ProfileAdminForm = ({
 
   return (
     <form
+      key={JSON.stringify(profile ?? null)}
       action={handleSubmit}
       className="space-y-4 rounded-2xl border border-jet bg-eerie-black-2 p-5"
       aria-label="Edit profile"

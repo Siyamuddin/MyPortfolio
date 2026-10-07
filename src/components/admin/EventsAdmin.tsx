@@ -306,7 +306,7 @@ function EventEditor({ event, tagLabels, onClose, onSaved }: {
           <fieldset className={styles.formSection} disabled={saving}>
             <legend>Tags &amp; social preview</legend>
             <p className={styles.sectionDescription}>Tags create crawlable topic pages at <code>/tags</code>. The social image defaults to your cover photo when left blank.</p>
-            <TagsInput defaultTags={defaultTags} />
+            <TagsInput defaultTags={defaultTags} onChange={() => setDirty(true)} />
             <label className={styles.field}>Social image URL<input name="og_image" type="url" maxLength={2048} defaultValue={event?.ogImage} placeholder="Defaults to the cover photo" /><small>Optional. Used for link previews when sharing this event.</small></label>
           </fieldset>
 

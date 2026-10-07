@@ -6,6 +6,7 @@ import {
   isLikelyBot,
   isTrackablePath,
 } from "@/lib/analytics/hash"
+import { trustedClientIp } from "@/lib/rate-limit"
 import { createServiceClient } from "@/lib/supabase/admin"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
@@ -13,36 +14,9 @@ const collectSchema = z.object({
   path: z.string().min(1).max(500),
 })
 
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
-
-const getClientIp = (request: NextRequest) =>
-  request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-  request.headers.get("x-real-ip") ??
-  "unknown"
-
-const isRateLimited = (ip: string) => {
-  const now = Date.now()
-  const windowMs = 60_000
-  const maxRequests = 60
-  const entry = rateLimitMap.get(ip)
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + windowMs })
-    return false
-  }
-
-  entry.count += 1
-  return entry.count > maxRequests
-}
-
 export const POST = async (request: NextRequest) => {
   try {
     if (!isSupabaseConfigured() || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      return new NextResponse(null, { status: 204 })
-    }
-
-    const ip = getClientIp(request)
-    if (isRateLimited(ip)) {
       return new NextResponse(null, { status: 204 })
     }
 
@@ -68,7 +42,7 @@ export const POST = async (request: NextRequest) => {
       return new NextResponse(null, { status: 204 })
     }
 
-    const visitorHash = hashVisitor(ip, userAgent)
+    const visitorHash = hashVisitor(trustedClientIp(request), userAgent)
     const admin = createServiceClient()
     const { error } = await admin.from("analytics_events").insert({
       path,

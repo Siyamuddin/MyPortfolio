@@ -1,6 +1,6 @@
 ---
 name: siyam-portfolio-admin
-description: Use when managing any siyamuddin.com portfolio CMS content via the secured agent admin API (profile, lists, blog, FAQ, comments, upload, seed).
+description: Use when managing siyamuddin.com portfolio CMS content via the secured agent admin API (profile, lists, blog, events, FAQ, comments, upload, seed).
 version: 2.0.0
 author: Siyam Uddin
 license: MIT
@@ -12,11 +12,11 @@ metadata:
 
 # Siyam Portfolio Admin API
 
-Full CMS control for **siyamuddin.com** through a Bearer-authenticated agent API (same key as before: `BLOG_API_KEY`).
+Agent API for **siyamuddin.com** (`Authorization: Bearer` `BLOG_API_KEY`). Admin UI only: `featured_event_id`, blog and project tags and `og_image`, and contact messages.
 
 ## When to Use
 
-Use this skill for any portfolio CMS task: profile, services, skills, education, experience, projects, blog (MDX), FAQ, comment moderation, file upload, or seeding from static data.
+Use this skill for portfolio CMS tasks the API covers: profile, services, skills, education, experience, projects, blog (MDX), events, FAQ, comment moderation, file upload, or seeding from static data.
 
 ## Credentials
 

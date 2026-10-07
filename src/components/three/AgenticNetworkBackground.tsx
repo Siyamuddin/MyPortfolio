@@ -5,7 +5,6 @@ import { Canvas, useFrame } from "@react-three/fiber"
 import { Line } from "@react-three/drei"
 import * as THREE from "three"
 import { cn } from "@/lib/cn"
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion"
 
 const GOLD = "#ffdb70"
 const NODE_COUNT = 22
@@ -108,7 +107,6 @@ export const AgenticNetworkBackground = ({
   className,
   pointer,
 }: AgenticNetworkBackgroundProps) => {
-  const prefersReducedMotion = usePrefersReducedMotion()
   const containerRef = useRef<HTMLDivElement>(null)
   const intersectingRef = useRef(true)
   const runningRef = useRef(true)
@@ -142,15 +140,6 @@ export const AgenticNetworkBackground = ({
       document.removeEventListener("visibilitychange", update)
     }
   }, [])
-
-  if (prefersReducedMotion) {
-    return (
-      <div
-        className={cn("hero-glow-fallback pointer-events-none", className)}
-        aria-hidden="true"
-      />
-    )
-  }
 
   return (
     <div

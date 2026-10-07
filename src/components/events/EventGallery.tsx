@@ -114,7 +114,7 @@ function Lightbox({
         }
       }}
     >
-      <div className={styles.album}>
+      <div>
         <header className={styles.albumHeader}>
           <span className={styles.eyebrow}>
             {count ? `${index + 1} of ${count} photos` : "Event photo"}

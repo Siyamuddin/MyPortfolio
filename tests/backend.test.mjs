@@ -30,9 +30,9 @@ test('CMS unpublished or removed article must not fall back to a sample article'
  const load=sourceLoader({'react':{cache:fn=>fn},'next/cache':{unstable_cache:fn=>fn},'@supabase/supabase-js':{createClient:()=>({from:()=>chain})},'@/data/portfolio':{navPages:[]},'@/lib/portfolio/mappers':{},'@/lib/portfolio/static':{getStaticBlogPostBySlug:()=>fake,getStaticPortfolio:()=>({})},'@/lib/supabase/env':{isSupabaseConfigured:()=>true}},{process:{env:{NEXT_PUBLIC_SUPABASE_URL:'https://example.supabase.co',NEXT_PUBLIC_SUPABASE_ANON_KEY:'mock'}}});
  assert.equal(await load('src/lib/portfolio/repository.ts').getBlogPostBySlug('sample'),null);
 });
-test('project card website and source must have independent links',()=>{
+test('project card source link comes from a GitHub project url',()=>{
  const {ProjectCard}=sourceLoader({'next/image':()=>null})('src/components/portfolio/ProjectCard.tsx');
- const html=renderToStaticMarkup(React.createElement(ProjectCard,{project:{title:'Example',category:'Applications',image:'/image.png',url:'https://example.com',githubUrl:'https://github.com/example/repo',description:'Example'}}));
+ const html=renderToStaticMarkup(React.createElement(ProjectCard,{project:{title:'Example',category:'Applications',image:'/image.png',url:'https://github.com/example/repo',description:'Example'}}));
  assert.match(html,/href="https:\/\/github.com\/example\/repo"/);
 });
 test('MDX 6 defaults block JavaScript expressions',async()=>{

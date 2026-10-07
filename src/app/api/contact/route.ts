@@ -40,23 +40,32 @@ const persistMessage = async (payload: ContactPayload): Promise<boolean> => {
   }
 }
 
+/** Recipient and verified from address are both required. No mailbox fallback. */
+const getContactMailConfig = () => {
+  const resendApiKey = process.env.RESEND_API_KEY
+  const toEmail = process.env.CONTACT_TO_EMAIL?.trim()
+  const fromEmail = process.env.CONTACT_FROM_EMAIL?.trim()
+
+  if (!resendApiKey || !toEmail || !fromEmail) return null
+
+  return { resendApiKey, toEmail, fromEmail }
+}
+
 /** Attempt to forward the submission by email via Resend, if configured. */
 const sendEmail = async (payload: ContactPayload): Promise<boolean> => {
-  const resendApiKey = process.env.RESEND_API_KEY
-  if (!resendApiKey) return false
-
-  const toEmail = process.env.CONTACT_TO_EMAIL ?? "siyamuddin177@gmail.com"
+  const mail = getContactMailConfig()
+  if (!mail) return false
 
   try {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${resendApiKey}`,
+        Authorization: `Bearer ${mail.resendApiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Portfolio Contact <onboarding@resend.dev>",
-        to: [toEmail],
+        from: mail.fromEmail,
+        to: [mail.toEmail],
         reply_to: payload.email,
         subject: `Portfolio message from ${payload.fullname}`,
         text: `From: ${payload.fullname} <${payload.email}>\n\n${payload.message}`,
@@ -96,7 +105,7 @@ export const POST = async (request: NextRequest) => {
   const payload = parsed.data
   const canPersist =
     isSupabaseConfigured() && Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY)
-  const canEmail = Boolean(process.env.RESEND_API_KEY)
+  const canEmail = Boolean(getContactMailConfig())
 
   if (!canPersist && !canEmail) {
     return NextResponse.json({

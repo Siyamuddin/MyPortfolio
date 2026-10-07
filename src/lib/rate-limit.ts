@@ -8,11 +8,18 @@ const localWindows = new Map<string, { count: number; resetAt: number }>()
 const WINDOW_SECONDS = 60
 const MAX_REQUESTS = 5
 
+/** First hop from the host's trusted forwarding header.
+ * Vercel replaces `x-vercel-forwarded-for` at its proxy. Other hosts must
+ * supply `x-forwarded-for`, or callers share the conservative unknown bucket.
+ */
+export const trustedClientIp = (request: NextRequest) =>
+  (process.env.VERCEL
+    ? request.headers.get("x-vercel-forwarded-for")
+    : request.headers.get("x-forwarded-for")
+  )?.split(",")[0]?.trim() || "unknown"
+
 export const guardSubmissionRate = async (request: NextRequest, scope: "contact" | "comments") => {
-  // Vercel replaces this header at its proxy. Other hosts must supply a trusted
-  // forwarding header or all callers share the conservative unknown bucket.
-  const ip = (process.env.VERCEL ? request.headers.get("x-vercel-forwarded-for") :
-    request.headers.get("x-forwarded-for"))?.split(",")[0]?.trim() || "unknown"
+  const ip = trustedClientIp(request)
   const secret = process.env.RATE_LIMIT_SALT || process.env.SUPABASE_SERVICE_ROLE_KEY || "local-only"
   const key = createHmac("sha256", secret).update(`${scope}:${ip}`).digest("hex")
 

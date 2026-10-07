@@ -39,21 +39,18 @@ export const mapProfile = (row: ProfileRow): Profile => ({
   avatar: row.avatar,
   resumeUrl: row.resume_url ?? undefined,
   featuredEventId: row.featured_event_id ?? null,
-  updatedAt: row.updated_at,
 })
 
 export const mapService = (row: ServiceRow): Service => ({
   title: row.title,
   description: row.description,
   icon: row.icon,
-  updatedAt: row.updated_at,
 })
 
 export const mapSkill = (row: SkillRow): Skill => ({
   name: row.name,
   color: row.color,
   icon: row.icon,
-  updatedAt: row.updated_at,
 })
 
 export const mapEducation = (row: EducationRow): Education => ({
@@ -61,7 +58,6 @@ export const mapEducation = (row: EducationRow): Education => ({
   degree: row.degree,
   period: row.period,
   description: row.description,
-  updatedAt: row.updated_at,
 })
 
 export const mapExperience = (row: ExperienceRow): Experience => ({
@@ -70,7 +66,6 @@ export const mapExperience = (row: ExperienceRow): Experience => ({
   period: row.period,
   location: row.location,
   highlights: Array.isArray(row.highlights) ? row.highlights : [],
-  updatedAt: row.updated_at,
 })
 
 export const mapProject = (row: ProjectRow): Project => ({
@@ -82,7 +77,6 @@ export const mapProject = (row: ProjectRow): Project => ({
   description: row.description,
   tags: Array.isArray(row.tags) ? row.tags : [],
   ogImage: row.og_image ?? "",
-  updatedAt: row.updated_at,
 })
 
 export const mapBlogPost = (row: BlogPostRow): BlogPost => ({
@@ -107,7 +101,6 @@ export const mapFaq = (row: FaqRow): Faq => ({
   question: row.question,
   answer: row.answer,
   sortOrder: row.sort_order,
-  updatedAt: row.updated_at,
 })
 
 export const mapBlogComment = (row: Omit<BlogCommentRow, "author_email">): BlogComment => ({

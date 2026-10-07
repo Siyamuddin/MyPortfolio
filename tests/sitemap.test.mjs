@@ -11,6 +11,7 @@ const loadSitemap = () =>
           { status: "draft", body: "", slug: "hidden", updatedAt: undefined },
         ],
       }),
+      getPortfolioFreshness: async () => undefined,
     },
     "@/lib/portfolio/events-repository": {
       getPublishedEvents: async () => [

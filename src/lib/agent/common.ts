@@ -2,7 +2,7 @@ import { revalidatePortfolio } from "@/lib/portfolio/auth"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
 export const revalidateAfterMutation = async () => {
-  await revalidatePortfolio()
+  revalidatePortfolio()
 }
 
 export const assertAgentDbReady = () =>

@@ -2,14 +2,12 @@ export interface Service {
   title: string;
   description: string;
   icon: string;
-  updatedAt?: string;
 }
 
 export interface Skill {
   name: string;
   color: string;
   icon: string;
-  updatedAt?: string;
 }
 
 export interface Education {
@@ -17,7 +15,6 @@ export interface Education {
   degree: string;
   period: string;
   description: string;
-  updatedAt?: string;
 }
 
 export interface Experience {
@@ -26,7 +23,6 @@ export interface Experience {
   period: string;
   location: string;
   highlights: string[];
-  updatedAt?: string;
 }
 
 export interface Project {
@@ -38,7 +34,6 @@ export interface Project {
   description: string
   tags: string[]
   ogImage?: string
-  updatedAt?: string
 }
 
 export interface BlogPost {
@@ -63,7 +58,6 @@ export interface Faq {
   question: string
   answer: string
   sortOrder?: number
-  updatedAt?: string
 }
 
 export interface BlogComment {
@@ -95,5 +89,4 @@ export interface Profile {
   avatar: string;
   resumeUrl?: string;
   featuredEventId?: string | null;
-  updatedAt?: string;
 }

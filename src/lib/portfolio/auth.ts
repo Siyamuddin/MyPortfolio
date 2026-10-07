@@ -23,7 +23,7 @@ export const requireAdmin = async () => {
   return { supabase, user }
 }
 
-export const revalidatePortfolio = async () => {
+export const revalidatePortfolio = () => {
   revalidateTag(PORTFOLIO_CACHE_TAG)
   revalidateTag(TAGS_CACHE_TAG)
   revalidatePath("/", "layout")

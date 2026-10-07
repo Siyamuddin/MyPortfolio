@@ -8,7 +8,7 @@ import { EVENTS_CACHE_TAG } from "@/lib/portfolio/events"
  * shows up on /events/[slug] without waiting for the cache TTL.
  */
 export const refreshEvents = (slug?: string) => {
-  void revalidatePortfolio()
+  revalidatePortfolio()
   revalidateTag(EVENTS_CACHE_TAG)
   revalidatePath("/")
   revalidatePath("/events")

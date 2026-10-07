@@ -40,7 +40,7 @@ export const ServicesAdmin = ({ items }: { items: ServiceRow[] }) => {
 
   return (
     <div className="space-y-6">
-      <AdminForm title="Add service" action={upsertServiceAction} onSuccess={refresh}>
+      <AdminForm title="Add service" action={upsertServiceAction} onSuccess={refresh} fieldsKey={items.length}>
         <Field label="Title" name="title" required />
         <TextArea label="Description" name="description" />
         <Field label="Icon (Smartphone|Code2|Sparkles|Server)" name="icon" defaultValue="Code2" />
@@ -49,7 +49,7 @@ export const ServicesAdmin = ({ items }: { items: ServiceRow[] }) => {
 
       {items.map((item) => (
         <div key={item.id} className="space-y-2">
-          <AdminForm title={`Edit: ${item.title}`} action={upsertServiceAction} onSuccess={refresh}>
+          <AdminForm title={`Edit: ${item.title}`} action={upsertServiceAction} onSuccess={refresh} fieldsKey={JSON.stringify(item)}>
             <input type="hidden" name="id" value={item.id} />
             <Field label="Title" name="title" defaultValue={item.title} required />
             <TextArea label="Description" name="description" defaultValue={item.description} />
@@ -75,26 +75,25 @@ export const SkillsAdmin = ({ items }: { items: SkillRow[] }) => {
 
   return (
     <div className="space-y-6">
-      <AdminForm title="Add skill" action={upsertSkillAction} onSuccess={refresh}>
+      <AdminForm title="Add skill" action={upsertSkillAction} onSuccess={refresh} fieldsKey={items.length}>
         <Field label="Name" name="name" required />
         <Field label="Color" name="color" defaultValue="#ffffff" />
-        <Field label="Icon stem or URL" name="icon" defaultValue="" />
-        <FileUploadField name="icon_upload_preview" label="Or upload icon (paste URL into Icon)" folder="skills" />
+        <FileUploadField name="icon" label="Icon stem or URL" folder="skills" type="text" />
         <Field label="Sort order" name="sort_order" type="number" defaultValue={items.length} />
       </AdminForm>
 
       {items.map((item) => (
         <div key={item.id} className="space-y-2">
-          <AdminForm title={`Edit: ${item.name}`} action={upsertSkillAction} onSuccess={refresh}>
+          <AdminForm title={`Edit: ${item.name}`} action={upsertSkillAction} onSuccess={refresh} fieldsKey={JSON.stringify(item)}>
             <input type="hidden" name="id" value={item.id} />
             <Field label="Name" name="name" defaultValue={item.name} required />
             <Field label="Color" name="color" defaultValue={item.color} />
-            <Field label="Icon stem or URL" name="icon" defaultValue={item.icon} />
             <FileUploadField
-              name="icon_upload_preview"
-              label="Upload icon (copy URL into Icon field)"
+              name="icon"
+              label="Icon stem or URL"
               folder="skills"
-              defaultValue={item.icon.startsWith("http") ? item.icon : ""}
+              type="text"
+              defaultValue={item.icon}
             />
             <Field label="Sort order" name="sort_order" type="number" defaultValue={item.sort_order} />
           </AdminForm>
@@ -117,7 +116,7 @@ export const EducationAdmin = ({ items }: { items: EducationRow[] }) => {
 
   return (
     <div className="space-y-6">
-      <AdminForm title="Add education" action={upsertEducationAction} onSuccess={refresh}>
+      <AdminForm title="Add education" action={upsertEducationAction} onSuccess={refresh} fieldsKey={items.length}>
         <Field label="School" name="school" required />
         <Field label="Degree" name="degree" required />
         <Field label="Period" name="period" required />
@@ -127,7 +126,7 @@ export const EducationAdmin = ({ items }: { items: EducationRow[] }) => {
 
       {items.map((item) => (
         <div key={item.id} className="space-y-2">
-          <AdminForm title={`Edit: ${item.school}`} action={upsertEducationAction} onSuccess={refresh}>
+          <AdminForm title={`Edit: ${item.school}`} action={upsertEducationAction} onSuccess={refresh} fieldsKey={JSON.stringify(item)}>
             <input type="hidden" name="id" value={item.id} />
             <Field label="School" name="school" defaultValue={item.school} required />
             <Field label="Degree" name="degree" defaultValue={item.degree} required />
@@ -197,7 +196,12 @@ const ExperienceForm = ({
   }
 
   return (
-    <AdminForm title={title} action={handleAction} onSuccess={onSuccess}>
+    <AdminForm
+      title={title}
+      action={handleAction}
+      onSuccess={onSuccess}
+      fieldsKey={item ? JSON.stringify(item) : sortOrder}
+    >
       {item?.id ? <input type="hidden" name="id" value={item.id} /> : null}
       <Field label="Role" name="role" defaultValue={item?.role} required />
       <Field label="Company" name="company" defaultValue={item?.company} required />
@@ -236,7 +240,7 @@ export const ProjectsAdmin = ({
 
   return (
     <div className="space-y-6">
-      <AdminForm title="Add project" action={upsertProjectAction} onSuccess={refresh}>
+      <AdminForm title="Add project" action={upsertProjectAction} onSuccess={refresh} fieldsKey={items.length}>
         <Field label="Title" name="title" required />
         <label className="block text-sm text-light-gray-70">
           Category
@@ -262,7 +266,7 @@ export const ProjectsAdmin = ({
 
       {items.map((item) => (
         <div key={item.id} className="space-y-2">
-          <AdminForm title={`Edit: ${item.title}`} action={upsertProjectAction} onSuccess={refresh}>
+          <AdminForm title={`Edit: ${item.title}`} action={upsertProjectAction} onSuccess={refresh} fieldsKey={JSON.stringify(item)}>
             <input type="hidden" name="id" value={item.id} />
             <Field label="Title" name="title" defaultValue={item.title} required />
             <label className="block text-sm text-light-gray-70">
@@ -305,7 +309,7 @@ export const FaqAdmin = ({ items }: { items: FaqRow[] }) => {
 
   return (
     <div className="space-y-6">
-      <AdminForm title="Add FAQ" action={upsertFaqAction} onSuccess={refresh}>
+      <AdminForm title="Add FAQ" action={upsertFaqAction} onSuccess={refresh} fieldsKey={items.length}>
         <Field label="Question" name="question" required />
         <TextArea label="Answer" name="answer" rows={5} />
         <Field label="Sort order" name="sort_order" type="number" defaultValue={items.length} />
@@ -313,7 +317,7 @@ export const FaqAdmin = ({ items }: { items: FaqRow[] }) => {
 
       {items.map((item) => (
         <div key={item.id} className="space-y-2">
-          <AdminForm title={`Edit FAQ`} action={upsertFaqAction} onSuccess={refresh}>
+          <AdminForm title={`Edit FAQ`} action={upsertFaqAction} onSuccess={refresh} fieldsKey={JSON.stringify(item)}>
             <input type="hidden" name="id" value={item.id} />
             <Field label="Question" name="question" defaultValue={item.question} required />
             <TextArea label="Answer" name="answer" defaultValue={item.answer} rows={5} />

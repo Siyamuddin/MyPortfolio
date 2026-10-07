@@ -6,17 +6,15 @@ import { FileUploadField } from "@/components/admin/FileUploadField"
 import { fieldClassName } from "@/components/admin/AdminForm"
 import { upsertProfileAction } from "@/lib/portfolio/admin-actions"
 import type { EventOptionRow } from "@/lib/portfolio/admin-data"
-import type { ProfileRow, ProjectRow } from "@/lib/portfolio/types"
+import type { ProfileRow } from "@/lib/portfolio/types"
 
 type ProfileAdminFormProps = {
   profile: ProfileRow | null
-  projects: ProjectRow[]
   events?: EventOptionRow[]
 }
 
 export const ProfileAdminForm = ({
   profile,
-  projects,
   events = [],
 }: ProfileAdminFormProps) => {
   const router = useRouter()
@@ -72,6 +70,7 @@ export const ProfileAdminForm = ({
 
   return (
     <form
+      key={JSON.stringify(profile ?? null)}
       action={handleSubmit}
       className="space-y-4 rounded-2xl border border-jet bg-eerie-black-2 p-5"
       aria-label="Edit profile"
@@ -161,23 +160,6 @@ export const ProfileAdminForm = ({
         defaultValue={profile?.resume_url ?? ""}
         accept=".pdf,application/pdf"
       />
-      <label className="block text-sm text-light-gray-70">
-        Featured work (Portfolio page)
-        <select
-          name="featured_project_id"
-          defaultValue={profile?.featured_project_id ?? ""}
-          className={fieldClassName}
-          aria-label="Featured work project"
-          tabIndex={0}
-        >
-          <option value="">None</option>
-          {projects.map((project) => (
-            <option key={project.id} value={project.id}>
-              {project.title}
-            </option>
-          ))}
-        </select>
-      </label>
       <label className="block text-sm text-light-gray-70">
         Featured event (Home page spotlight)
         <select

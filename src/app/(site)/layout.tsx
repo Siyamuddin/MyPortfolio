@@ -16,8 +16,6 @@ export default async function SiteLayout({
     getPublishedEvents(),
   ])
   const jsonLd = buildSiteGraph(portfolio.profile, {
-    education: portfolio.education,
-    experience: portfolio.experience,
     skills: portfolio.skills.map((skill) => skill.name),
   })
 

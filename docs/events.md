@@ -18,13 +18,13 @@ The About / landing page (`/`) spotlights a single event instead of a flagship p
 
 The spotlight card matches the dark + yellow UI and links to the event's `/events/[slug]` detail page plus the `/events` index. It is backed by `profile.featured_event_id`, which points at a single event and falls back to null if that event is deleted. If the referenced event is missing, unpublished, or unset, the home page omits the section rather than breaking.
 
-Saving the profile revalidates the home page immediately, and editing the featured event's content (title, cover photo, highlight, etc.) from **Admin → Events** also revalidates `/`, so the spotlight stays in sync. Featured work selection still lives on the profile form and the full project list remains on `/portfolio`; only the home-page spotlight changed.
+Saving the profile revalidates the home page immediately, and editing the featured event's content (title, cover photo, highlight, etc.) from **Admin → Events** also revalidates `/`, so the spotlight stays in sync.
 
 ## Database setup
 
 Apply `supabase/migrations/20261003111642_portfolio_events.sql` after the existing portfolio migrations. It adds only the `events` table, its index, grants and owner-only write policies. It depends on `private.is_portfolio_admin()` from the portfolio security migration and reuses the existing Storage bucket; no additional environment variables are required. This migration is already applied to the portfolio's existing Supabase project; its filename matches the recorded remote migration version.
 
-Then apply `supabase/migrations/20261004120000_featured_event.sql`. It adds a single nullable `profile.featured_event_id` column with a foreign key to `public.events(id)` and `on delete set null`, mirroring `featured_project_id`. Apply it with the Supabase CLI (`supabase db push`) or by running the SQL in the Supabase SQL editor. It is idempotent (`add column if not exists`) and requires no data backfill or new environment variables.
+Then apply `supabase/migrations/20261004120000_featured_event.sql`. It adds a single nullable `profile.featured_event_id` column with a foreign key to `public.events(id)` and `on delete set null`. Apply it with the Supabase CLI (`supabase db push`) or by running the SQL in the Supabase SQL editor. It is idempotent (`add column if not exists`) and requires no data backfill or new environment variables.
 
 Without Supabase configuration or while the new table is absent, the public page shows an empty journal. The admin page shows a setup error if the database table is missing. Other portfolio content queries are independent of the events table.
 

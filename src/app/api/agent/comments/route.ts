@@ -4,7 +4,7 @@ import { guardAgentRequest } from "@/lib/agent/auth"
 import { listComments } from "@/lib/agent/comments"
 
 export const GET = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
   const status = request.nextUrl.searchParams.get("status") ?? undefined

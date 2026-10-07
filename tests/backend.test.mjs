@@ -8,12 +8,51 @@ const require=createRequire(resolve('package.json'));
 const React=require('react');
 const {renderToStaticMarkup}=require('react-dom/server');
 const request=(authorization='')=>({headers:new Headers({authorization}),cookies:{getAll:()=>[],set(){}}});
-test('agent API rejects absent key configuration',()=>{
- const {guardAgentRequest}=sourceLoader({}, {Buffer})('src/lib/agent/auth.ts');assert.equal(guardAgentRequest(request()).status,503);
+test('agent API rejects absent key configuration', async () => {
+ const {guardAgentRequest}=sourceLoader({}, {Buffer})('src/lib/agent/auth.ts');assert.equal((await guardAgentRequest(request())).status,503);
 });
-test('agent API rejects missing/wrong bearer and accepts configured bearer',()=>{
+test('agent API rejects missing/wrong bearer and accepts configured bearer', async () => {
  const {guardAgentRequest}=sourceLoader({}, {Buffer,process:{env:{BLOG_API_KEY:'test-only-key'}}})('src/lib/agent/auth.ts');
- assert.equal(guardAgentRequest(request()).status,401);assert.equal(guardAgentRequest(request('Bearer invalid')).status,401);assert.equal(guardAgentRequest(request('Bearer test-only-key')),null);
+ assert.equal((await guardAgentRequest(request())).status,401);assert.equal((await guardAgentRequest(request('Bearer invalid'))).status,401);assert.equal(await guardAgentRequest(request('Bearer test-only-key')),null);
+});
+test('agent API rate limit uses the shared submission limiter', async () => {
+ let calls = 0;
+ let rpcName = '';
+ let sent = null;
+ const load = sourceLoader({
+  '@/lib/supabase/env': { isSupabaseConfigured: () => true },
+  '@/lib/supabase/admin': { createServiceClient: () => ({ rpc: async (name, args) => { calls += 1; rpcName = name; sent = args; return { data: false, error: null }; } }) },
+ }, { Buffer, process: { env: { BLOG_API_KEY: 'test-only-key', NODE_ENV: 'production', SUPABASE_SERVICE_ROLE_KEY: 'test-only', VERCEL: '1' } } });
+ const { guardAgentRequest } = load('src/lib/agent/auth.ts');
+ assert.equal((await guardAgentRequest(request())).status, 401);
+ assert.equal(calls, 0);
+ const blocked = await guardAgentRequest({ headers: new Headers({ authorization: 'Bearer test-only-key', 'x-forwarded-for': '203.0.113.50', 'x-vercel-forwarded-for': '192.0.2.10' }) });
+ assert.equal(blocked.status, 429);
+ assert.deepEqual(await blocked.json(), { ok: false, error: 'Too many requests. Please try again later.' });
+ assert.equal(blocked.headers.get('Retry-After'), '60');
+ assert.equal(calls, 1);
+ assert.equal(rpcName, 'consume_submission_limit');
+ assert.equal(sent.max_requests, 30);
+ assert.equal(sent.window_seconds, 60);
+ assert.match(sent.key_hash, /^[a-f0-9]{64}$/);
+ assert.equal(JSON.stringify(sent).includes('203.0.113.50'), false);
+ assert.equal(JSON.stringify(sent).includes('192.0.2.10'), false);
+ const agentHash = sent.key_hash;
+ const { guardSubmissionRate } = load('src/lib/rate-limit.ts');
+ await guardSubmissionRate({ headers: new Headers({ 'x-vercel-forwarded-for': '192.0.2.10', 'x-forwarded-for': '203.0.113.50' }) }, 'contact');
+ assert.equal(sent.max_requests, 5);
+ assert.notEqual(sent.key_hash, agentHash);
+ await guardSubmissionRate({ headers: new Headers({ 'x-vercel-forwarded-for': '192.0.2.10', 'x-forwarded-for': '198.51.100.4' }) }, 'agent');
+ assert.equal(sent.key_hash, agentHash);
+});
+test('agent API fails closed when the shared limiter is unavailable', async () => {
+ const { guardAgentRequest } = sourceLoader({
+  '@/lib/supabase/env': { isSupabaseConfigured: () => true },
+  '@/lib/supabase/admin': { createServiceClient: () => ({ rpc: async () => ({ data: null, error: { code: 'offline' } }) }) },
+ }, { Buffer, process: { env: { BLOG_API_KEY: 'test-only-key', NODE_ENV: 'production', SUPABASE_SERVICE_ROLE_KEY: 'test-only' } } })('src/lib/agent/auth.ts');
+ const blocked = await guardAgentRequest(request('Bearer test-only-key'));
+ assert.equal(blocked.status, 503);
+ assert.deepEqual(await blocked.json(), { ok: false, error: 'Agent API is temporarily unavailable.' });
 });
 test('finance API rejects anonymous session',async()=>{
  const load=sourceLoader({'@supabase/ssr':{createServerClient:()=>({auth:{getUser:async()=>({data:{user:null}})}})}},{Buffer,process:{env:{NEXT_PUBLIC_SUPABASE_URL:'https://example.supabase.co',NEXT_PUBLIC_SUPABASE_ANON_KEY:'mock'}}});

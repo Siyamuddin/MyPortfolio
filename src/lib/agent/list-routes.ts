@@ -17,7 +17,7 @@ const uuidSchema = z.string().uuid()
 
 export const createListCollectionHandlers = (table: ListTable) => {
   const GET = async (request: NextRequest) => {
-    const blocked = guardAgentRequest(request)
+    const blocked = await guardAgentRequest(request)
     if (blocked) return blocked
 
     const result = await listAll(table)
@@ -31,7 +31,7 @@ export const createListCollectionHandlers = (table: ListTable) => {
   }
 
   const POST = async (request: NextRequest) => {
-    const blocked = guardAgentRequest(request)
+    const blocked = await guardAgentRequest(request)
     if (blocked) return blocked
 
     let body: unknown
@@ -67,7 +67,7 @@ export const createListItemHandlers = (table: ListTable) => {
     request: NextRequest,
     context: { params: Promise<{ id: string }> }
   ) => {
-    const blocked = guardAgentRequest(request)
+    const blocked = await guardAgentRequest(request)
     if (blocked) return blocked
 
     const { id } = await context.params
@@ -89,7 +89,7 @@ export const createListItemHandlers = (table: ListTable) => {
     request: NextRequest,
     context: { params: Promise<{ id: string }> }
   ) => {
-    const blocked = guardAgentRequest(request)
+    const blocked = await guardAgentRequest(request)
     if (blocked) return blocked
 
     const { id } = await context.params
@@ -126,7 +126,7 @@ export const createListItemHandlers = (table: ListTable) => {
     request: NextRequest,
     context: { params: Promise<{ id: string }> }
   ) => {
-    const blocked = guardAgentRequest(request)
+    const blocked = await guardAgentRequest(request)
     if (blocked) return blocked
 
     const { id } = await context.params

@@ -1,12 +1,9 @@
 "use server"
 
-import { revalidatePath, revalidateTag } from "next/cache"
+import { revalidatePath } from "next/cache"
 import { z } from "zod"
-import {
-  requireAdmin,
-  revalidatePortfolio,
-  type ActionResult,
-} from "@/lib/portfolio/auth-actions"
+import type { ActionResult } from "@/lib/portfolio/auth-actions"
+import { requireAdmin, revalidatePortfolio } from "@/lib/portfolio/auth"
 import {
   DESTRUCTIVE_SEED_DISABLED_ERROR,
   isDestructiveSeedAllowed,
@@ -14,7 +11,7 @@ import {
 } from "@/lib/portfolio/seed-from-static"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 import { syncTagRegistry } from "@/lib/portfolio/tag-registry"
-import { contentTagsSchema, parseTagInput, TAGS_CACHE_TAG } from "@/lib/portfolio/tags"
+import { contentTagsSchema, parseTagInput } from "@/lib/portfolio/tags"
 
 const socialsSchema = z.object({
   github: z.string(),
@@ -229,11 +226,6 @@ const upsertListItem = async (
 
     if (tags.length) await syncTagRegistry(supabase, tags)
     await revalidatePortfolio()
-    if (formData.has("tags")) {
-      revalidateTag(TAGS_CACHE_TAG)
-      revalidatePath("/tags", "layout")
-      revalidatePath("/sitemap.xml")
-    }
     return { ok: true }
   } catch (error) {
     return {

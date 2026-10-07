@@ -36,6 +36,7 @@ export type ProfileRow = {
   resume_url: string | null
   featured_project_id?: string | null
   featured_event_id?: string | null
+  updated_at?: string
 }
 
 export type ServiceRow = {
@@ -44,6 +45,7 @@ export type ServiceRow = {
   description: string
   icon: string
   sort_order: number
+  updated_at?: string
 }
 
 export type SkillRow = {
@@ -52,6 +54,7 @@ export type SkillRow = {
   color: string
   icon: string
   sort_order: number
+  updated_at?: string
 }
 
 export type EducationRow = {
@@ -61,6 +64,7 @@ export type EducationRow = {
   period: string
   description: string
   sort_order: number
+  updated_at?: string
 }
 
 export type ExperienceRow = {
@@ -71,6 +75,7 @@ export type ExperienceRow = {
   location: string
   highlights: string[]
   sort_order: number
+  updated_at?: string
 }
 
 export type ProjectRow = {
@@ -83,6 +88,7 @@ export type ProjectRow = {
   sort_order: number
   tags?: string[]
   og_image?: string
+  updated_at?: string
 }
 
 export type BlogPostRow = {
@@ -108,6 +114,7 @@ export type FaqRow = {
   question: string
   answer: string
   sort_order: number
+  updated_at?: string
 }
 
 export type BlogCommentRow = {

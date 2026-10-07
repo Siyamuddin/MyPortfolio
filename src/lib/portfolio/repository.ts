@@ -125,50 +125,6 @@ export const getPortfolio = cache(async (): Promise<PortfolioData> => {
   return getCachedSupabasePortfolio()
 })
 
-export const getPortfolioFreshness = cache(async (): Promise<Date | undefined> => {
-  if (!isSupabaseConfigured()) {
-    return undefined
-  }
-
-  try {
-    const supabase = createAnonClient()
-    if (!supabase) return undefined
-
-    const tables = [
-      "profile",
-      "services",
-      "skills",
-      "education",
-      "experience",
-      "projects",
-      "blog_posts",
-      "faqs",
-    ] as const
-
-    const results = await Promise.all(
-      tables.map((table) =>
-        supabase
-          .from(table)
-          .select("updated_at")
-          .order("updated_at", { ascending: false })
-          .limit(1)
-          .maybeSingle()
-      )
-    )
-
-    const timestamps = results
-      .map((result) => result.data?.updated_at as string | undefined)
-      .filter(Boolean)
-      .map((value) => new Date(value as string).getTime())
-      .filter((value) => !Number.isNaN(value))
-
-    if (timestamps.length === 0) return undefined
-    return new Date(Math.max(...timestamps))
-  } catch {
-    return undefined
-  }
-})
-
 export const getBlogPostBySlug = cache(
   async (slug: string): Promise<BlogPost | null> => {
     if (!isSupabaseConfigured()) {

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next"
-import { getPortfolio, getPortfolioFreshness } from "@/lib/portfolio/repository"
+import { getPortfolio } from "@/lib/portfolio/repository"
 import { getPublishedEvents } from "@/lib/portfolio/events-repository"
 import { getTagsWithCounts } from "@/lib/portfolio/tags-repository"
 import { SITE_URL } from "@/lib/seo"
@@ -13,14 +13,36 @@ const toLastModified = (value: string | Date | undefined) => {
   return Number.isNaN(parsed.getTime()) ? undefined : parsed
 }
 
+const latestModified = (values: Array<string | undefined>) => {
+  let latest: Date | undefined
+  for (const value of values) {
+    const parsed = toLastModified(value)
+    if (!parsed) continue
+    if (!latest || parsed.getTime() > latest.getTime()) latest = parsed
+  }
+  return latest
+}
+
+const updatedAtStamps = (items: Array<{ updatedAt?: string }> | undefined) =>
+  (items ?? []).map((item) => item.updatedAt)
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [siteFreshness, portfolio, events, tags] = await Promise.all([
-    getPortfolioFreshness(),
+  const [portfolio, events, tags] = await Promise.all([
     getPortfolio(),
     getPublishedEvents(),
     getTagsWithCounts(),
   ])
-  const lastModified = toLastModified(siteFreshness)
+  const lastModified = latestModified([
+    portfolio.profile?.updatedAt,
+    ...updatedAtStamps(portfolio.services),
+    ...updatedAtStamps(portfolio.skills),
+    ...updatedAtStamps(portfolio.education),
+    ...updatedAtStamps(portfolio.experience),
+    ...updatedAtStamps(portfolio.projects),
+    ...updatedAtStamps(portfolio.blogPosts),
+    ...updatedAtStamps(portfolio.faqs),
+    ...updatedAtStamps(events),
+  ])
 
   const articleEntries = portfolio.blogPosts
     .filter((post) => post.status === "published" && post.body.trim() && post.slug)

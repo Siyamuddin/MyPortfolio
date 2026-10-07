@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/portfolio/auth-actions"
+import { requireAdmin } from "@/lib/portfolio/auth"
 import { createServiceClient } from "@/lib/supabase/admin"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 import type {

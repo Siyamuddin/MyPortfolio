@@ -37,10 +37,13 @@ function actionHarness({ authorized = true, result = { data: { id: eventId }, er
     getPublicUrl(path) { return { data: { publicUrl: `https://example.supabase.co/storage/v1/object/public/portfolio/${path}` } }; },
   };
   const actions = sourceLoader({
-    "@/lib/portfolio/auth-actions": { requireAdmin: async () => {
-      if (!authorized) throw new Error("Unauthorized");
-      return { supabase: { from: () => query, storage: { from: () => storage } } };
-    } },
+    "@/lib/portfolio/auth": {
+      requireAdmin: async () => {
+        if (!authorized) throw new Error("Unauthorized");
+        return { supabase: { from: () => query, storage: { from: () => storage } } };
+      },
+      revalidatePortfolio: async () => {},
+    },
     "next/cache": {
       revalidateTag: (tag) => invalidations.push(tag),
       revalidatePath: (path) => invalidations.push(path),
@@ -155,7 +158,7 @@ function repositoryHarness({ configured = true, result = { data: [], error: null
     react: { cache: (fn) => fn }, "next/cache": { unstable_cache: (fn) => fn },
     "@supabase/supabase-js": { createClient: () => ({ from: () => query }) },
     "@/lib/supabase/env": { isSupabaseConfigured: () => configured, getSupabaseEnv: () => ({ url: "https://example.supabase.co", anonKey: "test" }) },
-    "@/lib/portfolio/auth-actions": { requireAdmin: async () => {
+    "@/lib/portfolio/auth": { requireAdmin: async () => {
       if (!authorized) throw new Error("Unauthorized");
       return { supabase: { from: () => query } };
     } },

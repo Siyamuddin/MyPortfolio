@@ -11,6 +11,6 @@ export const getProjectLinks = (project: Project) => {
   const isSource = destination && ["github.com", "www.github.com"].includes(destination.hostname)
   return {
     liveUrl: destination && !isSource ? destination.href : null,
-    githubUrl: validUrl(project.githubUrl)?.href ?? (isSource ? destination.href : null),
+    githubUrl: isSource ? destination.href : null,
   }
 }

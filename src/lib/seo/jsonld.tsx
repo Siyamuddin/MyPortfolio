@@ -1,4 +1,4 @@
-import type { Education, Experience, Profile } from "@/lib/types"
+import type { Profile } from "@/lib/types"
 import { SITE_NAME, SITE_URL } from "@/lib/seo"
 
 const PERSON_ID = `${SITE_URL}/#person`
@@ -27,8 +27,6 @@ const parseLocation = (location: string) => {
 export const buildPersonNode = (
   profile: Profile,
   extras?: {
-    education?: Education[]
-    experience?: Experience[]
     skills?: string[]
   }
 ) => {
@@ -64,8 +62,6 @@ export const buildWebsiteNode = (profile: Profile) => ({
 export const buildSiteGraph = (
   profile: Profile,
   extras?: {
-    education?: Education[]
-    experience?: Experience[]
     skills?: string[]
   }
 ) => ({
@@ -195,15 +191,13 @@ export const buildBlogItemListJsonLd = (
 
 export const buildResumeJsonLd = (
   profile: Profile,
-  education: Education[],
-  experience: Experience[],
   skills: string[]
 ) => ({
   "@context": "https://schema.org",
   "@type": "ProfilePage",
   name: `Resume — ${profile.name}`,
   url: `${SITE_URL}/resume`,
-  mainEntity: buildPersonNode(profile, { education, experience, skills }),
+  mainEntity: buildPersonNode(profile, { skills }),
 })
 
 export const buildContactJsonLd = (profile: Profile) => ({

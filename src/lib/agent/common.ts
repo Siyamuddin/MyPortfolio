@@ -17,5 +17,3 @@ export type AgentFail = {
   error: string
   status: number
 }
-
-export type AgentOk<T> = { ok: true } & T

@@ -13,6 +13,7 @@ import { getStaticPortfolio } from "@/lib/portfolio/static"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 import { syncTagRegistry } from "@/lib/portfolio/tag-registry"
 import { contentTagsSchema, parseTagInput, TAGS_CACHE_TAG } from "@/lib/portfolio/tags"
+import { MAX_UPLOAD_BYTES, uploadTooLargeError } from "@/lib/upload-limit"
 
 const socialsSchema = z.object({
   github: z.string(),
@@ -389,6 +390,9 @@ export const uploadFileAction = async (
 
     if (!(file instanceof File) || file.size === 0) {
       return { ok: false, error: "No file provided" }
+    }
+    if (file.size > MAX_UPLOAD_BYTES) {
+      return { ok: false, error: uploadTooLargeError }
     }
 
     const safeFolder = folder.replace(/[^a-z0-9/_-]/gi, "") || "misc"

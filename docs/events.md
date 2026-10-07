@@ -4,7 +4,7 @@ The public `/events` page shows published event stories, newest event date first
 
 Upload up to 20 photos per event. JPEG, PNG, WebP, AVIF and GIF are supported, with a 4 MB limit per photo. Each photo can have a visible caption and an accessible description. Reorder photos to change the gallery; the first photo is the cover. Save changes after editing or removing photos. Photos use the existing public `portfolio` bucket and its owner-only upload policies. Removing a photo or deleting its event removes the gallery reference; uploaded files remain in Storage so a reused image is not accidentally deleted.
 
-The per-file limit leaves room for multipart form fields within [Vercel's 4.5 MB function request limit](https://vercel.com/docs/functions/limitations#request-body-size). The admin uploads selected photos individually. Next.js accepts up to 5 MB per server action request, while the upload action enforces the stricter 4 MB photo limit.
+The per-file limit leaves room for multipart form fields within [Vercel's 4.5 MB function request limit](https://vercel.com/docs/functions/limitations#request-body-size). The admin uploads selected photos individually. Next.js accepts up to 10 MB per server action request, while the upload action enforces the stricter 4 MB photo limit.
 
 Publish when the story is ready. Only published event records are readable by visitors, including visitors signed into a non-admin account. Draft photo files use the same public bucket as other portfolio images, so anyone who already knows a photo's URL can retrieve it.
 

@@ -36,18 +36,21 @@ function actionHarness({ authorized = true, result = { data: { id: eventId }, er
     async upload(path, file, options) { uploads.push({ path, file, options }); return { error: null }; },
     getPublicUrl(path) { return { data: { publicUrl: `https://example.supabase.co/storage/v1/object/public/portfolio/${path}` } }; },
   };
+  const cache = {
+    revalidateTag: (tag) => invalidations.push(tag),
+    revalidatePath: (path) => invalidations.push(path),
+    unstable_cache: (fn) => fn,
+  }
+  const { revalidatePortfolio } = sourceLoader({ "next/cache": cache })("src/lib/portfolio/auth.ts")
   const actions = sourceLoader({
     "@/lib/portfolio/auth": {
       requireAdmin: async () => {
         if (!authorized) throw new Error("Unauthorized");
         return { supabase: { from: () => query, storage: { from: () => storage } } };
       },
-      revalidatePortfolio: async () => {},
+      revalidatePortfolio,
     },
-    "next/cache": {
-      revalidateTag: (tag) => invalidations.push(tag),
-      revalidatePath: (path) => invalidations.push(path),
-    },
+    "next/cache": cache,
   }, { File, FormData, Uint8Array })("src/lib/portfolio/event-actions.ts");
   return { actions, writes, invalidations, uploads, tagWrites };
 }

@@ -13,8 +13,6 @@ import {
 import { getSupabaseEnv, isSupabaseConfigured } from "@/lib/supabase/env"
 import type { BlogPost, Project } from "@/lib/types"
 
-export { syncTagRegistry } from "@/lib/portfolio/tag-registry"
-
 export type TagContent = {
   events: PortfolioEvent[]
   posts: BlogPost[]

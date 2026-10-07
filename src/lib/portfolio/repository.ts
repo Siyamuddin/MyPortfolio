@@ -30,7 +30,7 @@ import type {
   ServiceRow,
   SkillRow,
 } from "@/lib/portfolio/types"
-import type { BlogComment, BlogPost, Faq } from "@/lib/types"
+import type { BlogComment, BlogPost } from "@/lib/types"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
 export const PORTFOLIO_CACHE_TAG = "portfolio"
@@ -219,8 +219,3 @@ export const getApprovedComments = cache(
     }
   }
 )
-
-export const getFaqs = cache(async (): Promise<Faq[]> => {
-  const portfolio = await getPortfolio()
-  return portfolio.faqs
-})

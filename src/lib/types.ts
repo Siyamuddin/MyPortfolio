@@ -32,8 +32,6 @@ export interface Project {
   image: string
   url: string
   description: string
-  highlight?: string
-  githubUrl?: string
   tags: string[]
   ogImage?: string
 }

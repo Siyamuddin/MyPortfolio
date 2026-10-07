@@ -12,6 +12,8 @@ function setup({
   email = false,
   stored = false,
   emailed = false,
+  to = email,
+  from = email,
 } = {}) {
   const calls = { stored: 0, emailed: 0 };
   const load = sourceLoader(
@@ -36,6 +38,8 @@ function setup({
         env: {
           ...(configured ? { SUPABASE_SERVICE_ROLE_KEY: "mock" } : {}),
           ...(email ? { RESEND_API_KEY: "mock" } : {}),
+          ...(to ? { CONTACT_TO_EMAIL: "owner@example.com" } : {}),
+          ...(from ? { CONTACT_FROM_EMAIL: "Portfolio <hello@example.com>" } : {}),
         },
       },
       fetch: async () => {
@@ -55,6 +59,17 @@ function setup({
   };
 }
 
+test("api key without recipient or from address does not send", async () => {
+  for (const flags of [{ to: false }, { from: false }]) {
+    const stored = setup({ configured: true, stored: true, email: true, ...flags });
+    assert.equal((await stored.send()).status, 200);
+    assert.deepEqual(stored.calls, { stored: 1, emailed: 0 });
+
+    const neither = setup({ email: true, ...flags });
+    assert.equal((await neither.send()).status, 503);
+    assert.deepEqual(neither.calls, { stored: 0, emailed: 0 });
+  }
+});
 test("unconfigured delivery returns 503, never false success", async () => {
   const { send, calls } = setup();
   const response = await send();

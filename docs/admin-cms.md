@@ -43,6 +43,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 RESEND_API_KEY=
 CONTACT_TO_EMAIL=
+CONTACT_FROM_EMAIL=
 
 # native | giscus | both
 NEXT_PUBLIC_COMMENT_PROVIDER=both
@@ -166,7 +167,7 @@ Add the same `BLOG_API_KEY` in Vercel so production accepts the agent.
 
 - Nav labels/routes stay in code (`navPages` / SEO helpers)
 - Without Supabase env vars the site keeps working from static data
-- Contact form and pending-comment alerts use Resend (`RESEND_API_KEY` / `CONTACT_TO_EMAIL`)
+- Contact form and pending-comment alerts use Resend only when `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, and `CONTACT_FROM_EMAIL` are all set
 - Comment alerts soft-fail (comment still saves) if Resend is not configured
 - Analytics soft-fail if Supabase / service role is missing
 - Agent admin API soft-fails with `503` if `BLOG_API_KEY` or Supabase is missing

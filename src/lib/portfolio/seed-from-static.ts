@@ -1,7 +1,6 @@
 import {
   blogPosts as staticBlogPosts,
   faqs as staticFaqs,
-  featuredProjectTitle,
 } from "@/data/portfolio"
 import { getStaticPortfolio } from "@/lib/portfolio/static"
 import { createServiceClient } from "@/lib/supabase/admin"
@@ -38,21 +37,17 @@ export const seedPortfolioFromStatic = async (): Promise<StaticSeedResult> => {
     admin.from("profile").delete().neq("id", NIL_ID),
   ])
 
-  const { data: profileData, error: profileError } = await admin
-    .from("profile")
-    .insert({
-      name: staticData.profile.name,
-      title: staticData.profile.title,
-      email: staticData.profile.email,
-      location: staticData.profile.location,
-      bio: staticData.profile.bio,
-      bio_highlight: staticData.profile.bioHighlight,
-      socials: staticData.profile.socials,
-      avatar: staticData.profile.avatar,
-      resume_url: staticData.profile.resumeUrl ?? null,
-    })
-    .select("id")
-    .single()
+  const { error: profileError } = await admin.from("profile").insert({
+    name: staticData.profile.name,
+    title: staticData.profile.title,
+    email: staticData.profile.email,
+    location: staticData.profile.location,
+    bio: staticData.profile.bio,
+    bio_highlight: staticData.profile.bioHighlight,
+    socials: staticData.profile.socials,
+    avatar: staticData.profile.avatar,
+    resume_url: staticData.profile.resumeUrl ?? null,
+  })
   if (profileError) return { ok: false, error: profileError.message }
 
   const { error: servicesError } = await admin.from("services").insert(
@@ -98,32 +93,18 @@ export const seedPortfolioFromStatic = async (): Promise<StaticSeedResult> => {
   )
   if (experienceError) return { ok: false, error: experienceError.message }
 
-  const { data: insertedProjects, error: projectsError } = await admin
-    .from("projects")
-    .insert(
-      staticData.projects.map((item, index) => ({
-        title: item.title,
-        category: item.category,
-        image: item.image,
-        url: item.url,
-        description: item.description,
-        tags: item.tags,
-        sort_order: index,
-      }))
-    )
-    .select("id, title")
-  if (projectsError) return { ok: false, error: projectsError.message }
-
-  const featuredProject = insertedProjects?.find(
-    (project) => project.title === featuredProjectTitle
+  const { error: projectsError } = await admin.from("projects").insert(
+    staticData.projects.map((item, index) => ({
+      title: item.title,
+      category: item.category,
+      image: item.image,
+      url: item.url,
+      description: item.description,
+      tags: item.tags,
+      sort_order: index,
+    }))
   )
-  if (profileData?.id && featuredProject?.id) {
-    const { error: featuredError } = await admin
-      .from("profile")
-      .update({ featured_project_id: featuredProject.id })
-      .eq("id", profileData.id)
-    if (featuredError) return { ok: false, error: featuredError.message }
-  }
+  if (projectsError) return { ok: false, error: projectsError.message }
 
   const { error: blogError } = await admin.from("blog_posts").insert(
     staticBlogPosts.map((item, index) => ({

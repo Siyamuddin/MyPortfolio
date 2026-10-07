@@ -129,12 +129,14 @@ Content-Type: application/json
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| `GET` | `/api/agent/portfolio` | Full CMS snapshot (includes draft blogs) |
+| `GET` | `/api/agent/portfolio` | Full CMS snapshot (includes draft blogs and events) |
 | `GET`/`PUT` | `/api/agent/profile` | Read / upsert profile |
 | `GET`/`POST` | `/api/agent/{resource}` | List / create (`services`, `skills`, `education`, `experience`, `projects`, `faqs`) |
 | `GET`/`PUT`/`DELETE` | `/api/agent/{resource}/{id}` | By UUID |
 | `POST` | `/api/agent/blog` | Create post (default `draft`) |
 | `GET`/`PUT`/`DELETE` | `/api/agent/blog/{slug}` | By slug |
+| `GET`/`POST` | `/api/agent/events` | List (drafts included) / create event (default `draft`) |
+| `GET`/`PUT`/`DELETE` | `/api/agent/events/{slug}` | By slug |
 | `GET` | `/api/agent/comments?status=` | List comments |
 | `PATCH`/`DELETE` | `/api/agent/comments/{id}` | Moderate / delete |
 | `POST` | `/api/agent/upload` | Multipart `file` + `folder` (`avatars`\|`projects`\|`blog`\|`skills`\|`resume`) |
@@ -148,6 +150,18 @@ export BLOG_API_KEY=your-key
 
 curl -sS "$SITE_URL/api/agent/portfolio" \
   -H "Authorization: Bearer $BLOG_API_KEY"
+
+# Events. Omit status to create a draft. Tags are lowercase slugs.
+# Photos are `{ "id": "<uuid>", "url": "https://...", "alt": "", "caption": "" }`.
+curl -sS -X POST "$SITE_URL/api/agent/events" \
+  -H "Authorization: Bearer $BLOG_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Campus hackathon","category":"Hackathon","date":"2026-09-20"}'
+
+curl -sS -X PUT "$SITE_URL/api/agent/events/campus-hackathon" \
+  -H "Authorization: Bearer $BLOG_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"status":"published"}'
 ```
 
 ### Hermes skill

@@ -4,7 +4,7 @@ Base: `$SITE_URL` · Auth: `Authorization: Bearer $BLOG_API_KEY`
 
 ## GET /api/agent/portfolio
 
-Returns `{ ok, portfolio: { profile, services, skills, education, experience, projects, blogPosts, faqs } }` (all blog statuses).
+Returns `{ ok, portfolio: { profile, services, skills, education, experience, projects, blogPosts, faqs, events } }` (all blog and event statuses). If the events table is not migrated yet, `events` is `[]` and the rest of the snapshot still returns.
 
 ## Profile
 
@@ -81,6 +81,29 @@ PUT bodies are partial (at least one field).
 - `GET|PUT|DELETE /api/agent/blog/{slug}`
 
 Create fields: `title`, `slug?`, `body`, `excerpt`, `category`, `date`, `date_time`, `image`, `url`, `status`, `sort_order`
+
+## Events
+
+- `GET /api/agent/events` — list every event, including drafts
+- `POST /api/agent/events` — create; default `status: draft` unless the body sets `published`. Slug is generated from the title when omitted.
+- `GET|PUT|DELETE /api/agent/events/{slug}`
+
+Required on create: `title`, `category`, `date` (`YYYY-MM-DD`).
+
+`category`: `Hackathon` | `University` | `Conference` | `Workshop` | `Community` | `Other`
+
+Optional: `location`, `organizer`, `description`, `highlight`, `url`, `status`, `slug`, `og_image`, `tags`, `photos`.
+
+`tags` are lowercase slugs (`hackathon`), not display labels. `photos` is an array of `{ id, url, alt, caption }` (`id` is a UUID, `url` is HTTPS or `/images/...`).
+
+Writes refresh the same cache as an admin event save (`portfolio-events`, `portfolio-tags`, `/`, `/events`, `/events/{slug}`, `/admin/events`, sitemap).
+
+```bash
+curl -sS -X POST "$SITE_URL/api/agent/events" \
+  -H "Authorization: Bearer $BLOG_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Campus hackathon","category":"Hackathon","date":"2026-09-20"}'
+```
 
 ## Comments
 

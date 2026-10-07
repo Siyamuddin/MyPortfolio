@@ -39,14 +39,14 @@ Never print the key unless the user asks.
 
 ## Safety rules
 
-1. Prefer blog `status: "draft"` unless the user explicitly asks to publish.
+1. Prefer blog and event `status: "draft"` unless the user explicitly asks to publish.
 2. Call `GET /api/agent/portfolio` before large edits to see current IDs/slugs.
 3. **Seed is destructive** — only `POST /api/agent/seed` when the user clearly confirms wiping CMS data. Body must be `{ "confirm": "SEED_FROM_STATIC" }`.
 4. After mutations, verify with GET and report relevant `/admin/...` links.
 
 ## Procedure
 
-1. `GET $SITE_URL/api/agent/portfolio` — full snapshot (includes draft blogs)
+1. `GET $SITE_URL/api/agent/portfolio` — full snapshot (includes draft blogs and events)
 2. Mutate the needed resource(s)
 3. Re-GET portfolio or the specific item
 4. Summarize changes + admin URL
@@ -64,6 +64,7 @@ Never print the key unless the user asks.
 | Projects | `/api/agent/projects` (category enum) |
 | FAQs | `/api/agent/faqs` |
 | Blog | `POST /api/agent/blog`, `GET`/`PUT`/`DELETE /api/agent/blog/{slug}` |
+| Events | `GET`/`POST /api/agent/events`, `GET`/`PUT`/`DELETE /api/agent/events/{slug}` |
 | Comments | `GET /api/agent/comments?status=pending`, `PATCH`/`DELETE /api/agent/comments/{id}` |
 | Upload | `POST /api/agent/upload` (multipart: `file`, `folder`) |
 | Seed | `POST /api/agent/seed` |
@@ -80,8 +81,8 @@ Registered components only: `Callout`, `YouTube`, CodeBlock/fenced code, GFM. No
 
 ## Pitfalls
 
-- `401` wrong/missing key · `503` key or Supabase missing on server · `409` blog slug conflict · use PUT for existing slugs
-- List item IDs are UUIDs; blog keys are slugs
+- `401` wrong/missing key · `503` key or Supabase missing on server · `409` blog or event slug conflict · use PUT for existing slugs
+- List item IDs are UUIDs; blog and event keys are slugs
 - Do not log the Bearer token
 
 ## Verification

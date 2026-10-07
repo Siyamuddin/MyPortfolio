@@ -1,31 +1,18 @@
 "use server"
 
 import { randomUUID } from "node:crypto"
-import { revalidatePath, revalidateTag } from "next/cache"
 import { z } from "zod"
 import { requireAdmin, type ActionResult } from "@/lib/portfolio/auth-actions"
 import {
-  EVENTS_CACHE_TAG,
   EVENTS_SETUP_MESSAGE,
   EVENT_PHOTO_MIME_TYPES,
   MAX_EVENT_PHOTO_BYTES,
   eventSchema,
   isMissingEventsTable,
 } from "@/lib/portfolio/events"
+import { refreshEvents } from "@/lib/portfolio/events-cache"
 import { syncTagRegistry } from "@/lib/portfolio/tag-registry"
-import { parseTagInput, TAGS_CACHE_TAG } from "@/lib/portfolio/tags"
-
-const refreshEvents = (slug?: string) => {
-  revalidateTag(EVENTS_CACHE_TAG)
-  revalidateTag(TAGS_CACHE_TAG)
-  revalidatePath("/")
-  revalidatePath("/events")
-  if (slug) revalidatePath(`/events/${slug}`)
-  revalidatePath("/tags", "layout")
-  revalidatePath("/admin/events")
-  revalidatePath("/admin")
-  revalidatePath("/sitemap.xml")
-}
+import { parseTagInput } from "@/lib/portfolio/tags"
 
 const actionError = (error: unknown, fallback: string): ActionResult => ({
   ok: false,

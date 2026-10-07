@@ -8,6 +8,8 @@ The per-file limit leaves room for multipart form fields within [Vercel's 4.5 MB
 
 Publish when the story is ready. Only published event records are readable by visitors, including visitors signed into a non-admin account. Draft photo files use the same public bucket as other portfolio images, so anyone who already knows a photo's URL can retrieve it.
 
+The same stories can be created and edited by an agent that already has the portfolio API key. `POST /api/agent/events` defaults to `draft`. Every create, update, and delete refreshes the public events cache, including `/events/[slug]`. See [Admin CMS](./admin-cms.md) for the Bearer auth header and curl examples.
+
 Each published event also has its own crawlable detail page at `/events/[slug]`, with `Event` structured data, a canonical URL, and tags. See [`docs/seo-events.md`](./seo-events.md) for the full SEO architecture and the checklist for every new event.
 
 ## Featured event on the home page
@@ -28,4 +30,4 @@ Without Supabase configuration or while the new table is absent, the public page
 
 ## Verification
 
-Run `node --test tests/events.test.mjs` for validation, authorization, upload checks, cache invalidation and publication query coverage. Run `TEST_DATABASE_URL=postgresql://localhost/portfolio_test bash scripts/test-database.sh` against an empty disposable local PostgreSQL database to validate the complete migration chain and anonymous, non-admin and owner access. The script refuses non-local and nonempty databases.
+Run `node --test tests/events.test.mjs tests/agent-events.test.mjs` for validation, authorization, upload checks, cache invalidation, the agent events API, and publication query coverage. Run `TEST_DATABASE_URL=postgresql://localhost/portfolio_test bash scripts/test-database.sh` against an empty disposable local PostgreSQL database to validate the complete migration chain and anonymous, non-admin and owner access. The script refuses non-local and nonempty databases.

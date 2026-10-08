@@ -1,9 +1,8 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState, useTransition } from "react"
 import { FileUploadField } from "@/components/admin/FileUploadField"
-import { fieldClassName } from "@/components/admin/AdminForm"
+import { AdminForm, fieldClassName } from "@/components/admin/AdminForm"
 import { upsertProfileAction } from "@/lib/portfolio/admin-actions"
 import type { EventOptionRow } from "@/lib/portfolio/admin-data"
 import type { ProfileRow } from "@/lib/portfolio/types"
@@ -18,11 +17,8 @@ export const ProfileAdminForm = ({
   events = [],
 }: ProfileAdminFormProps) => {
   const router = useRouter()
-  const [isPending, startTransition] = useTransition()
-  const [message, setMessage] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (formData: FormData) => {
+  const handleAction = async (formData: FormData) => {
     const bioRaw = String(formData.get("bio_raw") ?? "")
     const bio = bioRaw
       .split(/\n\s*\n/)
@@ -40,17 +36,7 @@ export const ProfileAdminForm = ({
     }
     formData.set("socials", JSON.stringify(socials))
 
-    startTransition(async () => {
-      const result = await upsertProfileAction(formData)
-      if (result.ok) {
-        setError(null)
-        setMessage("Saved")
-        router.refresh()
-        return
-      }
-      setMessage(null)
-      setError(result.error ?? "Save failed")
-    })
+    return upsertProfileAction(formData)
   }
 
   const currentFeaturedEventId = profile?.featured_event_id ?? ""
@@ -69,15 +55,13 @@ export const ProfileAdminForm = ({
   }
 
   return (
-    <form
-      key={JSON.stringify(profile ?? null)}
-      action={handleSubmit}
-      className="space-y-4 rounded-2xl border border-jet bg-eerie-black-2 p-5"
-      aria-label="Edit profile"
+    <AdminForm
+      title={profile ? "Edit profile" : "Create profile"}
+      action={handleAction}
+      onSuccess={() => router.refresh()}
+      submitLabel="Save profile"
+      fieldsKey={JSON.stringify(profile ?? null)}
     >
-      <h3 className="text-base text-white-2">
-        {profile ? "Edit profile" : "Create profile"}
-      </h3>
       {profile?.id ? <input type="hidden" name="id" value={profile.id} /> : null}
       <div className="grid gap-4 md:grid-cols-2">
         <label className="block text-sm text-light-gray-70">
@@ -205,26 +189,6 @@ export const ProfileAdminForm = ({
           </label>
         ))}
       </div>
-      <div className="flex flex-wrap items-center gap-3">
-        <button
-          type="submit"
-          disabled={isPending}
-          className="rounded-lg bg-gold px-4 py-2 text-sm font-medium text-eerie-black-1 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-          aria-label="Save profile"
-        >
-          {isPending ? "Saving…" : "Save profile"}
-        </button>
-        {message ? (
-          <span className="text-sm text-emerald-400" role="status">
-            {message}
-          </span>
-        ) : null}
-        {error ? (
-          <span className="text-sm text-red-400" role="alert">
-            {error}
-          </span>
-        ) : null}
-      </div>
-    </form>
+    </AdminForm>
   )
 }

@@ -1,12 +1,8 @@
-import { revalidatePath, revalidateTag } from "next/cache"
-import { PORTFOLIO_CACHE_TAG } from "@/lib/portfolio/repository"
+import { revalidatePortfolio } from "@/lib/portfolio/auth"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
 export const revalidateAfterMutation = async () => {
-  revalidateTag(PORTFOLIO_CACHE_TAG)
-  revalidatePath("/", "layout")
-  revalidatePath("/blog", "layout")
-  revalidatePath("/admin", "layout")
+  revalidatePortfolio()
 }
 
 export const assertAgentDbReady = () =>

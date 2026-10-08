@@ -2,7 +2,8 @@
 
 import { randomUUID } from "node:crypto"
 import { z } from "zod"
-import { requireAdmin, type ActionResult } from "@/lib/portfolio/auth-actions"
+import type { ActionResult } from "@/lib/portfolio/auth-actions"
+import { requireAdmin } from "@/lib/portfolio/auth"
 import {
   EVENTS_SETUP_MESSAGE,
   EVENT_PHOTO_MIME_TYPES,

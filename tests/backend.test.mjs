@@ -17,7 +17,7 @@ test('agent API rejects missing/wrong bearer and accepts configured bearer',()=>
 });
 test('admin actions must reject a signed-in non-admin',async()=>{
  const load=sourceLoader({'next/cache':{},'next/navigation':{},'@/lib/portfolio/repository':{},'@/lib/supabase/env':{isSupabaseConfigured:()=>true},'@/lib/supabase/server':{createClient:async()=>({auth:{getUser:async()=>({data:{user:{id:'non-admin',app_metadata:{}}}})},rpc:async()=>({data:false,error:null})})}});
- await assert.rejects(()=>load('src/lib/portfolio/auth-actions.ts').requireAdmin());
+ await assert.rejects(()=>load('src/lib/portfolio/auth.ts').requireAdmin());
 });
 test('structured data must escape closing script tags',()=>{
  const {JsonLdScript}=sourceLoader()('src/lib/seo/jsonld.tsx');const html=renderToStaticMarkup(React.createElement(JsonLdScript,{data:{text:'</script><script type="audit-marker">'}}));assert.equal(html.includes('</script><script type='),false);

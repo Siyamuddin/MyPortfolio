@@ -1,8 +1,6 @@
 "use server"
 
-import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
-import { PORTFOLIO_CACHE_TAG } from "@/lib/portfolio/repository"
 import { isPortfolioAdmin } from "@/lib/supabase/authorization"
 import { createClient } from "@/lib/supabase/server"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
@@ -11,24 +9,6 @@ export type ActionResult = {
   ok: boolean
   error?: string
   url?: string
-}
-
-export const requireAdmin = async () => {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase is not configured")
-  }
-
-  const supabase = await createClient()
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser()
-
-  if (error || !user || !(await isPortfolioAdmin(supabase))) {
-    throw new Error("Unauthorized")
-  }
-
-  return { supabase, user }
 }
 
 export const loginAction = async (
@@ -69,10 +49,4 @@ export const logoutAction = async () => {
   const supabase = await createClient()
   await supabase.auth.signOut()
   redirect("/admin/login")
-}
-
-export const revalidatePortfolio = async () => {
-  revalidateTag(PORTFOLIO_CACHE_TAG)
-  revalidatePath("/", "layout")
-  revalidatePath("/admin", "layout")
 }

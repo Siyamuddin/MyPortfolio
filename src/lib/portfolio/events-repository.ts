@@ -1,7 +1,7 @@
 import { cache } from "react"
 import { unstable_cache } from "next/cache"
 import { createClient } from "@supabase/supabase-js"
-import { requireAdmin } from "@/lib/portfolio/auth-actions"
+import { requireAdmin } from "@/lib/portfolio/auth"
 import {
   EVENTS_CACHE_TAG,
   EVENTS_SETUP_MESSAGE,

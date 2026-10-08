@@ -1,6 +1,6 @@
 ---
 name: siyam-portfolio-admin
-description: Use when managing any siyamuddin.com portfolio CMS content via the secured agent admin API (profile, lists, blog, FAQ, comments, upload, seed).
+description: Use when managing any siyamuddin.com portfolio CMS content via the secured agent admin API (profile, lists, blog, events, FAQ, comments, upload, seed).
 version: 2.0.0
 author: Siyam Uddin
 license: MIT
@@ -12,11 +12,11 @@ metadata:
 
 # Siyam Portfolio Admin API
 
-Full CMS control for **siyamuddin.com** through a Bearer-authenticated agent API (same key as before: `BLOG_API_KEY`).
+Bearer-authenticated agent API for **siyamuddin.com** (`BLOG_API_KEY`). The agent API has no `featured_event_id` on profile, no `tags` or `og_image` on blog or projects, and no messages route.
 
 ## When to Use
 
-Use this skill for any portfolio CMS task: profile, services, skills, education, experience, projects, blog (MDX), FAQ, comment moderation, file upload, or seeding from static data.
+Use this skill for any portfolio CMS task: profile, services, skills, education, experience, projects, blog (MDX), events, FAQ, comment moderation, file upload, or seeding from static data.
 
 ## Credentials
 
@@ -39,14 +39,14 @@ Never print the key unless the user asks.
 
 ## Safety rules
 
-1. Prefer blog `status: "draft"` unless the user explicitly asks to publish.
+1. Prefer blog and event `status: "draft"` unless the user explicitly asks to publish.
 2. Call `GET /api/agent/portfolio` before large edits to see current IDs/slugs.
 3. **Seed is destructive** — only `POST /api/agent/seed` when the user clearly confirms wiping CMS data. Body must be `{ "confirm": "SEED_FROM_STATIC" }`.
 4. After mutations, verify with GET and report relevant `/admin/...` links.
 
 ## Procedure
 
-1. `GET $SITE_URL/api/agent/portfolio` — full snapshot (includes draft blogs)
+1. `GET $SITE_URL/api/agent/portfolio` — full snapshot (includes draft blogs and events)
 2. Mutate the needed resource(s)
 3. Re-GET portfolio or the specific item
 4. Summarize changes + admin URL
@@ -64,6 +64,7 @@ Never print the key unless the user asks.
 | Projects | `/api/agent/projects` (category enum) |
 | FAQs | `/api/agent/faqs` |
 | Blog | `POST /api/agent/blog`, `GET`/`PUT`/`DELETE /api/agent/blog/{slug}` |
+| Events | `GET`/`POST /api/agent/events`, `GET`/`PUT`/`DELETE /api/agent/events/{slug}` |
 | Comments | `GET /api/agent/comments?status=pending`, `PATCH`/`DELETE /api/agent/comments/{id}` |
 | Upload | `POST /api/agent/upload` (multipart: `file`, `folder`) |
 | Seed | `POST /api/agent/seed` |
@@ -80,8 +81,8 @@ Registered components only: `Callout`, `YouTube`, CodeBlock/fenced code, GFM. No
 
 ## Pitfalls
 
-- `401` wrong/missing key · `503` key or Supabase missing on server · `409` blog slug conflict · use PUT for existing slugs
-- List item IDs are UUIDs; blog keys are slugs
+- `401` wrong/missing key · `503` key or Supabase missing on server · `409` blog or event slug conflict · use PUT for existing slugs
+- List item IDs are UUIDs; blog and event keys are slugs
 - Do not log the Bearer token
 
 ## Verification

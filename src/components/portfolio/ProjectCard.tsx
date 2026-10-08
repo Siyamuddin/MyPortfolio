@@ -2,7 +2,6 @@ import { ArrowUpRight } from "lucide-react"
 import { ContentImage as Image } from "@/components/portfolio/ContentImage"
 import { TagChips } from "@/components/ui/TagChips"
 import type { Project } from "@/lib/types"
-import { projectPlaceholderSrc } from "@/lib/portfolio/project-image"
 import { getProjectLinks } from "@/lib/portfolio/project-links"
 import { labelFromSlug } from "@/lib/portfolio/tags"
 
@@ -28,7 +27,7 @@ export const ProjectCard = ({ project, priority = false, enter = false }: Projec
   const imageSrc =
     project.image.startsWith("http") || project.image.startsWith("/")
       ? project.image
-      : projectPlaceholderSrc()
+      : "/images/project-placeholder.svg"
 
   const media = (
     <>
@@ -45,16 +44,9 @@ export const ProjectCard = ({ project, priority = false, enter = false }: Projec
         />
       </figure>
       <div className="ml-2.5">
-        <div className="mb-1 flex flex-wrap items-center gap-2">
-          <h2 className="text-[15px] font-normal capitalize leading-snug text-white-2">
-            {project.title}
-          </h2>
-          {project.highlight ? (
-            <span className="rounded-md bg-onyx px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-gold">
-              {project.highlight}
-            </span>
-          ) : null}
-        </div>
+        <h2 className="mb-1 text-[15px] font-normal capitalize leading-snug text-white-2">
+          {project.title}
+        </h2>
         <p className="mb-2 text-sm font-light text-light-gray-70 min-[580px]:text-[15px]">
           {project.category}
         </p>

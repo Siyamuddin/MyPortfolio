@@ -8,10 +8,6 @@ type TagChipsProps = {
   className?: string
 }
 
-/**
- * Crawlable hashtag chips. Each chip links to its `/tags/[slug]` landing page so
- * tags double as internal navigation and SEO entry points.
- */
 export const TagChips = ({ tags, label = "Tags", className = "" }: TagChipsProps) => {
   if (!tags.length) return null
 

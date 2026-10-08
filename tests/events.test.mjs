@@ -36,15 +36,21 @@ function actionHarness({ authorized = true, result = { data: { id: eventId }, er
     async upload(path, file, options) { uploads.push({ path, file, options }); return { error: null }; },
     getPublicUrl(path) { return { data: { publicUrl: `https://example.supabase.co/storage/v1/object/public/portfolio/${path}` } }; },
   };
+  const cache = {
+    revalidateTag: (tag) => invalidations.push(tag),
+    revalidatePath: (path) => invalidations.push(path),
+    unstable_cache: (fn) => fn,
+  }
+  const { revalidatePortfolio } = sourceLoader({ "next/cache": cache })("src/lib/portfolio/auth.ts")
   const actions = sourceLoader({
-    "@/lib/portfolio/auth-actions": { requireAdmin: async () => {
-      if (!authorized) throw new Error("Unauthorized");
-      return { supabase: { from: () => query, storage: { from: () => storage } } };
-    } },
-    "next/cache": {
-      revalidateTag: (tag) => invalidations.push(tag),
-      revalidatePath: (path) => invalidations.push(path),
+    "@/lib/portfolio/auth": {
+      requireAdmin: async () => {
+        if (!authorized) throw new Error("Unauthorized");
+        return { supabase: { from: () => query, storage: { from: () => storage } } };
+      },
+      revalidatePortfolio,
     },
+    "next/cache": cache,
   }, { File, FormData, Uint8Array })("src/lib/portfolio/event-actions.ts");
   return { actions, writes, invalidations, uploads, tagWrites };
 }
@@ -155,7 +161,7 @@ function repositoryHarness({ configured = true, result = { data: [], error: null
     react: { cache: (fn) => fn }, "next/cache": { unstable_cache: (fn) => fn },
     "@supabase/supabase-js": { createClient: () => ({ from: () => query }) },
     "@/lib/supabase/env": { isSupabaseConfigured: () => configured, getSupabaseEnv: () => ({ url: "https://example.supabase.co", anonKey: "test" }) },
-    "@/lib/portfolio/auth-actions": { requireAdmin: async () => {
+    "@/lib/portfolio/auth": { requireAdmin: async () => {
       if (!authorized) throw new Error("Unauthorized");
       return { supabase: { from: () => query } };
     } },

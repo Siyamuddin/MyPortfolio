@@ -34,40 +34,52 @@ const toDefaultTags = (
   labels: Record<string, string>
 ): Tag[] => (slugs ?? []).map((slug) => ({ slug, label: labels[slug] ?? labelFromSlug(slug) }))
 
+const deleteAndRefresh = (table: string, id: string, refresh: () => void) => async () => {
+  const result = await deleteItemAction(table, id)
+  if (result.ok) refresh()
+  return result
+}
+
 export const ServicesAdmin = ({ items }: { items: ServiceRow[] }) => {
   const router = useRouter()
   const refresh = () => router.refresh()
 
   return (
     <div className="space-y-6">
-      <AdminForm title="Add service" action={upsertServiceAction} onSuccess={refresh}>
-        <Field label="Title" name="title" required />
-        <TextArea label="Description" name="description" />
-        <Field label="Icon (Smartphone|Code2|Sparkles|Server)" name="icon" defaultValue="Code2" />
-        <Field label="Sort order" name="sort_order" type="number" defaultValue={items.length} />
-      </AdminForm>
-
+      <ServiceForm title="Add service" sortOrder={items.length} onSuccess={refresh} />
       {items.map((item) => (
         <div key={item.id} className="space-y-2">
-          <AdminForm title={`Edit: ${item.title}`} action={upsertServiceAction} onSuccess={refresh}>
-            <input type="hidden" name="id" value={item.id} />
-            <Field label="Title" name="title" defaultValue={item.title} required />
-            <TextArea label="Description" name="description" defaultValue={item.description} />
-            <Field label="Icon" name="icon" defaultValue={item.icon} />
-            <Field label="Sort order" name="sort_order" type="number" defaultValue={item.sort_order} />
-          </AdminForm>
-          <DeleteButton
-            onDelete={async () => {
-              const result = await deleteItemAction("services", item.id)
-              if (result.ok) refresh()
-              return result
-            }}
-          />
+          <ServiceForm item={item} title={`Edit: ${item.title}`} onSuccess={refresh} />
+          <DeleteButton onDelete={deleteAndRefresh("services", item.id, refresh)} />
         </div>
       ))}
     </div>
   )
 }
+
+const ServiceForm = ({ item, title, sortOrder = 0, onSuccess }: {
+  item?: ServiceRow
+  title: string
+  sortOrder?: number
+  onSuccess: () => void
+}) => (
+  <AdminForm
+    title={title}
+    action={upsertServiceAction}
+    onSuccess={onSuccess}
+    fieldsKey={item ? JSON.stringify(item) : sortOrder}
+  >
+    {item?.id ? <input type="hidden" name="id" value={item.id} /> : null}
+    <Field label="Title" name="title" defaultValue={item?.title} required />
+    <TextArea label="Description" name="description" defaultValue={item?.description} />
+    <Field
+      label={item ? "Icon" : "Icon (Smartphone|Code2|Sparkles|Server)"}
+      name="icon"
+      defaultValue={item ? item.icon : "Code2"}
+    />
+    <Field label="Sort order" name="sort_order" type="number" defaultValue={item ? item.sort_order : sortOrder} />
+  </AdminForm>
+)
 
 export const SkillsAdmin = ({ items }: { items: SkillRow[] }) => {
   const router = useRouter()
@@ -75,41 +87,36 @@ export const SkillsAdmin = ({ items }: { items: SkillRow[] }) => {
 
   return (
     <div className="space-y-6">
-      <AdminForm title="Add skill" action={upsertSkillAction} onSuccess={refresh}>
-        <Field label="Name" name="name" required />
-        <Field label="Color" name="color" defaultValue="#ffffff" />
-        <Field label="Icon stem or URL" name="icon" defaultValue="" />
-        <FileUploadField name="icon_upload_preview" label="Or upload icon (paste URL into Icon)" folder="skills" />
-        <Field label="Sort order" name="sort_order" type="number" defaultValue={items.length} />
-      </AdminForm>
-
+      <SkillForm title="Add skill" sortOrder={items.length} onSuccess={refresh} />
       {items.map((item) => (
         <div key={item.id} className="space-y-2">
-          <AdminForm title={`Edit: ${item.name}`} action={upsertSkillAction} onSuccess={refresh}>
-            <input type="hidden" name="id" value={item.id} />
-            <Field label="Name" name="name" defaultValue={item.name} required />
-            <Field label="Color" name="color" defaultValue={item.color} />
-            <Field label="Icon stem or URL" name="icon" defaultValue={item.icon} />
-            <FileUploadField
-              name="icon_upload_preview"
-              label="Upload icon (copy URL into Icon field)"
-              folder="skills"
-              defaultValue={item.icon.startsWith("http") ? item.icon : ""}
-            />
-            <Field label="Sort order" name="sort_order" type="number" defaultValue={item.sort_order} />
-          </AdminForm>
-          <DeleteButton
-            onDelete={async () => {
-              const result = await deleteItemAction("skills", item.id)
-              if (result.ok) refresh()
-              return result
-            }}
-          />
+          <SkillForm item={item} title={`Edit: ${item.name}`} onSuccess={refresh} />
+          <DeleteButton onDelete={deleteAndRefresh("skills", item.id, refresh)} />
         </div>
       ))}
     </div>
   )
 }
+
+const SkillForm = ({ item, title, sortOrder = 0, onSuccess }: {
+  item?: SkillRow
+  title: string
+  sortOrder?: number
+  onSuccess: () => void
+}) => (
+  <AdminForm
+    title={title}
+    action={upsertSkillAction}
+    onSuccess={onSuccess}
+    fieldsKey={item ? JSON.stringify(item) : sortOrder}
+  >
+    {item?.id ? <input type="hidden" name="id" value={item.id} /> : null}
+    <Field label="Name" name="name" defaultValue={item?.name} required />
+    <Field label="Color" name="color" defaultValue={item ? item.color : "#ffffff"} />
+    <FileUploadField name="icon" label="Icon stem or URL" folder="skills" type="text" defaultValue={item?.icon} />
+    <Field label="Sort order" name="sort_order" type="number" defaultValue={item ? item.sort_order : sortOrder} />
+  </AdminForm>
+)
 
 export const EducationAdmin = ({ items }: { items: EducationRow[] }) => {
   const router = useRouter()
@@ -117,36 +124,37 @@ export const EducationAdmin = ({ items }: { items: EducationRow[] }) => {
 
   return (
     <div className="space-y-6">
-      <AdminForm title="Add education" action={upsertEducationAction} onSuccess={refresh}>
-        <Field label="School" name="school" required />
-        <Field label="Degree" name="degree" required />
-        <Field label="Period" name="period" required />
-        <TextArea label="Description" name="description" />
-        <Field label="Sort order" name="sort_order" type="number" defaultValue={items.length} />
-      </AdminForm>
-
+      <EducationForm title="Add education" sortOrder={items.length} onSuccess={refresh} />
       {items.map((item) => (
         <div key={item.id} className="space-y-2">
-          <AdminForm title={`Edit: ${item.school}`} action={upsertEducationAction} onSuccess={refresh}>
-            <input type="hidden" name="id" value={item.id} />
-            <Field label="School" name="school" defaultValue={item.school} required />
-            <Field label="Degree" name="degree" defaultValue={item.degree} required />
-            <Field label="Period" name="period" defaultValue={item.period} required />
-            <TextArea label="Description" name="description" defaultValue={item.description} />
-            <Field label="Sort order" name="sort_order" type="number" defaultValue={item.sort_order} />
-          </AdminForm>
-          <DeleteButton
-            onDelete={async () => {
-              const result = await deleteItemAction("education", item.id)
-              if (result.ok) refresh()
-              return result
-            }}
-          />
+          <EducationForm item={item} title={`Edit: ${item.school}`} onSuccess={refresh} />
+          <DeleteButton onDelete={deleteAndRefresh("education", item.id, refresh)} />
         </div>
       ))}
     </div>
   )
 }
+
+const EducationForm = ({ item, title, sortOrder = 0, onSuccess }: {
+  item?: EducationRow
+  title: string
+  sortOrder?: number
+  onSuccess: () => void
+}) => (
+  <AdminForm
+    title={title}
+    action={upsertEducationAction}
+    onSuccess={onSuccess}
+    fieldsKey={item ? JSON.stringify(item) : sortOrder}
+  >
+    {item?.id ? <input type="hidden" name="id" value={item.id} /> : null}
+    <Field label="School" name="school" defaultValue={item?.school} required />
+    <Field label="Degree" name="degree" defaultValue={item?.degree} required />
+    <Field label="Period" name="period" defaultValue={item?.period} required />
+    <TextArea label="Description" name="description" defaultValue={item?.description} />
+    <Field label="Sort order" name="sort_order" type="number" defaultValue={item ? item.sort_order : sortOrder} />
+  </AdminForm>
+)
 
 export const ExperienceAdmin = ({ items }: { items: ExperienceRow[] }) => {
   const router = useRouter()
@@ -162,13 +170,7 @@ export const ExperienceAdmin = ({ items }: { items: ExperienceRow[] }) => {
       {items.map((item) => (
         <div key={item.id} className="space-y-2">
           <ExperienceForm item={item} title={`Edit: ${item.role}`} onSuccess={refresh} />
-          <DeleteButton
-            onDelete={async () => {
-              const result = await deleteItemAction("experience", item.id)
-              if (result.ok) refresh()
-              return result
-            }}
-          />
+          <DeleteButton onDelete={deleteAndRefresh("experience", item.id, refresh)} />
         </div>
       ))}
     </div>
@@ -197,7 +199,12 @@ const ExperienceForm = ({
   }
 
   return (
-    <AdminForm title={title} action={handleAction} onSuccess={onSuccess}>
+    <AdminForm
+      title={title}
+      action={handleAction}
+      onSuccess={onSuccess}
+      fieldsKey={item ? JSON.stringify(item) : sortOrder}
+    >
       {item?.id ? <input type="hidden" name="id" value={item.id} /> : null}
       <Field label="Role" name="role" defaultValue={item?.role} required />
       <Field label="Company" name="company" defaultValue={item?.company} required />
@@ -236,68 +243,54 @@ export const ProjectsAdmin = ({
 
   return (
     <div className="space-y-6">
-      <AdminForm title="Add project" action={upsertProjectAction} onSuccess={refresh}>
-        <Field label="Title" name="title" required />
-        <label className="block text-sm text-light-gray-70">
-          Category
-          <select
-            name="category"
-            defaultValue="Web Development"
-            className={fieldClassName}
-            aria-label="Category"
-            tabIndex={0}
-          >
-            <option value="Web Development">Web Development</option>
-            <option value="Applications">Applications</option>
-            <option value="Automation">Automation</option>
-          </select>
-        </label>
-        <FileUploadField name="image" label="Image" folder="projects" />
-        <Field label="URL" name="url" defaultValue="" />
-        <TextArea label="Description" name="description" />
-        <TagsInput />
-        <Field label="Social image URL (optional)" name="og_image" defaultValue="" />
-        <Field label="Sort order" name="sort_order" type="number" defaultValue={items.length} />
-      </AdminForm>
-
+      <ProjectForm title="Add project" sortOrder={items.length} tagLabels={tagLabels} onSuccess={refresh} />
       {items.map((item) => (
         <div key={item.id} className="space-y-2">
-          <AdminForm title={`Edit: ${item.title}`} action={upsertProjectAction} onSuccess={refresh}>
-            <input type="hidden" name="id" value={item.id} />
-            <Field label="Title" name="title" defaultValue={item.title} required />
-            <label className="block text-sm text-light-gray-70">
-              Category
-              <select
-                name="category"
-                defaultValue={item.category}
-                className={fieldClassName}
-                aria-label="Category"
-                tabIndex={0}
-              >
-                <option value="Web Development">Web Development</option>
-                <option value="Applications">Applications</option>
-                <option value="Automation">Automation</option>
-              </select>
-            </label>
-            <FileUploadField name="image" label="Image" folder="projects" defaultValue={item.image} />
-            <Field label="URL" name="url" defaultValue={item.url} />
-            <TextArea label="Description" name="description" defaultValue={item.description} />
-            <TagsInput defaultTags={toDefaultTags(item.tags, tagLabels)} />
-            <Field label="Social image URL (optional)" name="og_image" defaultValue={item.og_image ?? ""} />
-            <Field label="Sort order" name="sort_order" type="number" defaultValue={item.sort_order} />
-          </AdminForm>
-          <DeleteButton
-            onDelete={async () => {
-              const result = await deleteItemAction("projects", item.id)
-              if (result.ok) refresh()
-              return result
-            }}
-          />
+          <ProjectForm item={item} title={`Edit: ${item.title}`} tagLabels={tagLabels} onSuccess={refresh} />
+          <DeleteButton onDelete={deleteAndRefresh("projects", item.id, refresh)} />
         </div>
       ))}
     </div>
   )
 }
+
+const ProjectForm = ({ item, title, sortOrder = 0, tagLabels, onSuccess }: {
+  item?: ProjectRow
+  title: string
+  sortOrder?: number
+  tagLabels: Record<string, string>
+  onSuccess: () => void
+}) => (
+  <AdminForm
+    title={title}
+    action={upsertProjectAction}
+    onSuccess={onSuccess}
+    fieldsKey={item ? JSON.stringify(item) : sortOrder}
+  >
+    {item?.id ? <input type="hidden" name="id" value={item.id} /> : null}
+    <Field label="Title" name="title" defaultValue={item?.title} required />
+    <label className="block text-sm text-light-gray-70">
+      Category
+      <select
+        name="category"
+        defaultValue={item?.category ?? "Web Development"}
+        className={fieldClassName}
+        aria-label="Category"
+        tabIndex={0}
+      >
+        <option value="Web Development">Web Development</option>
+        <option value="Applications">Applications</option>
+        <option value="Automation">Automation</option>
+      </select>
+    </label>
+    <FileUploadField name="image" label="Image" folder="projects" defaultValue={item?.image} />
+    <Field label="URL" name="url" defaultValue={item?.url ?? ""} />
+    <TextArea label="Description" name="description" defaultValue={item?.description} />
+    <TagsInput defaultTags={item ? toDefaultTags(item.tags, tagLabels) : []} />
+    <Field label="Social image URL (optional)" name="og_image" defaultValue={item?.og_image ?? ""} />
+    <Field label="Sort order" name="sort_order" type="number" defaultValue={item ? item.sort_order : sortOrder} />
+  </AdminForm>
+)
 
 export const FaqAdmin = ({ items }: { items: FaqRow[] }) => {
   const router = useRouter()
@@ -305,29 +298,32 @@ export const FaqAdmin = ({ items }: { items: FaqRow[] }) => {
 
   return (
     <div className="space-y-6">
-      <AdminForm title="Add FAQ" action={upsertFaqAction} onSuccess={refresh}>
-        <Field label="Question" name="question" required />
-        <TextArea label="Answer" name="answer" rows={5} />
-        <Field label="Sort order" name="sort_order" type="number" defaultValue={items.length} />
-      </AdminForm>
-
+      <FaqForm title="Add FAQ" sortOrder={items.length} onSuccess={refresh} />
       {items.map((item) => (
         <div key={item.id} className="space-y-2">
-          <AdminForm title={`Edit FAQ`} action={upsertFaqAction} onSuccess={refresh}>
-            <input type="hidden" name="id" value={item.id} />
-            <Field label="Question" name="question" defaultValue={item.question} required />
-            <TextArea label="Answer" name="answer" defaultValue={item.answer} rows={5} />
-            <Field label="Sort order" name="sort_order" type="number" defaultValue={item.sort_order} />
-          </AdminForm>
-          <DeleteButton
-            onDelete={async () => {
-              const result = await deleteItemAction("faqs", item.id)
-              if (result.ok) refresh()
-              return result
-            }}
-          />
+          <FaqForm item={item} title="Edit FAQ" onSuccess={refresh} />
+          <DeleteButton onDelete={deleteAndRefresh("faqs", item.id, refresh)} />
         </div>
       ))}
     </div>
   )
 }
+
+const FaqForm = ({ item, title, sortOrder = 0, onSuccess }: {
+  item?: FaqRow
+  title: string
+  sortOrder?: number
+  onSuccess: () => void
+}) => (
+  <AdminForm
+    title={title}
+    action={upsertFaqAction}
+    onSuccess={onSuccess}
+    fieldsKey={item ? JSON.stringify(item) : sortOrder}
+  >
+    {item?.id ? <input type="hidden" name="id" value={item.id} /> : null}
+    <Field label="Question" name="question" defaultValue={item?.question} required />
+    <TextArea label="Answer" name="answer" defaultValue={item?.answer} rows={5} />
+    <Field label="Sort order" name="sort_order" type="number" defaultValue={item ? item.sort_order : sortOrder} />
+  </AdminForm>
+)

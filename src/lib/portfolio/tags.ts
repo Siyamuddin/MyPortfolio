@@ -8,9 +8,6 @@ export const TAGS_CACHE_TAG = "portfolio-tags"
 export type Tag = { slug: string; label: string }
 export type TagWithCount = Tag & { count: number }
 
-/** The content types that can carry tags, used by tag landing pages. */
-export type TaggableKind = "event" | "post" | "project"
-
 export const TAG_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 /** Produce a clean, URL-safe tag slug from arbitrary user input. */
@@ -69,11 +66,6 @@ export const contentTagsSchema = z
   .max(MAX_TAGS_PER_ITEM, `Add up to ${MAX_TAGS_PER_ITEM} tags.`)
   .default([])
   .transform((slugs) => Array.from(new Set(slugs)))
-
-export const tagRegistrySchema = z.object({
-  slug: tagSlugSchema,
-  label: z.string().trim().min(1).max(TAG_LABEL_MAX),
-})
 
 /**
  * Parse the admin tag field. Accepts a JSON array of raw labels and returns the

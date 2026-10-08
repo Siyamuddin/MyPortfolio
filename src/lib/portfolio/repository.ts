@@ -3,7 +3,6 @@ import { unstable_cache } from "next/cache"
 import { createClient } from "@supabase/supabase-js"
 import { navPages } from "@/data/portfolio"
 import { sortBlogPostsByNewest } from "@/lib/portfolio/blog"
-import { resolveFeaturedProject } from "@/lib/portfolio/featured-project"
 import {
   mapBlogComment,
   mapBlogPost,
@@ -31,7 +30,7 @@ import type {
   ServiceRow,
   SkillRow,
 } from "@/lib/portfolio/types"
-import type { BlogComment, BlogPost, Faq } from "@/lib/types"
+import type { BlogComment, BlogPost } from "@/lib/types"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
 export const PORTFOLIO_CACHE_TAG = "portfolio"
@@ -94,10 +93,6 @@ const fetchPortfolioFromSupabase = async (): Promise<PortfolioData> => {
     education: ((educationResult.data ?? []) as EducationRow[]).map(mapEducation),
     experience: ((experienceResult.data ?? []) as ExperienceRow[]).map(mapExperience),
     projects,
-    featuredProject: resolveFeaturedProject(
-      projects,
-      profileRow.featured_project_id
-    ),
     blogPosts: sortBlogPostsByNewest(
       ((blogResult.data ?? []) as BlogPostRow[]).map(mapBlogPost)
     ),
@@ -224,8 +219,3 @@ export const getApprovedComments = cache(
     }
   }
 )
-
-export const getFaqs = cache(async (): Promise<Faq[]> => {
-  const portfolio = await getPortfolio()
-  return portfolio.faqs
-})

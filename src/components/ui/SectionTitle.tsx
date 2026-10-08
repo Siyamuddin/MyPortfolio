@@ -2,7 +2,7 @@ import { cn } from "@/lib/cn"
 
 type SectionTitleProps = {
   children: React.ReactNode
-  as?: "h1" | "h2" | "h3"
+  as?: "h1"
   className?: string
   section?: boolean
 }
@@ -12,31 +12,14 @@ const pageTitleClassName =
 
 export const SectionTitle = ({
   children,
-  as = "h2",
   className,
   section = false,
 }: SectionTitleProps) => {
   if (section) return <h2 className={cn("mb-5 text-lg capitalize text-white-2", className)}>{children}</h2>
 
-  if (as === "h3") {
-    return (
-      <h3 className={cn("mb-5 text-lg capitalize text-white-2", className)}>
-        {children}
-      </h3>
-    )
-  }
-
-  if (as === "h1") {
-    return (
-      <h1 className={cn(pageTitleClassName, className)}>
-        {children}
-      </h1>
-    )
-  }
-
   return (
-    <h2 className={cn(pageTitleClassName, className)}>
+    <h1 className={cn(pageTitleClassName, className)}>
       {children}
-    </h2>
+    </h1>
   )
 }

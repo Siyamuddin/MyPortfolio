@@ -15,17 +15,9 @@ The public site reads portfolio content via `getPortfolio()`:
 
 ## 2. Apply schema
 
-Run these in the Supabase SQL Editor (in order):
+Apply every file in [`supabase/migrations/`](../supabase/migrations/) in order, the same way [`scripts/test-database.sh`](../scripts/test-database.sh) applies `supabase/migrations/*.sql`.
 
-1. [`supabase/migrations/001_portfolio.sql`](../supabase/migrations/001_portfolio.sql)
-2. [`supabase/migrations/002_content_cms.sql`](../supabase/migrations/002_content_cms.sql)
-3. [`supabase/migrations/003_analytics.sql`](../supabase/migrations/003_analytics.sql)
-
-`001` creates profile, services, skills, education, experience, projects, blog_posts, RLS, and the `portfolio` storage bucket.
-
-`002` adds blog `slug` / `body` (MDX) / `status`, plus `faqs` and moderated `blog_comments`.
-
-`003` adds first-party visitor analytics (`analytics_events` + `get_analytics_summary()`).
+Do not replay [`006_contact_messages.sql`](../supabase/migrations/006_contact_messages.sql) policies alone. Production treats that version as satisfied by [`20260916012653_portfolio_audit_security.sql`](../supabase/migrations/20260916012653_portfolio_audit_security.sql).
 
 ## 3. Create the admin user
 
@@ -34,31 +26,7 @@ There is no public signup UI — only this account can sign in at `/admin/login`
 
 ## 4. Environment variables
 
-Copy `.env.example` to `.env.local` and fill:
-
-```bash
-NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-
-RESEND_API_KEY=
-CONTACT_TO_EMAIL=
-
-# native | giscus | both
-NEXT_PUBLIC_COMMENT_PROVIDER=both
-NEXT_PUBLIC_GISCUS_REPO=owner/repo
-NEXT_PUBLIC_GISCUS_REPO_ID=
-NEXT_PUBLIC_GISCUS_CATEGORY=Announcements
-NEXT_PUBLIC_GISCUS_CATEGORY_ID=
-
-# Long random string — used to hash IP + User-Agent (raw IP is never stored)
-ANALYTICS_SALT=replace-with-a-long-random-secret
-
-# Hermes / agent admin API key (Authorization: Bearer <key>)
-BLOG_API_KEY=replace-with-a-long-random-secret
-```
-
-Add the same values in Vercel → Project → Settings → Environment Variables.
+Copy [`.env.example`](../.env.example) to `.env.local` and fill the values. Add the same keys in Vercel → Project → Settings → Environment Variables.
 
 ### Giscus setup
 
@@ -81,6 +49,7 @@ Use `/admin` sections:
 
 - Profile (avatar + resume uploads)
 - Services, Skills, Education, Experience, Projects
+- **Events** — `/admin/events`
 - **Blog** — slug, MDX body, draft/published
 - **FAQ** — About page accordion + FAQPage schema
 - **Comments** — approve/reject native comments
@@ -128,12 +97,14 @@ Content-Type: application/json
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| `GET` | `/api/agent/portfolio` | Full CMS snapshot (includes draft blogs) |
+| `GET` | `/api/agent/portfolio` | Full CMS snapshot (includes draft blogs and events) |
 | `GET`/`PUT` | `/api/agent/profile` | Read / upsert profile |
 | `GET`/`POST` | `/api/agent/{resource}` | List / create (`services`, `skills`, `education`, `experience`, `projects`, `faqs`) |
 | `GET`/`PUT`/`DELETE` | `/api/agent/{resource}/{id}` | By UUID |
 | `POST` | `/api/agent/blog` | Create post (default `draft`) |
 | `GET`/`PUT`/`DELETE` | `/api/agent/blog/{slug}` | By slug |
+| `GET`/`POST` | `/api/agent/events` | List (drafts included) / create event (default `draft`) |
+| `GET`/`PUT`/`DELETE` | `/api/agent/events/{slug}` | By slug |
 | `GET` | `/api/agent/comments?status=` | List comments |
 | `PATCH`/`DELETE` | `/api/agent/comments/{id}` | Moderate / delete |
 | `POST` | `/api/agent/upload` | Multipart `file` + `folder` (`avatars`\|`projects`\|`blog`\|`skills`\|`resume`) |
@@ -147,6 +118,18 @@ export BLOG_API_KEY=your-key
 
 curl -sS "$SITE_URL/api/agent/portfolio" \
   -H "Authorization: Bearer $BLOG_API_KEY"
+
+# Events. Omit status to create a draft. Tags are lowercase slugs.
+# Photos are `{ "id": "<uuid>", "url": "https://...", "alt": "", "caption": "" }`.
+curl -sS -X POST "$SITE_URL/api/agent/events" \
+  -H "Authorization: Bearer $BLOG_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Campus hackathon","category":"Hackathon","date":"2026-09-20"}'
+
+curl -sS -X PUT "$SITE_URL/api/agent/events/campus-hackathon" \
+  -H "Authorization: Bearer $BLOG_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"status":"published"}'
 ```
 
 ### Hermes skill
@@ -166,7 +149,7 @@ Add the same `BLOG_API_KEY` in Vercel so production accepts the agent.
 
 - Nav labels/routes stay in code (`navPages` / SEO helpers)
 - Without Supabase env vars the site keeps working from static data
-- Contact form and pending-comment alerts use Resend (`RESEND_API_KEY` / `CONTACT_TO_EMAIL`)
+- Contact form and pending-comment alerts use Resend only when `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, and `CONTACT_FROM_EMAIL` are all set
 - Comment alerts soft-fail (comment still saves) if Resend is not configured
 - Analytics soft-fail if Supabase / service role is missing
 - Agent admin API soft-fails with `503` if `BLOG_API_KEY` or Supabase is missing

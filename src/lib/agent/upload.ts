@@ -4,6 +4,7 @@ import {
   type AgentFail,
 } from "@/lib/agent/common"
 import { createServiceClient } from "@/lib/supabase/admin"
+import { MAX_UPLOAD_BYTES, uploadTooLargeError } from "@/lib/upload-limit"
 
 const ALLOWED_FOLDERS = new Set([
   "avatars",
@@ -12,8 +13,6 @@ const ALLOWED_FOLDERS = new Set([
   "skills",
   "resume",
 ])
-
-const MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 
 export const uploadPortfolioFile = async (
   file: File,
@@ -36,7 +35,7 @@ export const uploadPortfolioFile = async (
     return { ok: false, error: "No file provided", status: 400 }
   }
   if (file.size > MAX_UPLOAD_BYTES) {
-    return { ok: false, error: "File too large (max 10MB)", status: 400 }
+    return { ok: false, error: uploadTooLargeError, status: 400 }
   }
 
   const admin = createServiceClient()

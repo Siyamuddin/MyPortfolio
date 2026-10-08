@@ -6,10 +6,6 @@ import type { EventPhoto } from "@/lib/portfolio/events"
 import { EventImage } from "./EventImage"
 import styles from "./Events.module.css"
 
-/**
- * Photo gallery for an event detail page: a responsive grid of thumbnails that
- * open an accessible lightbox with keyboard and swipe navigation.
- */
 export function EventGallery({ title, photos }: { title: string; photos: EventPhoto[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   if (!photos.length) return null
@@ -114,7 +110,7 @@ function Lightbox({
         }
       }}
     >
-      <div className={styles.album}>
+      <div>
         <header className={styles.albumHeader}>
           <span className={styles.eyebrow}>
             {count ? `${index + 1} of ${count} photos` : "Event photo"}

@@ -15,17 +15,9 @@ The public site reads portfolio content via `getPortfolio()`:
 
 ## 2. Apply schema
 
-Run these in the Supabase SQL Editor (in order):
+Apply every file in [`supabase/migrations/`](../supabase/migrations/) in order, the same way [`scripts/test-database.sh`](../scripts/test-database.sh) applies `supabase/migrations/*.sql`.
 
-1. [`supabase/migrations/001_portfolio.sql`](../supabase/migrations/001_portfolio.sql)
-2. [`supabase/migrations/002_content_cms.sql`](../supabase/migrations/002_content_cms.sql)
-3. [`supabase/migrations/003_analytics.sql`](../supabase/migrations/003_analytics.sql)
-
-`001` creates profile, services, skills, education, experience, projects, blog_posts, RLS, and the `portfolio` storage bucket.
-
-`002` adds blog `slug` / `body` (MDX) / `status`, plus `faqs` and moderated `blog_comments`.
-
-`003` adds first-party visitor analytics (`analytics_events` + `get_analytics_summary()`).
+Do not replay [`006_contact_messages.sql`](../supabase/migrations/006_contact_messages.sql) policies alone. Production treats that version as satisfied by [`20260916012653_portfolio_audit_security.sql`](../supabase/migrations/20260916012653_portfolio_audit_security.sql).
 
 ## 3. Create the admin user
 
@@ -34,32 +26,7 @@ There is no public signup UI — only this account can sign in at `/admin/login`
 
 ## 4. Environment variables
 
-Copy `.env.example` to `.env.local` and fill:
-
-```bash
-NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-
-RESEND_API_KEY=
-CONTACT_TO_EMAIL=
-CONTACT_FROM_EMAIL=
-
-# native | giscus | both
-NEXT_PUBLIC_COMMENT_PROVIDER=both
-NEXT_PUBLIC_GISCUS_REPO=owner/repo
-NEXT_PUBLIC_GISCUS_REPO_ID=
-NEXT_PUBLIC_GISCUS_CATEGORY=Announcements
-NEXT_PUBLIC_GISCUS_CATEGORY_ID=
-
-# Long random string — used to hash IP + User-Agent (raw IP is never stored)
-ANALYTICS_SALT=replace-with-a-long-random-secret
-
-# Hermes / agent admin API key (Authorization: Bearer <key>)
-BLOG_API_KEY=replace-with-a-long-random-secret
-```
-
-Add the same values in Vercel → Project → Settings → Environment Variables.
+Copy [`.env.example`](../.env.example) to `.env.local` and fill the values. Add the same keys in Vercel → Project → Settings → Environment Variables.
 
 ### Giscus setup
 
@@ -82,6 +49,7 @@ Use `/admin` sections:
 
 - Profile (avatar + resume uploads)
 - Services, Skills, Education, Experience, Projects
+- **Events** — `/admin/events`
 - **Blog** — slug, MDX body, draft/published
 - **FAQ** — About page accordion + FAQPage schema
 - **Comments** — approve/reject native comments

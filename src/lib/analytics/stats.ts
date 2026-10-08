@@ -50,7 +50,6 @@ export const getAnalyticsSummary = async (): Promise<AnalyticsSummary> => {
 
     const payload = (data ?? {}) as Record<string, unknown>
     const summary = (payload.summary ?? {}) as Record<string, unknown>
-    // by_day, by_month, and by_year stay in the SQL function and are ignored here.
 
     return {
       summary: {

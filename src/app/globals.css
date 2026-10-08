@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-/* ============================================
-   DESIGN SYSTEM — Dark Portfolio Theme
-   ============================================ */
 :root {
   /* Backgrounds */
   --smoky-black: #0a0a0b;
@@ -19,7 +16,6 @@
 
   /* Accent */
   --orange-yellow-crayola: #ffdb70;
-  --vegas-gold: #ffdb70;
   --text-gradient-yellow: linear-gradient(to right, #ffdb70, #e8b84b);
 
   /* Shadows */
@@ -29,17 +25,11 @@
   --shadow-4: 0 25px 50px hsla(0, 0%, 0%, 0.15);
   --shadow-5: 0 24px 80px hsla(0, 0%, 0%, 0.25);
 
-  /* Transitions */
-  --transition-1: 0.25s ease;
-  --transition-2: 0.32s cubic-bezier(0.65, 0, 0.35, 1);
-
   /* ── Motion system ──────────────────────────────────────
      Animate transform & opacity only. One gold emphasis per
      viewport. Every usage has a reduced-motion fallback. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* enters, reveals */
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* moves, morphs, layout */
   --ease-in: cubic-bezier(0.4, 0, 1, 1); /* exits */
-  --dur-1: 120ms;
   --dur-2: 180ms;
   --dur-3: 240ms;
   --dur-4: 320ms;
@@ -69,9 +59,6 @@
     Menlo, Consolas, monospace;
 }
 
-/* ============================================
-   BASE STYLES
-   ============================================ */
 body {
   background: var(--smoky-black);
   color: var(--light-gray);
@@ -101,9 +88,6 @@ samp {
   box-shadow: 0 0 0 4px hsla(44, 100%, 72%, 0.25);
 }
 
-/* ============================================
-   GOLD GRADIENT UNDERLINE (section titles)
-   ============================================ */
 .gold-underline {
   position: relative;
   padding-bottom: 7px;
@@ -136,9 +120,6 @@ samp {
   }
 }
 
-/* ============================================
-   CARD WITH GRADIENT BORDER
-   ============================================ */
 .gradient-border-card {
   position: relative;
   background: linear-gradient(to bottom right, #38383d 0%, rgba(56, 56, 61, 0) 50%);
@@ -159,9 +140,6 @@ samp {
   z-index: -1;
 }
 
-/* ============================================
-   GOLD ACCENT ICON BOX
-   ============================================ */
 .icon-box {
   position: relative;
   background: linear-gradient(to bottom right, #38383d 3%, #2b2b30 97%);
@@ -184,20 +162,6 @@ samp {
   z-index: -1;
 }
 
-/* ============================================
-   TIMELINE
-   ============================================ */
-.timeline-dot {
-  height: 8px;
-  width: 8px;
-  background: var(--text-gradient-yellow);
-  border-radius: 50%;
-  box-shadow: 0 0 0 4px var(--jet);
-}
-
-/* ============================================
-   SCROLLBAR
-   ============================================ */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -212,9 +176,6 @@ samp {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* ============================================
-   ANIMATIONS
-   ============================================ */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(var(--rise)); }
   to { opacity: 1; transform: translateY(0); }
@@ -225,18 +186,9 @@ samp {
   to { opacity: 1; transform: scale(1); }
 }
 
-@keyframes slideInRight {
-  from { transform: translateX(100px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
 /* Route/page transition: subtle rise + crossfade on the main card. */
 .fade-in {
   animation: fadeIn var(--dur-4) var(--ease-out) backwards;
-}
-
-.scale-up {
-  animation: scaleUp var(--dur-3) var(--ease-out) backwards;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -301,26 +253,6 @@ samp {
   }
 }
 
-/* ── Low-contrast shimmer for skeletons ─────────────────── */
-@keyframes shimmer {
-  from { background-position: 200% 0; }
-  to { background-position: -200% 0; }
-}
-.shimmer {
-  background-image: linear-gradient(
-    90deg,
-    var(--eerie-black-1) 25%,
-    var(--onyx) 50%,
-    var(--eerie-black-1) 75%
-  );
-  background-size: 200% 100%;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .shimmer {
-    animation: shimmer 1.2s linear infinite;
-  }
-}
-
 /* ── Cover image clip-path reveal (event detail / articles) ─ */
 @keyframes coverReveal {
   from { clip-path: inset(0 0 100% 0); }
@@ -364,7 +296,6 @@ samp {
 /* Reduced-motion: neutralize transforms, keep only short fades/colors. */
 @media (prefers-reduced-motion: reduce) {
   .fade-in,
-  .scale-up,
   .hero-enter,
   .cover-reveal {
     animation: none !important;

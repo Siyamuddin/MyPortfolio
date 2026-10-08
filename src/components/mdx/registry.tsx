@@ -15,14 +15,6 @@ const Heading = ({
   />
 )
 
-/**
- * Extensible MDX component registry.
- * To add a new npm package for CMS MDX:
- * 1. npm install <package>
- * 2. Add a wrapper under src/components/mdx/
- * 3. Register it here
- * 4. Use <WrapperName /> in admin MDX body
- */
 export const mdxComponents: MDXComponents = {
   Callout,
   YouTube,

@@ -4,7 +4,6 @@ import { useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { Sidebar } from "@/components/layout/Sidebar"
 import { Navbar } from "@/components/layout/Navbar"
-import { FadeIn } from "@/components/ui/FadeIn"
 import {
   CommandPaletteProvider,
   type CommandData,
@@ -34,9 +33,9 @@ export const MainShell = ({ children, profile, commandData }: MainShellProps) =>
           <Navbar />
 
           <main id="main-content" tabIndex={-1} className="outline-none">
-          <FadeIn key={pathname} className="min-[1250px]:min-h-full">
+          <div key={pathname} className="fade-in min-[1250px]:min-h-full">
             {children}
-          </FadeIn>
+          </div>
           </main>
         </div>
       </div>

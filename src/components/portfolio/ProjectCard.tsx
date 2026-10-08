@@ -2,7 +2,6 @@ import { ArrowUpRight } from "lucide-react"
 import { ContentImage as Image } from "@/components/portfolio/ContentImage"
 import { TagChips } from "@/components/ui/TagChips"
 import type { Project } from "@/lib/types"
-import { projectPlaceholderSrc } from "@/lib/portfolio/project-image"
 import { getProjectLinks } from "@/lib/portfolio/project-links"
 import { labelFromSlug } from "@/lib/portfolio/tags"
 
@@ -28,7 +27,7 @@ export const ProjectCard = ({ project, priority = false, enter = false }: Projec
   const imageSrc =
     project.image.startsWith("http") || project.image.startsWith("/")
       ? project.image
-      : projectPlaceholderSrc()
+      : "/images/project-placeholder.svg"
 
   const media = (
     <>

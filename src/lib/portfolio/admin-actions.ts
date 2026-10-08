@@ -36,11 +36,6 @@ const profileSchema = z.object({
   socials: socialsSchema,
   avatar: z.string(),
   resume_url: z.string().nullable(),
-  featured_project_id: z
-    .union([z.string().uuid(), z.literal("")])
-    .nullable()
-    .optional()
-    .transform((value) => (value ? value : null)),
   featured_event_id: z
     .union([z.string().uuid(), z.literal("")])
     .nullable()
@@ -137,7 +132,6 @@ export const upsertProfileAction = async (
 ): Promise<ActionResult> => {
   try {
     const { supabase } = await requireAdmin()
-    const submittedFeaturedProject = formData.has("featured_project_id")
     const payload = profileSchema.parse({
       id: formData.get("id") || undefined,
       name: formData.get("name"),
@@ -156,9 +150,6 @@ export const upsertProfileAction = async (
       }),
       avatar: formData.get("avatar") ?? "",
       resume_url: formData.get("resume_url") || null,
-      ...(submittedFeaturedProject
-        ? { featured_project_id: formData.get("featured_project_id") }
-        : {}),
       featured_event_id: formData.get("featured_event_id") ?? null,
     })
 
@@ -172,9 +163,6 @@ export const upsertProfileAction = async (
       socials: payload.socials,
       avatar: payload.avatar,
       resume_url: payload.resume_url,
-      ...(submittedFeaturedProject
-        ? { featured_project_id: payload.featured_project_id }
-        : {}),
       featured_event_id: payload.featured_event_id,
       updated_at: new Date().toISOString(),
     }

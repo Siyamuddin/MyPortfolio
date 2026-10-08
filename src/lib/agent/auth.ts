@@ -1,28 +1,7 @@
 import { timingSafeEqual } from "crypto"
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
-
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
-
-export const getClientIp = (request: NextRequest) =>
-  request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-  request.headers.get("x-real-ip") ??
-  "unknown"
-
-export const isAgentRateLimited = (ip: string) => {
-  const now = Date.now()
-  const windowMs = 60_000
-  const maxRequests = 30
-  const entry = rateLimitMap.get(ip)
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + windowMs })
-    return false
-  }
-
-  entry.count += 1
-  return entry.count > maxRequests
-}
+import { guardSubmissionRate } from "@/lib/rate-limit"
 
 const unauthorized = () =>
   NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 })
@@ -30,6 +9,12 @@ const unauthorized = () =>
 const serviceUnavailable = () =>
   NextResponse.json(
     { ok: false, error: "Agent API is not configured." },
+    { status: 503 }
+  )
+
+const temporarilyUnavailable = () =>
+  NextResponse.json(
+    { ok: false, error: "Agent API is temporarily unavailable." },
     { status: 503 }
   )
 
@@ -55,16 +40,20 @@ export const requireBlogApiKey = (request: NextRequest): NextResponse | null => 
   return null
 }
 
-export const guardAgentRequest = (request: NextRequest): NextResponse | null => {
+/** Bearer auth, then the shared Postgres submission limit keyed as `agent`. */
+export const guardAgentRequest = async (request: NextRequest): Promise<NextResponse | null> => {
   const authError = requireBlogApiKey(request)
   if (authError) return authError
 
-  if (isAgentRateLimited(getClientIp(request))) {
+  const blocked = await guardSubmissionRate(request, "agent")
+  if (!blocked) return null
+  if (blocked.status === 429) {
+    const retryAfter = blocked.headers.get("Retry-After") ?? "60"
     return NextResponse.json(
       { ok: false, error: "Too many requests. Please try again later." },
-      { status: 429 }
+      { status: 429, headers: { "Retry-After": retryAfter } }
     )
   }
 
-  return null
+  return temporarilyUnavailable()
 }

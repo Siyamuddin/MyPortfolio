@@ -29,7 +29,7 @@ const readSlug = async (context: RouteContext) => {
 }
 
 export const GET = async (request: NextRequest, context: RouteContext) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
   if (!assertAgentDbReady()) return dbUnavailable()
@@ -51,7 +51,7 @@ export const GET = async (request: NextRequest, context: RouteContext) => {
 }
 
 export const PUT = async (request: NextRequest, context: RouteContext) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
   if (!assertAgentDbReady()) return dbUnavailable()
@@ -95,7 +95,7 @@ export const PUT = async (request: NextRequest, context: RouteContext) => {
 }
 
 export const DELETE = async (request: NextRequest, context: RouteContext) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
   if (!assertAgentDbReady()) return dbUnavailable()

@@ -5,20 +5,27 @@ import { createServiceClient } from "@/lib/supabase/admin"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
 const localWindows = new Map<string, { count: number; resetAt: number }>()
-const WINDOW_SECONDS = 60
-const MAX_REQUESTS = 5
 
-/** First hop from the host's trusted forwarding header.
- * Vercel replaces `x-vercel-forwarded-for` at its proxy. Other hosts must
- * supply `x-forwarded-for`, or callers share the conservative unknown bucket.
- */
-export const trustedClientIp = (request: NextRequest) =>
-  (process.env.VERCEL
+const limits = {
+  contact: { windowSeconds: 60, maxRequests: 5 },
+  comments: { windowSeconds: 60, maxRequests: 5 },
+  agent: { windowSeconds: 60, maxRequests: 30 },
+} as const
+
+export type SubmissionLimitScope = keyof typeof limits
+
+/** IP from the platform-set forwarding header. The caller cannot choose the bucket. */
+export const trustedClientIp = (request: NextRequest) => {
+  // Vercel replaces this header at its proxy. Other hosts must supply a trusted
+  // forwarding header or all callers share the conservative unknown bucket.
+  const header = process.env.VERCEL
     ? request.headers.get("x-vercel-forwarded-for")
     : request.headers.get("x-forwarded-for")
-  )?.split(",")[0]?.trim() || "unknown"
+  return header?.split(",")[0]?.trim() || "unknown"
+}
 
-export const guardSubmissionRate = async (request: NextRequest, scope: "contact" | "comments") => {
+export const guardSubmissionRate = async (request: NextRequest, scope: SubmissionLimitScope) => {
+  const { windowSeconds, maxRequests } = limits[scope]
   const ip = trustedClientIp(request)
   const secret = process.env.RATE_LIMIT_SALT || process.env.SUPABASE_SERVICE_ROLE_KEY || "local-only"
   const key = createHmac("sha256", secret).update(`${scope}:${ip}`).digest("hex")
@@ -27,7 +34,7 @@ export const guardSubmissionRate = async (request: NextRequest, scope: "contact"
   if (isSupabaseConfigured() && process.env.SUPABASE_SERVICE_ROLE_KEY) {
     try {
       const { data, error } = await createServiceClient().rpc("consume_submission_limit", {
-        key_hash: key, window_seconds: WINDOW_SECONDS, max_requests: MAX_REQUESTS,
+        key_hash: key, window_seconds: windowSeconds, max_requests: maxRequests,
       })
       if (error || typeof data !== "boolean") throw new Error("Rate limiter unavailable")
       allowed = data
@@ -39,17 +46,17 @@ export const guardSubmissionRate = async (request: NextRequest, scope: "contact"
   } else {
     const now = Date.now()
     for (const [id, entry] of localWindows) if (entry.resetAt <= now) localWindows.delete(id)
-    const entry = localWindows.get(key) ?? { count: 0, resetAt: now + WINDOW_SECONDS * 1000 }
+    const entry = localWindows.get(key) ?? { count: 0, resetAt: now + windowSeconds * 1000 }
     if (!localWindows.has(key) && localWindows.size >= 1000) {
-      return NextResponse.json({ message: "Please try again shortly." }, { status: 429, headers: { "Retry-After": "60" } })
+      return NextResponse.json({ message: "Please try again shortly." }, { status: 429, headers: { "Retry-After": String(windowSeconds) } })
     }
     entry.count += 1
     localWindows.set(key, entry)
-    allowed = entry.count <= MAX_REQUESTS
+    allowed = entry.count <= maxRequests
   }
 
   return allowed ? null : NextResponse.json(
     { message: "Too many requests. Please try again in a minute." },
-    { status: 429, headers: { "Retry-After": String(WINDOW_SECONDS) } }
+    { status: 429, headers: { "Retry-After": String(windowSeconds) } }
   )
 }

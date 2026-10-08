@@ -15,7 +15,7 @@ const patchSchema = z.object({
 type CommentContext = { params: Promise<{ id: string }> }
 
 export const PATCH = async (request: NextRequest, context: CommentContext) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
   const { id } = await context.params
@@ -49,7 +49,7 @@ export const PATCH = async (request: NextRequest, context: CommentContext) => {
 }
 
 export const DELETE = async (request: NextRequest, context: CommentContext) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
   const { id } = await context.params

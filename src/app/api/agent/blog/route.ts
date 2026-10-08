@@ -8,7 +8,7 @@ import {
 } from "@/lib/agent/blog"
 
 export const POST = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
   if (!assertAgentDbReady()) {

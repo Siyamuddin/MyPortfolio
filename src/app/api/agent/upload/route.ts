@@ -4,7 +4,7 @@ import { guardAgentRequest } from "@/lib/agent/auth"
 import { uploadPortfolioFile } from "@/lib/agent/upload"
 
 export const POST = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
   let formData: FormData

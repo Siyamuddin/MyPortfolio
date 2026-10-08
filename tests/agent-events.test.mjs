@@ -88,7 +88,7 @@ function harness({ responses = [], env = readyEnv } = {}) {
   const load = sourceLoader({
     "next/cache": cache,
     "next/server": { NextResponse },
-    "@/lib/supabase/admin": { createServiceClient: () => ({ from }) },
+    "@/lib/supabase/admin": { createServiceClient: () => ({ from, rpc: async () => ({ data: true, error: null }) }) },
   }, { Buffer, process: { env } })
   return { writes, invalidations, cache, load }
 }
@@ -400,7 +400,7 @@ test("portfolio snapshot includes draft events and survives a missing events tab
       return builder
     }
     const { getPortfolioSnapshot } = sourceLoader({
-      "@/lib/supabase/admin": { createServiceClient: () => ({ from }) },
+      "@/lib/supabase/admin": { createServiceClient: () => ({ from, rpc: async () => ({ data: true, error: null }) }) },
     }, {
       process: {
         env: {

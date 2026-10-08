@@ -15,7 +15,7 @@ const dbUnavailable = () =>
   )
 
 export const GET = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
   if (!assertAgentDbReady()) return dbUnavailable()
@@ -32,7 +32,7 @@ export const GET = async (request: NextRequest) => {
 }
 
 export const POST = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
   if (!assertAgentDbReady()) return dbUnavailable()

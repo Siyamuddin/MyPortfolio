@@ -9,7 +9,7 @@ const seedSchema = z.object({
 })
 
 export const POST = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
   let body: unknown

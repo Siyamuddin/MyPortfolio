@@ -4,7 +4,7 @@ import { guardAgentRequest } from "@/lib/agent/auth"
 import { getPortfolioSnapshot } from "@/lib/agent/profile"
 
 export const GET = async (request: NextRequest) => {
-  const blocked = guardAgentRequest(request)
+  const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
   const result = await getPortfolioSnapshot()

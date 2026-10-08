@@ -21,8 +21,6 @@ export default async function ResumeRoute() {
       <JsonLdScript
         data={buildResumeJsonLd(
           portfolio.profile,
-          portfolio.education,
-          portfolio.experience,
           portfolio.skills.map((skill) => skill.name)
         )}
       />

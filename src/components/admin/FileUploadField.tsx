@@ -9,6 +9,8 @@ type FileUploadFieldProps = {
   folder: string
   defaultValue?: string
   accept?: string
+  /** Text allows icon stems; URL fields stay validated as URLs. */
+  type?: "text" | "url"
 }
 
 export const FileUploadField = ({
@@ -17,6 +19,7 @@ export const FileUploadField = ({
   folder,
   defaultValue = "",
   accept = "image/*,.pdf,.webp,.svg",
+  type = "url",
 }: FileUploadFieldProps) => {
   const [value, setValue] = useState(defaultValue)
   const [error, setError] = useState<string | null>(null)
@@ -45,11 +48,11 @@ export const FileUploadField = ({
       {label}
       <input type="hidden" name={name} value={value} />
       <input
-        type="url"
+        type={type}
         value={value}
         onChange={(event) => setValue(event.target.value)}
         className="mt-1 w-full rounded-lg border border-jet bg-onyx px-3 py-2 text-white-2 outline-none focus:border-gold"
-        aria-label={`${label} URL`}
+        aria-label={type === "text" ? label : `${label} URL`}
         tabIndex={0}
       />
       <div className="mt-2 flex flex-wrap items-center gap-2">

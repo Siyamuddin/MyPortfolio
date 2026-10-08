@@ -4,6 +4,7 @@ import {
   revalidateAfterMutation,
   type AgentFail,
 } from "@/lib/agent/common"
+import { isMissingEventsTable } from "@/lib/portfolio/events"
 import { createServiceClient } from "@/lib/supabase/admin"
 
 const socialsSchema = z.object({
@@ -86,6 +87,7 @@ export const getPortfolioSnapshot = async () => {
     projects,
     blogPosts,
     faqs,
+    events,
   ] = await Promise.all([
     admin.from("profile").select("*").limit(1).maybeSingle(),
     admin.from("services").select("*").order("sort_order"),
@@ -95,8 +97,14 @@ export const getPortfolioSnapshot = async () => {
     admin.from("projects").select("*").order("sort_order"),
     admin.from("blog_posts").select("*").order("sort_order"),
     admin.from("faqs").select("*").order("sort_order"),
+    admin
+      .from("events")
+      .select("*")
+      .order("date", { ascending: false })
+      .order("created_at", { ascending: false }),
   ])
 
+  const eventsMissing = Boolean(events.error && isMissingEventsTable(events.error))
   const firstError = [
     profile.error,
     services.error,
@@ -106,6 +114,7 @@ export const getPortfolioSnapshot = async () => {
     projects.error,
     blogPosts.error,
     faqs.error,
+    eventsMissing ? null : events.error,
   ].find(Boolean)
 
   if (firstError) {
@@ -123,6 +132,7 @@ export const getPortfolioSnapshot = async () => {
       projects: projects.data ?? [],
       blogPosts: blogPosts.data ?? [],
       faqs: faqs.data ?? [],
+      events: eventsMissing ? [] : events.data ?? [],
     },
   }
 }

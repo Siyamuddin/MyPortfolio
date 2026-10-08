@@ -18,7 +18,6 @@ export default async function AdminProfilePage() {
       <h2 className="text-xl text-white-2">Profile</h2>
       <ProfileAdminForm
         profile={rows?.profile ?? null}
-        projects={rows?.projects ?? []}
         events={rows?.events ?? []}
       />
     </div>

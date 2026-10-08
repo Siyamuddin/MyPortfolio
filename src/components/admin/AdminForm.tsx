@@ -9,6 +9,12 @@ type AdminFormProps = {
   children: React.ReactNode
   onSuccess?: () => void
   submitLabel?: string
+  /**
+   * Remounts uncontrolled fields when this changes. Callers pass server data
+   * (or the list length for add forms) so a refresh after save applies new
+   * defaultValues instead of leaving the first mount in place.
+   */
+  fieldsKey?: string | number
 }
 
 export const AdminForm = ({
@@ -17,6 +23,7 @@ export const AdminForm = ({
   children,
   onSuccess,
   submitLabel = "Save",
+  fieldsKey,
 }: AdminFormProps) => {
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -43,7 +50,9 @@ export const AdminForm = ({
       aria-label={title}
     >
       <h3 className="text-base text-white-2">{title}</h3>
-      {children}
+      <div key={fieldsKey} className="space-y-4">
+        {children}
+      </div>
       <div className="flex flex-wrap items-center gap-3">
         <button
           type="submit"

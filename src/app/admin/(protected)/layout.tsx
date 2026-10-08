@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { logoutAction, requireAdmin } from "@/lib/portfolio/auth-actions"
+import { requireAdmin } from "@/lib/portfolio/auth"
+import { logoutAction } from "@/lib/portfolio/auth-actions"
 import {
   getPendingCommentCount,
   getUnreadMessageCount,
@@ -35,7 +36,6 @@ const navItems = [
   { href: "/admin/faq", label: "FAQ" },
   { href: "/admin/comments", label: "Comments" },
   { href: "/admin/messages", label: "Messages" },
-  { href: "/admin/finance", label: "Finance" },
 ]
 
 export default async function AdminProtectedLayout({

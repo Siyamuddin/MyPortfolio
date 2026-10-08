@@ -12,12 +12,13 @@ export const notifyPendingComment = async ({
   body,
 }: NotifyPendingCommentInput) => {
   const resendApiKey = process.env.RESEND_API_KEY
-  const toEmail = process.env.CONTACT_TO_EMAIL ?? "siyamuddin177@gmail.com"
+  const toEmail = process.env.CONTACT_TO_EMAIL?.trim()
+  const fromEmail = process.env.CONTACT_FROM_EMAIL?.trim()
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://siyamuddin.com"
   const excerpt = body.length > 280 ? `${body.slice(0, 277)}…` : body
 
-  if (!resendApiKey) {
+  if (!resendApiKey || !toEmail || !fromEmail) {
     console.info("[blog-comment] notification delivery is not configured")
     return
   }
@@ -30,7 +31,7 @@ export const notifyPendingComment = async ({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Portfolio Blog <onboarding@resend.dev>",
+        from: fromEmail,
         to: [toEmail],
         subject: `New blog comment pending: ${postTitle}`,
         text: [

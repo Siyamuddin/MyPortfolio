@@ -1,11 +1,12 @@
 import type { NextConfig } from "next"
+import { MAX_UPLOAD_BYTES } from "./src/lib/upload-limit"
 
 const supabaseHostname =
   process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/^https?:\/\//, "").split("/")[0]
 
 const nextConfig: NextConfig = {
   experimental: {
-    serverActions: { bodySizeLimit: "5mb" },
+    serverActions: { bodySizeLimit: MAX_UPLOAD_BYTES },
   },
   images: {
     formats: ["image/avif", "image/webp"],

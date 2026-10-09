@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { z } from "zod"
+import { getMailConfig, sendEmail } from "@/lib/email"
 import { guardSubmissionRate } from "@/lib/rate-limit"
 import { createServiceClient } from "@/lib/supabase/admin"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
@@ -40,50 +41,6 @@ const persistMessage = async (payload: ContactPayload): Promise<boolean> => {
   }
 }
 
-/** Recipient and verified from address are both required. No mailbox fallback. */
-const getContactMailConfig = () => {
-  const resendApiKey = process.env.RESEND_API_KEY
-  const toEmail = process.env.CONTACT_TO_EMAIL?.trim()
-  const fromEmail = process.env.CONTACT_FROM_EMAIL?.trim()
-
-  if (!resendApiKey || !toEmail || !fromEmail) return null
-
-  return { resendApiKey, toEmail, fromEmail }
-}
-
-/** Attempt to forward the submission by email via Resend, if configured. */
-const sendEmail = async (payload: ContactPayload): Promise<boolean> => {
-  const mail = getContactMailConfig()
-  if (!mail) return false
-
-  try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${mail.resendApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: mail.fromEmail,
-        to: [mail.toEmail],
-        reply_to: payload.email,
-        subject: `Portfolio message from ${payload.fullname}`,
-        text: `From: ${payload.fullname} <${payload.email}>\n\n${payload.message}`,
-      }),
-    })
-
-    if (!response.ok) {
-      console.error("[contact] email rejected", response.status)
-      return false
-    }
-
-    return true
-  } catch {
-    console.error("[contact] email unavailable")
-    return false
-  }
-}
-
 export const POST = async (request: NextRequest) => {
   let body: unknown
 
@@ -105,7 +62,8 @@ export const POST = async (request: NextRequest) => {
   const payload = parsed.data
   const canPersist =
     isSupabaseConfigured() && Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY)
-  const canEmail = Boolean(getContactMailConfig())
+  // Recipient and verified from address are both required. No mailbox fallback.
+  const canEmail = Boolean(getMailConfig())
 
   if (!canPersist && !canEmail) {
     return NextResponse.json({
@@ -119,7 +77,11 @@ export const POST = async (request: NextRequest) => {
 
   const [stored, emailed] = await Promise.all([
     persistMessage(payload),
-    sendEmail(payload),
+    sendEmail({
+      replyTo: payload.email,
+      subject: `Portfolio message from ${payload.fullname}`,
+      text: `From: ${payload.fullname} <${payload.email}>\n\n${payload.message}`,
+    }),
   ])
 
   if (stored || emailed) {

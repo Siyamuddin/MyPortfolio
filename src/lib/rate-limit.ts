@@ -10,6 +10,7 @@ const limits = {
   contact: { windowSeconds: 60, maxRequests: 5 },
   comments: { windowSeconds: 60, maxRequests: 5 },
   agent: { windowSeconds: 60, maxRequests: 30 },
+  analytics: { windowSeconds: 60, maxRequests: 60 },
 } as const
 
 export type SubmissionLimitScope = keyof typeof limits

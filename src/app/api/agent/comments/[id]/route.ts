@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { guardAgentRequest } from "@/lib/agent/auth"
+import { agentFailure, agentValidationError, readJsonBody } from "@/lib/agent/common"
 import {
   commentStatusSchema,
   deleteComment,
@@ -23,28 +24,14 @@ export const PATCH = async (request: NextRequest, context: CommentContext) => {
     return NextResponse.json({ ok: false, error: "Invalid id" }, { status: 400 })
   }
 
-  let body: unknown
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json({ ok: false, error: "Invalid JSON body." }, { status: 400 })
-  }
+  const json = await readJsonBody(request)
+  if (!json.ok) return json.response
 
-  const parsed = patchSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json(
-      { ok: false, error: "Validation failed.", errors: parsed.error.flatten() },
-      { status: 400 }
-    )
-  }
+  const parsed = patchSchema.safeParse(json.body)
+  if (!parsed.success) return agentValidationError(parsed.error)
 
   const result = await updateCommentStatus(id, parsed.data.status)
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: result.status }
-    )
-  }
+  if (!result.ok) return agentFailure(result)
   return NextResponse.json({ ok: true, comment: result.comment })
 }
 
@@ -58,11 +45,6 @@ export const DELETE = async (request: NextRequest, context: CommentContext) => {
   }
 
   const result = await deleteComment(id)
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: result.status }
-    )
-  }
+  if (!result.ok) return agentFailure(result)
   return NextResponse.json({ ok: true, deleted: result.deleted })
 }

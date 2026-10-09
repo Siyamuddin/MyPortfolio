@@ -105,6 +105,7 @@ export const eventSchema = z.object({
 export const eventRowSchema = eventSchema.extend({
   id: z.string().uuid(),
   slug: z.string().trim().optional(),
+  created_at: z.string().optional(),
   updated_at: z.string().optional(),
 })
 

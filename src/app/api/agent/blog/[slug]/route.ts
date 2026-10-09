@@ -2,12 +2,18 @@ import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { guardAgentRequest } from "@/lib/agent/auth"
 import {
-  assertAgentDbReady,
   deleteBlogPostBySlug,
   getBlogPostBySlugAdmin,
   updateBlogPostBySlug,
   updateBlogSchema,
 } from "@/lib/agent/blog"
+import {
+  agentDbUnavailable,
+  agentFailure,
+  agentValidationError,
+  assertAgentDbReady,
+  readJsonBody,
+} from "@/lib/agent/common"
 
 type RouteContext = {
   params: Promise<{ slug: string }>
@@ -16,22 +22,11 @@ type RouteContext = {
 export const GET = async (request: NextRequest, context: RouteContext) => {
   const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
-
-  if (!assertAgentDbReady()) {
-    return NextResponse.json(
-      { ok: false, error: "Supabase is not configured." },
-      { status: 503 }
-    )
-  }
+  if (!assertAgentDbReady()) return agentDbUnavailable()
 
   const { slug } = await context.params
   const result = await getBlogPostBySlugAdmin(slug)
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: result.status }
-    )
-  }
+  if (!result.ok) return agentFailure(result)
 
   return NextResponse.json({ ok: true, post: result.post })
 }
@@ -39,44 +34,17 @@ export const GET = async (request: NextRequest, context: RouteContext) => {
 export const PUT = async (request: NextRequest, context: RouteContext) => {
   const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
+  if (!assertAgentDbReady()) return agentDbUnavailable()
 
-  if (!assertAgentDbReady()) {
-    return NextResponse.json(
-      { ok: false, error: "Supabase is not configured." },
-      { status: 503 }
-    )
-  }
+  const json = await readJsonBody(request)
+  if (!json.ok) return json.response
 
-  let body: unknown
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json(
-      { ok: false, error: "Invalid JSON body." },
-      { status: 400 }
-    )
-  }
-
-  const parsed = updateBlogSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: "Validation failed.",
-        errors: parsed.error.flatten(),
-      },
-      { status: 400 }
-    )
-  }
+  const parsed = updateBlogSchema.safeParse(json.body)
+  if (!parsed.success) return agentValidationError(parsed.error)
 
   const { slug } = await context.params
   const result = await updateBlogPostBySlug(slug, parsed.data)
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: result.status }
-    )
-  }
+  if (!result.ok) return agentFailure(result)
 
   return NextResponse.json({ ok: true, post: result.post })
 }
@@ -84,22 +52,11 @@ export const PUT = async (request: NextRequest, context: RouteContext) => {
 export const DELETE = async (request: NextRequest, context: RouteContext) => {
   const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
-
-  if (!assertAgentDbReady()) {
-    return NextResponse.json(
-      { ok: false, error: "Supabase is not configured." },
-      { status: 503 }
-    )
-  }
+  if (!assertAgentDbReady()) return agentDbUnavailable()
 
   const { slug } = await context.params
   const result = await deleteBlogPostBySlug(slug)
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: result.status }
-    )
-  }
+  if (!result.ok) return agentFailure(result)
 
   return NextResponse.json({ ok: true, deleted: result.deleted })
 }

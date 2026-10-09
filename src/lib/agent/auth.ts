@@ -22,7 +22,7 @@ const temporarilyUnavailable = () =>
  * Validates Authorization: Bearer <BLOG_API_KEY> with timing-safe compare.
  * Does not log the Authorization header or key.
  */
-export const requireBlogApiKey = (request: NextRequest): NextResponse | null => {
+const requireBlogApiKey = (request: NextRequest): NextResponse | null => {
   const expected = process.env.BLOG_API_KEY
   if (!expected) return serviceUnavailable()
 

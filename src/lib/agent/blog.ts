@@ -4,8 +4,6 @@ import { slugifyTitle } from "@/lib/portfolio/blog"
 import { createServiceClient } from "@/lib/supabase/admin"
 import type { BlogPostRow } from "@/lib/portfolio/types"
 
-export { assertAgentDbReady } from "@/lib/agent/common"
-
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 export const createBlogSchema = z.object({
@@ -50,10 +48,10 @@ export const updateBlogSchema = z
     message: "At least one field is required",
   })
 
-export type CreateBlogInput = z.infer<typeof createBlogSchema>
-export type UpdateBlogInput = z.infer<typeof updateBlogSchema>
+type CreateBlogInput = z.infer<typeof createBlogSchema>
+type UpdateBlogInput = z.infer<typeof updateBlogSchema>
 
-export const toPublicPost = (row: BlogPostRow) => ({
+const toPublicPost = (row: BlogPostRow) => ({
   id: row.id,
   title: row.title,
   slug: row.slug,

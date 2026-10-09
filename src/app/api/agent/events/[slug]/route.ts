@@ -2,7 +2,13 @@ import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { guardAgentRequest } from "@/lib/agent/auth"
 import {
+  agentDbUnavailable,
+  agentFailure,
+  agentValidationError,
   assertAgentDbReady,
+  readJsonBody,
+} from "@/lib/agent/common"
+import {
   deleteEventBySlug,
   getEventBySlug,
   updateEventBySlug,
@@ -12,12 +18,6 @@ import {
 type RouteContext = {
   params: Promise<{ slug: string }>
 }
-
-const dbUnavailable = () =>
-  NextResponse.json(
-    { ok: false, error: "Supabase is not configured." },
-    { status: 503 }
-  )
 
 const readSlug = async (context: RouteContext) => {
   const { slug } = await context.params
@@ -31,8 +31,7 @@ const readSlug = async (context: RouteContext) => {
 export const GET = async (request: NextRequest, context: RouteContext) => {
   const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
-
-  if (!assertAgentDbReady()) return dbUnavailable()
+  if (!assertAgentDbReady()) return agentDbUnavailable()
 
   const slug = await readSlug(context)
   if (!slug) {
@@ -40,12 +39,7 @@ export const GET = async (request: NextRequest, context: RouteContext) => {
   }
 
   const result = await getEventBySlug(slug)
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: result.status }
-    )
-  }
+  if (!result.ok) return agentFailure(result)
 
   return NextResponse.json({ ok: true, event: result.event })
 }
@@ -53,30 +47,13 @@ export const GET = async (request: NextRequest, context: RouteContext) => {
 export const PUT = async (request: NextRequest, context: RouteContext) => {
   const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
+  if (!assertAgentDbReady()) return agentDbUnavailable()
 
-  if (!assertAgentDbReady()) return dbUnavailable()
+  const json = await readJsonBody(request)
+  if (!json.ok) return json.response
 
-  let body: unknown
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json(
-      { ok: false, error: "Invalid JSON body." },
-      { status: 400 }
-    )
-  }
-
-  const parsed = updateEventSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: "Validation failed.",
-        errors: parsed.error.flatten(),
-      },
-      { status: 400 }
-    )
-  }
+  const parsed = updateEventSchema.safeParse(json.body)
+  if (!parsed.success) return agentValidationError(parsed.error)
 
   const slug = await readSlug(context)
   if (!slug) {
@@ -84,12 +61,7 @@ export const PUT = async (request: NextRequest, context: RouteContext) => {
   }
 
   const result = await updateEventBySlug(slug, parsed.data)
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: result.status }
-    )
-  }
+  if (!result.ok) return agentFailure(result)
 
   return NextResponse.json({ ok: true, event: result.event })
 }
@@ -97,8 +69,7 @@ export const PUT = async (request: NextRequest, context: RouteContext) => {
 export const DELETE = async (request: NextRequest, context: RouteContext) => {
   const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
-
-  if (!assertAgentDbReady()) return dbUnavailable()
+  if (!assertAgentDbReady()) return agentDbUnavailable()
 
   const slug = await readSlug(context)
   if (!slug) {
@@ -106,12 +77,7 @@ export const DELETE = async (request: NextRequest, context: RouteContext) => {
   }
 
   const result = await deleteEventBySlug(slug)
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: result.status }
-    )
-  }
+  if (!result.ok) return agentFailure(result)
 
   return NextResponse.json({ ok: true, deleted: result.deleted })
 }

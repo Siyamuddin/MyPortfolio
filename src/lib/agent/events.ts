@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { z } from "zod"
-import { assertAgentDbReady, type AgentFail } from "@/lib/agent/common"
+import { type AgentFail } from "@/lib/agent/common"
 import { slugifyTitle } from "@/lib/portfolio/blog"
 import {
   EVENTS_SETUP_MESSAGE,
@@ -18,8 +18,6 @@ import {
   tagSlugSchema,
 } from "@/lib/portfolio/tags"
 import { createServiceClient } from "@/lib/supabase/admin"
-
-export { assertAgentDbReady }
 
 const slugSchema = z
   .string()
@@ -89,41 +87,32 @@ export const updateEventSchema = z
     message: "At least one field is required",
   })
 
-export type CreateEventInput = z.infer<typeof createEventSchema>
-export type UpdateEventInput = z.infer<typeof updateEventSchema>
+type CreateEventInput = z.infer<typeof createEventSchema>
+type UpdateEventInput = z.infer<typeof updateEventSchema>
 
 const EVENT_COLUMNS =
   "id,slug,title,category,date,location,organizer,description,highlight,url,status,photos,tags,og_image,created_at,updated_at"
 
 type DbError = { code?: string; message: string }
 
-export const toPublicEvent = (row: EventRow, raw?: unknown) => {
-  const createdAt =
-    raw &&
-    typeof raw === "object" &&
-    typeof (raw as { created_at?: unknown }).created_at === "string"
-      ? (raw as { created_at: string }).created_at
-      : null
-
-  return {
-    id: row.id,
-    slug: row.slug?.trim() || slugifyTitle(row.title) || "event",
-    title: row.title,
-    category: row.category,
-    date: row.date,
-    location: row.location,
-    organizer: row.organizer,
-    description: row.description,
-    highlight: row.highlight,
-    url: row.url,
-    status: row.status,
-    photos: row.photos,
-    tags: row.tags ?? [],
-    og_image: row.og_image ?? "",
-    created_at: createdAt,
-    updated_at: row.updated_at ?? null,
-  }
-}
+const toPublicEvent = (row: EventRow) => ({
+  id: row.id,
+  slug: row.slug?.trim() || slugifyTitle(row.title) || "event",
+  title: row.title,
+  category: row.category,
+  date: row.date,
+  location: row.location,
+  organizer: row.organizer,
+  description: row.description,
+  highlight: row.highlight,
+  url: row.url,
+  status: row.status,
+  photos: row.photos,
+  tags: row.tags ?? [],
+  og_image: row.og_image ?? "",
+  created_at: row.created_at ?? null,
+  updated_at: row.updated_at ?? null,
+})
 
 const mapWriteError = (error: DbError): AgentFail => {
   if (isMissingEventsTable(error)) {
@@ -161,7 +150,7 @@ const finishWrite = (
   if (!parsed.success) {
     return { ok: false, error: "Saved event could not be read back.", status: 500 }
   }
-  return { ok: true, event: toPublicEvent(parsed.data, data) }
+  return { ok: true, event: toPublicEvent(parsed.data) }
 }
 
 export const listEvents = async () => {
@@ -180,7 +169,7 @@ export const listEvents = async () => {
     if (!parsed.success) {
       return { ok: false as const, error: "Could not read events.", status: 500 }
     }
-    events.push(toPublicEvent(parsed.data, row))
+    events.push(toPublicEvent(parsed.data))
   }
   return { ok: true as const, events }
 }
@@ -221,7 +210,7 @@ export const getEventBySlug = async (slug: string) => {
   if (!parsed.success) {
     return { ok: false as const, error: "Could not read this event.", status: 500 }
   }
-  return { ok: true as const, event: toPublicEvent(parsed.data, data) }
+  return { ok: true as const, event: toPublicEvent(parsed.data) }
 }
 
 export const updateEventBySlug = async (slug: string, input: UpdateEventInput) => {

@@ -2,31 +2,21 @@ import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { guardAgentRequest } from "@/lib/agent/auth"
 import {
+  agentDbUnavailable,
+  agentFailure,
+  agentValidationError,
   assertAgentDbReady,
-  createEvent,
-  createEventSchema,
-  listEvents,
-} from "@/lib/agent/events"
-
-const dbUnavailable = () =>
-  NextResponse.json(
-    { ok: false, error: "Supabase is not configured." },
-    { status: 503 }
-  )
+  readJsonBody,
+} from "@/lib/agent/common"
+import { createEvent, createEventSchema, listEvents } from "@/lib/agent/events"
 
 export const GET = async (request: NextRequest) => {
   const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
-
-  if (!assertAgentDbReady()) return dbUnavailable()
+  if (!assertAgentDbReady()) return agentDbUnavailable()
 
   const result = await listEvents()
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: result.status }
-    )
-  }
+  if (!result.ok) return agentFailure(result)
 
   return NextResponse.json({ ok: true, events: result.events })
 }
@@ -34,38 +24,16 @@ export const GET = async (request: NextRequest) => {
 export const POST = async (request: NextRequest) => {
   const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
+  if (!assertAgentDbReady()) return agentDbUnavailable()
 
-  if (!assertAgentDbReady()) return dbUnavailable()
+  const json = await readJsonBody(request)
+  if (!json.ok) return json.response
 
-  let body: unknown
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json(
-      { ok: false, error: "Invalid JSON body." },
-      { status: 400 }
-    )
-  }
-
-  const parsed = createEventSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: "Validation failed.",
-        errors: parsed.error.flatten(),
-      },
-      { status: 400 }
-    )
-  }
+  const parsed = createEventSchema.safeParse(json.body)
+  if (!parsed.success) return agentValidationError(parsed.error)
 
   const result = await createEvent(parsed.data)
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: result.status }
-    )
-  }
+  if (!result.ok) return agentFailure(result)
 
   return NextResponse.json({ ok: true, event: result.event }, { status: 201 })
 }

@@ -76,7 +76,6 @@ export const mapProject = (row: ProjectRow): Project => ({
   url: row.url ?? "",
   description: row.description,
   tags: Array.isArray(row.tags) ? row.tags : [],
-  ogImage: row.og_image ?? "",
 })
 
 export const mapBlogPost = (row: BlogPostRow): BlogPost => ({

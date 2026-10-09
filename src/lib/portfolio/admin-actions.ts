@@ -85,7 +85,6 @@ const projectSchema = z.object({
   description: z.string(),
   sort_order: z.coerce.number().int(),
   tags: contentTagsSchema,
-  og_image: z.string().trim().max(2048).optional().default(""),
 })
 
 const blogSchema = z.object({

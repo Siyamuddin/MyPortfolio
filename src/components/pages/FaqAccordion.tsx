@@ -18,16 +18,6 @@ export const FaqAccordion = ({ faqs }: FaqAccordionProps) => {
     setOpenId((current) => (current === id ? null : id))
   }
 
-  const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLButtonElement>,
-    id: string
-  ) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault()
-      handleToggle(id)
-    }
-  }
-
   return (
     <section className="mt-10 mb-2" aria-labelledby="faq-title">
       <SectionTitle section>
@@ -51,7 +41,6 @@ export const FaqAccordion = ({ faqs }: FaqAccordionProps) => {
                 id={`faq-button-${id}`}
                 tabIndex={0}
                 onClick={() => handleToggle(id)}
-                onKeyDown={(event) => handleKeyDown(event, id)}
               >
                 <span className="text-sm font-medium min-[580px]:text-[15px]">
                   {faq.question}

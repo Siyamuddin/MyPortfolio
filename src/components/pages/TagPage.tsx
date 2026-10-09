@@ -123,7 +123,7 @@ export function TagPage({ tag, content }: { tag: Tag; content: TagContent }) {
       </nav>
 
       <header className="mb-2">
-        <SectionTitle as="h1">
+        <SectionTitle>
           <span id="tag-title">#{tag.label}</span>
         </SectionTitle>
         <p className="mt-3 text-sm font-light text-light-gray">

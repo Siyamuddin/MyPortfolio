@@ -15,7 +15,6 @@ export const Navbar = () => {
   const pathname = usePathname()
   const activePage = pathToNavPage(pathname)
 
-  const listRef = useRef<HTMLUListElement>(null)
   const itemRefs = useRef<Record<string, HTMLLIElement | null>>({})
   const [indicator, setIndicator] = useState<Indicator | null>(null)
 
@@ -54,10 +53,7 @@ export const Navbar = () => {
       aria-label="Primary"
     >
       <CommandPaletteTrigger className="hidden min-[1024px]:inline-flex" />
-      <ul
-        ref={listRef}
-        className="relative grid grid-cols-6 items-center px-1 text-center min-[580px]:flex min-[580px]:justify-center min-[580px]:gap-5 min-[1024px]:gap-4 min-[1024px]:px-2"
-      >
+      <ul className="relative grid grid-cols-6 items-center px-1 text-center min-[580px]:flex min-[580px]:justify-center min-[580px]:gap-5 min-[1024px]:gap-4 min-[1024px]:px-2">
         {indicator ? (
           <span
             aria-hidden="true"

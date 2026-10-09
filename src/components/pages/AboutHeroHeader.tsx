@@ -55,7 +55,7 @@ export const AboutHeroHeader = ({ profile, resumeHref }: AboutHeroHeaderProps) =
           <SectionEyebrow>Introduction</SectionEyebrow>
         </div>
         <div className="hero-enter" style={{ "--enter-delay": "80ms" } as React.CSSProperties}>
-          <SectionTitle as="h1">
+          <SectionTitle>
             <span id="about-title">{profile.name}</span>
             {showCaret ? (
               <span className="hero-caret" aria-hidden="true" />

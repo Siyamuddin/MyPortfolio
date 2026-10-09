@@ -38,13 +38,10 @@ type CommandItem = {
   keywords?: string
   icon: typeof ArrowRight
   run: () => void | Promise<void>
-  /** Keep the palette open after running (used by Copy email). */
-  keepOpen?: boolean
 }
 
 type CommandContextValue = {
   open: () => void
-  toggle: () => void
 }
 
 const CommandPaletteContext = createContext<CommandContextValue | null>(null)
@@ -68,7 +65,6 @@ export const CommandPaletteProvider = ({
 
   const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])
-  const toggle = useCallback(() => setIsOpen((prev) => !prev), [])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -81,7 +77,7 @@ export const CommandPaletteProvider = ({
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [])
 
-  const value = useMemo(() => ({ open, toggle }), [open, toggle])
+  const value = useMemo(() => ({ open }), [open])
 
   return (
     <CommandPaletteContext.Provider value={value}>
@@ -152,7 +148,6 @@ const CommandPalette = ({
         group: "Actions",
         keywords: `email ${data.email} contact`,
         icon: copied ? Check : Copy,
-        keepOpen: true,
         run: async () => {
           try {
             await navigator.clipboard.writeText(data.email)

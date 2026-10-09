@@ -287,7 +287,6 @@ const ProjectForm = ({ item, title, sortOrder = 0, tagLabels, onSuccess }: {
     <Field label="URL" name="url" defaultValue={item?.url ?? ""} />
     <TextArea label="Description" name="description" defaultValue={item?.description} />
     <TagsInput defaultTags={item ? toDefaultTags(item.tags, tagLabels) : []} />
-    <Field label="Social image URL (optional)" name="og_image" defaultValue={item?.og_image ?? ""} />
     <Field label="Sort order" name="sort_order" type="number" defaultValue={item ? item.sort_order : sortOrder} />
   </AdminForm>
 )

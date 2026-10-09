@@ -1,18 +1,8 @@
 import { BlogAdmin } from "@/components/admin/BlogAdmin"
 import { getAdminRows } from "@/lib/portfolio/admin-data"
 import { getTagRegistry } from "@/lib/portfolio/tags-repository"
-import { isSupabaseConfigured } from "@/lib/supabase/env"
 
 export default async function AdminBlogPage() {
-  if (!isSupabaseConfigured()) {
-    return (
-      <section className="rounded-2xl border border-jet bg-eerie-black-2 p-6">
-        <h2 className="text-2xl font-medium text-white-2">Blog</h2>
-        <p className="mt-3 text-sm text-light-gray">Configure Supabase env vars first.</p>
-      </section>
-    )
-  }
-
   try {
     const [rows, registry] = await Promise.all([getAdminRows(), getTagRegistry()])
     const tagLabels = Object.fromEntries(registry.map((tag) => [tag.slug, tag.label]))

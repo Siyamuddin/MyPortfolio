@@ -2,7 +2,6 @@ import { cn } from "@/lib/cn"
 
 type SectionTitleProps = {
   children: React.ReactNode
-  as?: "h1"
   className?: string
   section?: boolean
 }

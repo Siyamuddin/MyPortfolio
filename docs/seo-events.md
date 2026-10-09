@@ -77,21 +77,7 @@ titles always drive the `H1` and `<title>`.
   `seoul`, `korea-blockchain-week`) and attaches them to the Digital AF event
   when present.
 
-## Database setup
-
-Apply `supabase/migrations/20261004100000_portfolio_tags_seo.sql` after the
-existing portfolio migrations. It is additive and forward-only:
-
-- adds `slug`, `tags`, `og_image` to `events` (slug backfilled from titles, made
-  unique, kept populated by the `generate_event_slug` trigger);
-- adds `tags` and `og_image` to `blog_posts` and `projects`, with GIN indexes and
-  a 12-tag ceiling;
-- creates the `public.tags` registry with owner-only write RLS
-  (`private.is_portfolio_admin()`), reusing the existing security model;
-- seeds the starter tags and tags the Digital AF event.
-
-No new environment variables are required. Without Supabase configured, tag
-pages fall back to labels derived from slugs and the system still builds.
+Database setup: apply the full migration chain in [Admin CMS setup](./admin-cms.md#2-apply-schema).
 
 ## Verification
 

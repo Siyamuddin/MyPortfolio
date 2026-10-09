@@ -36,10 +36,7 @@ Copy [`.env.example`](../.env.example) to `.env.local` and fill the values. Add 
 
 ## 5. Seed content
 
-1. Start the app: `npm run dev`
-2. Open [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
-3. Sign in
-4. On the dashboard, click **Seed from static data**
+On local `npm run dev`, sign in at `/admin/login` and click **Seed from static data**. The button renders only in development and still fails unless `ALLOW_DESTRUCTIVE_SEED=true` (`.env.example` ships `false`); `POST /api/agent/seed` returns 403 in production.
 
 That imports everything from `src/data/portfolio.ts` (including MDX bodies and FAQs). After a profile row exists, the public site serves Supabase data.
 
@@ -108,7 +105,7 @@ Content-Type: application/json
 | `GET` | `/api/agent/comments?status=` | List comments |
 | `PATCH`/`DELETE` | `/api/agent/comments/{id}` | Moderate / delete |
 | `POST` | `/api/agent/upload` | Multipart `file` + `folder` (`avatars`\|`projects`\|`blog`\|`skills`\|`resume`) |
-| `POST` | `/api/agent/seed` | Destructive wipe+seed; body `{ "confirm": "SEED_FROM_STATIC" }` |
+| `POST` | `/api/agent/seed` | Destructive wipe+seed; local `npm run dev` with `ALLOW_DESTRUCTIVE_SEED=true` only (403 otherwise); body `{ "confirm": "SEED_FROM_STATIC" }` |
 
 Example snapshot:
 
@@ -154,4 +151,4 @@ Add the same `BLOG_API_KEY` in Vercel so production accepts the agent.
 - Analytics soft-fail if Supabase / service role is missing
 - Agent admin API soft-fails with `503` if `BLOG_API_KEY` or Supabase is missing
 - Never commit `*.PASTE.md` or real API keys
-- Seed via API is destructive — require explicit confirmation
+- Seed via API is destructive, local-only, and returns 403 in production — require explicit confirmation

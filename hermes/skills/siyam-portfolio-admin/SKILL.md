@@ -12,7 +12,7 @@ metadata:
 
 # Siyam Portfolio Admin API
 
-Bearer-authenticated agent API for **siyamuddin.com** (`BLOG_API_KEY`). The agent API has no `featured_event_id` on profile, no `tags` or `og_image` on blog or projects, and no messages route.
+Bearer-authenticated agent API for **siyamuddin.com** (`BLOG_API_KEY`). Writes have no `featured_event_id` on profile and no `tags` or `og_image` on blog or projects; blog item responses omit `tags` and `og_image`; there is no messages route.
 
 ## When to Use
 
@@ -41,7 +41,7 @@ Never print the key unless the user asks.
 
 1. Prefer blog and event `status: "draft"` unless the user explicitly asks to publish.
 2. Call `GET /api/agent/portfolio` before large edits to see current IDs/slugs.
-3. **Seed is destructive** — only `POST /api/agent/seed` when the user clearly confirms wiping CMS data. Body must be `{ "confirm": "SEED_FROM_STATIC" }`.
+3. **Seed is destructive** — `POST /api/agent/seed` only against local `npm run dev` with `ALLOW_DESTRUCTIVE_SEED=true`, and only when the user clearly confirms wiping CMS data. Body must be `{ "confirm": "SEED_FROM_STATIC" }`. Production returns 403.
 4. After mutations, verify with GET and report relevant `/admin/...` links.
 
 ## Procedure

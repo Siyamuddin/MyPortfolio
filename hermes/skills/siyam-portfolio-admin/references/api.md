@@ -128,8 +128,8 @@ Response: `{ ok, url, path }`
 { "confirm": "SEED_FROM_STATIC" }
 ```
 
-Wipes CMS tables and reloads from static portfolio data.
+Wipes CMS tables and reloads from static portfolio data. Only local `npm run dev` with `ALLOW_DESTRUCTIVE_SEED=true`; production returns 403.
 
 ## Errors
 
-`{ "ok": false, "error": "..." }` — 400 / 401 / 404 / 409 / 429 / 503
+`{ "ok": false, "error": "..." }` — 400 / 401 / 403 / 404 / 409 / 429 / 503

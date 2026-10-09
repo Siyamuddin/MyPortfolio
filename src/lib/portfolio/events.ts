@@ -33,8 +33,6 @@ export type PortfolioEvent = {
 
 export const EVENTS_CACHE_TAG = "portfolio-events"
 export const MAX_EVENT_PHOTOS = 20
-// Leave room for multipart fields below Vercel's 4.5 MB request limit.
-export const MAX_EVENT_PHOTO_BYTES = 4 * 1024 * 1024
 export const EVENT_PHOTO_MIME_TYPES = [
   "image/jpeg",
   "image/png",

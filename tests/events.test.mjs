@@ -135,6 +135,27 @@ test("photo uploads reject oversized, unsupported and MIME-spoofed files", async
   assert.equal(uploads.length, 0);
 });
 
+test("shared upload policy rejects a spoofed type and names the file from the detected type", async () => {
+  const { MAX_UPLOAD_BYTES, preparePortfolioUpload } = sourceLoader({}, { File, Uint8Array })("src/lib/upload-limit.ts");
+  assert.equal(MAX_UPLOAD_BYTES, 4 * 1024 * 1024);
+  const spoofed = new File(["%PDF-1.7\n"], "avatar.png", { type: "image/png" });
+  assert.equal((await preparePortfolioUpload(spoofed, "avatars")).ok, false);
+  const pdf = await preparePortfolioUpload(new File(["%PDF-1.7\n"], "resume.png", { type: "application/pdf" }), "resume");
+  assert.equal(pdf.ok, true);
+  assert.equal(pdf.extension, "pdf");
+  const svg = await preparePortfolioUpload(
+    new File(["<?xml version=\"1.0\"?><svg xmlns=\"http://www.w3.org/2000/svg\"/>"], "icon.png", { type: "image/svg+xml" }),
+    "skills",
+  );
+  assert.equal(svg.ok, true);
+  assert.equal(svg.extension, "svg");
+  const jpeg = new Uint8Array([0xff, 0xd8, 0xff]);
+  const avatar = await preparePortfolioUpload(new File([jpeg], "photo.png", { type: "image/jpeg" }), "avatars");
+  assert.equal(avatar.extension, "jpg");
+  assert.equal((await preparePortfolioUpload(new File(["%PDF-1.7\n"], "x.pdf", { type: "application/pdf" }), "misc")).ok, false);
+  assert.equal((await preparePortfolioUpload(new File(["%PDF-1.7\n"], "x.pdf", { type: "application/pdf" }), "")).ok, false);
+});
+
 test("photo uploads use a generated filename and preserve the validated MIME type", async () => {
   const { actions, uploads } = actionHarness();
   const data = new FormData();

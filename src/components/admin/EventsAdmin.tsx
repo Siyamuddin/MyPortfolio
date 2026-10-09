@@ -8,9 +8,10 @@ import {
   ImagePlus, LoaderCircle, MapPin, Pencil, Plus, Trash2, X,
 } from "lucide-react"
 import {
-  EVENT_CATEGORIES, EVENT_PHOTO_MIME_TYPES, MAX_EVENT_PHOTO_BYTES,
+  EVENT_CATEGORIES, EVENT_PHOTO_MIME_TYPES,
   MAX_EVENT_PHOTOS, type EventPhoto, type PortfolioEvent,
 } from "@/lib/portfolio/events"
+import { MAX_UPLOAD_BYTES } from "@/lib/upload-limit"
 import {
   deleteEventAction, uploadEventPhotoAction, upsertEventAction,
 } from "@/lib/portfolio/event-actions"
@@ -22,7 +23,7 @@ import { EventImage } from "@/components/events/EventImage"
 import styles from "./studio/AdminStudio.module.css"
 
 type EventFilter = "all" | "published" | "draft"
-const maximumPhotoSizeLabel = `${MAX_EVENT_PHOTO_BYTES / (1024 * 1024)} MB`
+const maximumPhotoSizeLabel = `${MAX_UPLOAD_BYTES / (1024 * 1024)} MB`
 
 const displayDate = (date: string) => new Intl.DateTimeFormat("en", {
   month: "short", day: "numeric", year: "numeric", timeZone: "UTC",
@@ -205,7 +206,7 @@ function EventEditor({ event, tagLabels, onClose, onSaved }: {
         failures.push(`${file.name}: choose a JPEG, PNG, WebP, AVIF, or GIF image.`)
         continue
       }
-      if (file.size > MAX_EVENT_PHOTO_BYTES || file.size === 0) {
+      if (file.size > MAX_UPLOAD_BYTES || file.size === 0) {
         failures.push(`${file.name}: choose a nonempty image no larger than ${maximumPhotoSizeLabel}.`)
         continue
       }

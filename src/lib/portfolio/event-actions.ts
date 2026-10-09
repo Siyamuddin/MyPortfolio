@@ -7,10 +7,10 @@ import { requireAdmin } from "@/lib/portfolio/auth"
 import {
   EVENTS_SETUP_MESSAGE,
   EVENT_PHOTO_MIME_TYPES,
-  MAX_EVENT_PHOTO_BYTES,
   eventSchema,
   isMissingEventsTable,
 } from "@/lib/portfolio/events"
+import { MAX_UPLOAD_BYTES, preparePortfolioUpload } from "@/lib/upload-limit"
 import { refreshEvents } from "@/lib/portfolio/events-cache"
 import { syncTagRegistry } from "@/lib/portfolio/tag-registry"
 import { parseTagInput } from "@/lib/portfolio/tags"
@@ -82,16 +82,10 @@ export const deleteEventAction = async (id: string): Promise<ActionResult> => {
   }
 }
 
-const matchesImageSignature = (bytes: Uint8Array, mime: string) => {
-  const text = (start: number, end: number) => String.fromCharCode(...bytes.slice(start, end))
-  switch (mime) {
-    case "image/jpeg": return bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff
-    case "image/png": return bytes[0] === 0x89 && text(1, 4) === "PNG" && bytes[4] === 13 && bytes[5] === 10 && bytes[6] === 26 && bytes[7] === 10
-    case "image/gif": return text(0, 6) === "GIF87a" || text(0, 6) === "GIF89a"
-    case "image/webp": return text(0, 4) === "RIFF" && text(8, 12) === "WEBP"
-    case "image/avif": return text(4, 8) === "ftyp" && /avif|avis/.test(text(8, 32))
-    default: return false
-  }
+const eventUploadError = (reason: "folder" | "type" | "bytes", fallback: string) => {
+  if (reason === "type") return "Use a JPEG, PNG, WebP, AVIF, or GIF photo."
+  if (reason === "bytes") return "This file does not appear to be a valid photo. Export it as JPEG, PNG, WebP, AVIF, or GIF and try again."
+  return fallback
 }
 
 export const uploadEventPhotoAction = async (formData: FormData): Promise<ActionResult> => {
@@ -99,19 +93,16 @@ export const uploadEventPhotoAction = async (formData: FormData): Promise<Action
     const { supabase } = await requireAdmin()
     const file = formData.get("file")
     if (!(file instanceof File) || file.size === 0) return { ok: false, error: "Choose a photo to upload." }
-    if (file.size > MAX_EVENT_PHOTO_BYTES) return { ok: false, error: "Each photo must be 4 MB or smaller." }
-    if (!(EVENT_PHOTO_MIME_TYPES as readonly string[]).includes(file.type)) {
-      return { ok: false, error: "Use a JPEG, PNG, WebP, AVIF, or GIF photo." }
-    }
-    const signature = new Uint8Array(await file.slice(0, 32).arrayBuffer())
-    if (!matchesImageSignature(signature, file.type)) {
-      return { ok: false, error: "This file does not appear to be a valid photo. Export it as JPEG, PNG, WebP, AVIF, or GIF and try again." }
-    }
-    const extension = file.type === "image/jpeg" ? "jpg" : file.type.split("/")[1]
-    const path = `events/${randomUUID()}.${extension}`
+    if (file.size > MAX_UPLOAD_BYTES) return { ok: false, error: "Each photo must be 4 MB or smaller." }
+    const prepared = await preparePortfolioUpload(file, "events", {
+      types: EVENT_PHOTO_MIME_TYPES,
+      folders: ["events"],
+    })
+    if (!prepared.ok) return { ok: false, error: eventUploadError(prepared.reason, prepared.error) }
+    const path = `events/${randomUUID()}.${prepared.extension}`
     const { error } = await supabase.storage.from("portfolio").upload(path, file, {
       upsert: false,
-      contentType: file.type,
+      contentType: prepared.contentType,
       cacheControl: "31536000",
     })
     if (error) return { ok: false, error: "Could not upload this photo. Please try again." }

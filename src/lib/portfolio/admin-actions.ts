@@ -12,7 +12,7 @@ import {
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 import { syncTagRegistry } from "@/lib/portfolio/tag-registry"
 import { contentTagsSchema, parseTagInput } from "@/lib/portfolio/tags"
-import { MAX_UPLOAD_BYTES, uploadTooLargeError } from "@/lib/upload-limit"
+import { MAX_UPLOAD_BYTES, preparePortfolioUpload, uploadTooLargeError } from "@/lib/upload-limit"
 
 const socialsSchema = z.object({
   github: z.string(),
@@ -373,7 +373,7 @@ export const uploadFileAction = async (
   try {
     const { supabase } = await requireAdmin()
     const file = formData.get("file")
-    const folder = String(formData.get("folder") ?? "misc")
+    const folder = String(formData.get("folder") ?? "")
 
     if (!(file instanceof File) || file.size === 0) {
       return { ok: false, error: "No file provided" }
@@ -382,18 +382,18 @@ export const uploadFileAction = async (
       return { ok: false, error: uploadTooLargeError }
     }
 
-    const safeFolder = folder.replace(/[^a-z0-9/_-]/gi, "") || "misc"
-    const ext = file.name.split(".").pop() || "bin"
-    const path = `${safeFolder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+    const prepared = await preparePortfolioUpload(file, folder)
+    if (!prepared.ok) return { ok: false, error: prepared.error }
+
+    const path = `${prepared.folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${prepared.extension}`
 
     const { error } = await supabase.storage
       .from("portfolio")
-      .upload(path, file, { upsert: false, contentType: file.type })
+      .upload(path, file, { upsert: false, contentType: prepared.contentType })
 
     if (error) return { ok: false, error: error.message }
 
     const { data } = supabase.storage.from("portfolio").getPublicUrl(path)
-    await revalidatePortfolio()
     return { ok: true, url: data.publicUrl }
   } catch (error) {
     return {

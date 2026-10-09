@@ -6,7 +6,9 @@ const supabaseHostname =
 
 const nextConfig: NextConfig = {
   experimental: {
-    serverActions: { bodySizeLimit: MAX_UPLOAD_BYTES },
+    // The whole multipart body, not the file. 64 KB covers the envelope so a
+    // 4 MB file still fits, and the total stays under Vercel's 4.5 MB cap.
+    serverActions: { bodySizeLimit: MAX_UPLOAD_BYTES + 64 * 1024 },
   },
   images: {
     formats: ["image/avif", "image/webp"],

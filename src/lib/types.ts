@@ -33,7 +33,6 @@ export interface Project {
   url: string
   description: string
   tags: string[]
-  ogImage?: string
 }
 
 export interface BlogPost {

@@ -9,25 +9,14 @@ export const AnalyticsBeacon = () => {
   useEffect(() => {
     if (!pathname) return
 
-    const controller = new AbortController()
-
-    const send = () => {
-      void fetch("/api/analytics/collect", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ path: pathname }),
-        keepalive: true,
-        signal: controller.signal,
-      }).catch(() => {
-        // Soft-fail: analytics must never break the page
-      })
-    }
-
-    send()
-
-    return () => {
-      controller.abort()
-    }
+    void fetch("/api/analytics/collect", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: pathname }),
+      keepalive: true,
+    }).catch(() => {
+      // Soft-fail: analytics must never break the page
+    })
   }, [pathname])
 
   return null

@@ -113,7 +113,7 @@ function Lightbox({
       <div>
         <header className={styles.albumHeader}>
           <span className={styles.eyebrow}>
-            {count ? `${index + 1} of ${count} photos` : "Event photo"}
+            {`${index + 1} of ${count} photos`}
           </span>
           <button autoFocus type="button" className={styles.iconButton} onClick={onClose} aria-label="Close photo viewer">
             <X size={21} />

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
 type CountUpProps = {
   value: number
@@ -14,12 +14,8 @@ type CountUpProps = {
  */
 export const CountUp = ({ value, pad = 2, duration = 600 }: CountUpProps) => {
   const [display, setDisplay] = useState(0)
-  const started = useRef(false)
 
   useEffect(() => {
-    if (started.current) return
-    started.current = true
-
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     if (reduce || value <= 0) {
       setDisplay(value)

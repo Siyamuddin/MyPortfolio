@@ -1,16 +1,7 @@
 import { ProfileAdminForm } from "@/components/admin/ProfileAdminForm"
 import { getAdminRows } from "@/lib/portfolio/admin-data"
-import { isSupabaseConfigured } from "@/lib/supabase/env"
 
 export default async function AdminProfilePage() {
-  if (!isSupabaseConfigured()) {
-    return (
-      <p className="text-sm text-light-gray">
-        Configure Supabase env vars to manage profile content.
-      </p>
-    )
-  }
-
   const rows = await getAdminRows()
 
   return (

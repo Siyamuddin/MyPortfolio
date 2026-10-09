@@ -19,10 +19,9 @@ const GithubIcon = ({ className }: { className?: string }) => (
 type ProjectCardProps = {
   project: Project
   priority?: boolean
-  enter?: boolean
 }
 
-export const ProjectCard = ({ project, priority = false, enter = false }: ProjectCardProps) => {
+export const ProjectCard = ({ project, priority = false }: ProjectCardProps) => {
   const { liveUrl, githubUrl } = getProjectLinks(project)
   const imageSrc =
     project.image.startsWith("http") || project.image.startsWith("/")
@@ -83,7 +82,7 @@ export const ProjectCard = ({ project, priority = false, enter = false }: Projec
   return (
     <li
       data-flip={project.title}
-      className={`group ${enter ? "project-enter" : ""}`}
+      className="group project-enter"
     >
       {media}
     </li>

@@ -20,7 +20,6 @@ type NetworkProps = {
 
 const Network = ({ pointer, running }: NetworkProps) => {
   const groupRef = useRef<THREE.Group>(null)
-  const pulseRef = useRef(0)
 
   const { nodes, links } = useMemo(() => {
     const nodeList: THREE.Vector3[] = []
@@ -50,12 +49,11 @@ const Network = ({ pointer, running }: NetworkProps) => {
     return { nodes: nodeList, links: linkList }
   }, [])
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     // Pause the render loop when the hero is offscreen or the tab is hidden.
     if (running.current === false) return
     if (!groupRef.current) return
     const aim = pointer.current ?? { x: 0, y: 0 }
-    pulseRef.current = state.clock.elapsedTime
     groupRef.current.rotation.y += delta * 0.12
     groupRef.current.rotation.x = THREE.MathUtils.lerp(
       groupRef.current.rotation.x,
@@ -79,17 +77,15 @@ const Network = ({ pointer, running }: NetworkProps) => {
       ))}
       {links.map(([start, end, distance], index) => {
         const strength = 1 - distance / LINK_DISTANCE
-        const pulse =
-          0.12 +
-          strength * 0.18 +
-          Math.sin(pulseRef.current * 1.4 + index * 0.35) * 0.04
+        const opacity =
+          0.12 + strength * 0.18 + Math.sin(index * 0.35) * 0.04
         return (
           <Line
             key={`link-${index}`}
             points={[start, end]}
             color={GOLD}
             transparent
-            opacity={pulse}
+            opacity={opacity}
             lineWidth={1}
           />
         )
@@ -157,8 +153,6 @@ export const AgenticNetworkBackground = ({
           gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
           className="h-full w-full"
         >
-          <ambientLight intensity={0.35} />
-          <pointLight position={[4, 4, 4]} intensity={0.6} color={GOLD} />
           <Network pointer={pointer} running={runningRef} />
         </Canvas>
       </div>

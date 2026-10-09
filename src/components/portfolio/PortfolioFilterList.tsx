@@ -61,7 +61,6 @@ export const PortfolioFilterList = ({ projects }: PortfolioFilterListProps) => {
             key={project.title}
             project={project}
             priority={index < 3}
-            enter
           />
         ))}
       </ul>

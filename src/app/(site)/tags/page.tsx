@@ -31,7 +31,7 @@ export default async function TagsIndexRoute() {
         aria-labelledby="tags-title"
       >
         <header className="mb-2">
-          <SectionTitle as="h1">
+          <SectionTitle>
             <span id="tags-title">Tags</span>
           </SectionTitle>
           <p className="mt-3 text-sm font-light text-light-gray">

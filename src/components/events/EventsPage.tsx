@@ -88,7 +88,7 @@ export function EventsPage({ events }: { events: PortfolioEvent[] }) {
 
   return (
     <article className={`rounded-[20px] border border-jet bg-eerie-black-2 p-[15px] shadow-[var(--shadow-1)] min-[580px]:mx-auto min-[580px]:w-[520px] min-[580px]:p-[30px] min-[768px]:w-[700px] min-[1024px]:w-[950px] min-[1024px]:shadow-[var(--shadow-5)] min-[1250px]:w-auto min-[1250px]:min-h-full ${styles.page}`} aria-labelledby="events-title">
-      <header><SectionTitle as="h1"><span id="events-title">Events</span></SectionTitle></header>
+      <header><SectionTitle><span id="events-title">Events</span></SectionTitle></header>
       <div className={styles.intro}>
         <div>
           <p className={styles.eyebrow}>Beyond the screen</p>
@@ -158,7 +158,7 @@ export function EventsPage({ events }: { events: PortfolioEvent[] }) {
           <p className={styles.eyebrow}>A collection in the making</p>
           <h3 id="empty-events-title">More moments, coming soon.</h3>
           <p>Photos and stories from hackathons, university life, and community events will find their home here.</p>
-          <a href="/portfolio" className={styles.textLink}><ArrowLeft size={16} aria-hidden="true" />Explore my projects</a>
+          <Link href="/portfolio" className={styles.textLink}><ArrowLeft size={16} aria-hidden="true" />Explore my projects</Link>
         </section>
       )}
     </article>

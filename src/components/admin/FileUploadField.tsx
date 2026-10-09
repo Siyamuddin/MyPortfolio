@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, useTransition } from "react"
+import { useState, useTransition } from "react"
 import { uploadFileAction } from "@/lib/portfolio/admin-actions"
 
 type FileUploadFieldProps = {
@@ -24,7 +24,6 @@ export const FileUploadField = ({
   const [value, setValue] = useState(defaultValue)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
-  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleUpload = (file: File | undefined) => {
     if (!file) return
@@ -57,7 +56,6 @@ export const FileUploadField = ({
       />
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <input
-          ref={inputRef}
           type="file"
           accept={accept}
           className="text-sm text-light-gray"

@@ -1,6 +1,7 @@
 import { ContentImage as Image } from "@/components/portfolio/ContentImage"
 import Link from "next/link"
 import { SectionTitle } from "@/components/ui/SectionTitle"
+import { pageShellClassName } from "@/lib/cn"
 import { getBlogPostHref } from "@/lib/portfolio/blog"
 import type { BlogPost } from "@/lib/types"
 
@@ -12,7 +13,7 @@ export const BlogPage = ({ blogPosts }: BlogPageProps) => {
   return (
     <article
       id="blog-panel"
-      className="rounded-[20px] border border-jet bg-eerie-black-2 p-[15px] shadow-[var(--shadow-1)] min-[580px]:mx-auto min-[580px]:w-[520px] min-[580px]:p-[30px] min-[768px]:w-[700px] min-[1024px]:w-[950px] min-[1024px]:shadow-[var(--shadow-5)] min-[1250px]:w-auto min-[1250px]:min-h-full"
+      className={`${pageShellClassName} min-[1250px]:min-h-full`}
       aria-labelledby="blog-title"
     >
       <header>

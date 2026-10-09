@@ -2,7 +2,7 @@
 
 import { useRef, useState, type ReactNode } from "react"
 import { Check, Plus, Trash2 } from "lucide-react"
-import { useModalDialog } from "@/components/admin/studio/useModalDialog"
+import { useModalDialog } from "@/hooks/useModalDialog"
 import styles from "./AdminStudio.module.css"
 
 export type StudioFilterOption<T extends string> = {

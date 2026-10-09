@@ -21,6 +21,7 @@ import {
   Search,
 } from "lucide-react"
 import { navPages } from "@/data/portfolio"
+import { useModalDialog } from "@/hooks/useModalDialog"
 import { pagePaths } from "@/lib/seo"
 import type { NavPage } from "@/lib/types"
 
@@ -99,7 +100,7 @@ const CommandPalette = ({
   onClose: () => void
 }) => {
   const router = useRouter()
-  const dialogRef = useRef<HTMLDialogElement>(null)
+  const dialogRef = useModalDialog()
   const inputRef = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState("")
   const [activeIndex, setActiveIndex] = useState(0)
@@ -197,18 +198,7 @@ const CommandPalette = ({
   }, [query])
 
   useEffect(() => {
-    const dialog = dialogRef.current
-    if (!dialog) return
-    const previousFocus = document.activeElement as HTMLElement | null
-    const overflow = document.body.style.overflow
-    dialog.showModal()
-    document.body.style.overflow = "hidden"
     inputRef.current?.focus()
-    return () => {
-      dialog.close()
-      document.body.style.overflow = overflow
-      previousFocus?.focus({ preventScroll: true })
-    }
   }, [])
 
   const runItem = (item: CommandItem | undefined) => {

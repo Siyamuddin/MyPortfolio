@@ -7,6 +7,7 @@ import { FeaturedEventCard } from "@/components/events/FeaturedEventCard"
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow"
 import { SectionTitle } from "@/components/ui/SectionTitle"
 import { Reveal } from "@/components/ui/Reveal"
+import { pageShellClassName } from "@/lib/cn"
 import { getBlogPostHref } from "@/lib/portfolio/blog"
 import type { PortfolioEvent } from "@/lib/portfolio/events"
 import type { BlogPost, Faq, Profile, Service, Skill } from "@/lib/types"
@@ -49,7 +50,7 @@ export const AboutPage = ({
   return (
     <article
       id="about-panel"
-      className="rounded-[20px] border border-jet bg-eerie-black-2 p-[15px] shadow-[var(--shadow-1)] min-[580px]:mx-auto min-[580px]:w-[520px] min-[580px]:p-[30px] min-[768px]:w-[700px] min-[1024px]:w-[950px] min-[1024px]:shadow-[var(--shadow-5)] min-[1250px]:w-auto min-[1250px]:min-h-full"
+      className={`${pageShellClassName} min-[1250px]:min-h-full`}
       aria-labelledby="about-title"
     >
       <AboutHeroHeader profile={profile} resumeHref={resumeHref} />

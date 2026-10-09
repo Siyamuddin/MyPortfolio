@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowUpRight, CalendarDays, MapPin, Sparkles, Users } from "
 import { EventImage } from "@/components/events/EventImage"
 import { EventGallery } from "@/components/events/EventGallery"
 import { TagChips } from "@/components/ui/TagChips"
+import { pageShellClassName } from "@/lib/cn"
 import { formatEventDate, resolveEventCover, type PortfolioEvent } from "@/lib/portfolio/events"
 import type { Tag } from "@/lib/portfolio/tags"
 
@@ -13,7 +14,7 @@ export function EventDetail({ event, tags }: { event: PortfolioEvent; tags: Tag[
 
   return (
     <article
-      className="rounded-[20px] border border-jet bg-eerie-black-2 p-[15px] shadow-[var(--shadow-1)] min-[580px]:mx-auto min-[580px]:w-[520px] min-[580px]:p-[30px] min-[768px]:w-[700px] min-[1024px]:w-[950px] min-[1024px]:shadow-[var(--shadow-5)] min-[1250px]:w-auto"
+      className={pageShellClassName}
       aria-labelledby="event-title"
     >
       <nav className="mb-6 text-sm text-light-gray-70 min-[1024px]:mt-16" aria-label="Breadcrumb">

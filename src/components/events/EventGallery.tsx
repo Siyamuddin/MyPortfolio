@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react"
+import { useModalDialog } from "@/hooks/useModalDialog"
 import type { EventPhoto } from "@/lib/portfolio/events"
 import { EventImage } from "./EventImage"
 import styles from "./Events.module.css"
@@ -64,7 +65,7 @@ function Lightbox({
   startIndex: number
   onClose: () => void
 }) {
-  const dialogRef = useRef<HTMLDialogElement>(null)
+  const dialogRef = useModalDialog()
   const [index, setIndex] = useState(startIndex)
   const [direction, setDirection] = useState<1 | -1>(1)
   const touchStart = useRef<{ x: number; y: number } | null>(null)
@@ -74,20 +75,6 @@ function Lightbox({
     setDirection(next > 0 ? 1 : -1)
     setIndex((current) => (current + next + count) % count)
   }
-
-  useEffect(() => {
-    const dialog = dialogRef.current
-    if (!dialog) return
-    const previousFocus = document.activeElement as HTMLElement | null
-    const overflow = document.body.style.overflow
-    dialog.showModal()
-    document.body.style.overflow = "hidden"
-    return () => {
-      dialog.close()
-      document.body.style.overflow = overflow
-      previousFocus?.focus({ preventScroll: true })
-    }
-  }, [])
 
   return (
     <dialog

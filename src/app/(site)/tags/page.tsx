@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Hash } from "lucide-react"
 import { SectionTitle } from "@/components/ui/SectionTitle"
+import { pageShellClassName } from "@/lib/cn"
 import { getTagsWithCounts } from "@/lib/portfolio/tags-repository"
 import { buildPageMetadata } from "@/lib/seo"
 import {
@@ -27,7 +28,7 @@ export default async function TagsIndexRoute() {
       <JsonLdScript data={buildBreadcrumbJsonLd("Tags", "/tags")} />
       {tags.length ? <JsonLdScript data={buildTagsCollectionJsonLd(tags)} /> : null}
       <article
-        className="rounded-[20px] border border-jet bg-eerie-black-2 p-[15px] shadow-[var(--shadow-1)] min-[580px]:mx-auto min-[580px]:w-[520px] min-[580px]:p-[30px] min-[768px]:w-[700px] min-[1024px]:w-[950px] min-[1024px]:shadow-[var(--shadow-5)] min-[1250px]:w-auto min-[1250px]:min-h-full"
+        className={`${pageShellClassName} min-[1250px]:min-h-full`}
         aria-labelledby="tags-title"
       >
         <header className="mb-2">

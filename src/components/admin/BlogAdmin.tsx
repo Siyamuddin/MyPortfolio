@@ -9,7 +9,7 @@ import {
 } from "lucide-react"
 import { TagsInput } from "@/components/admin/TagsInput"
 import { DeleteConfirmDialog, StudioEmpty, StudioFilter, StudioNotice } from "@/components/admin/studio/StudioChrome"
-import { useModalDialog } from "@/components/admin/studio/useModalDialog"
+import { useModalDialog } from "@/hooks/useModalDialog"
 import { deleteItemAction, uploadFileAction, upsertBlogAction } from "@/lib/portfolio/admin-actions"
 import { getBlogPostHref, slugifyTitle } from "@/lib/portfolio/blog"
 import { mapBlogPost } from "@/lib/portfolio/mappers"

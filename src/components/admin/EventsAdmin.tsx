@@ -17,7 +17,7 @@ import {
 import { labelFromSlug, type Tag } from "@/lib/portfolio/tags"
 import { TagsInput } from "@/components/admin/TagsInput"
 import { DeleteConfirmDialog, StudioEmpty, StudioFilter, StudioNotice } from "@/components/admin/studio/StudioChrome"
-import { useModalDialog } from "@/components/admin/studio/useModalDialog"
+import { useModalDialog } from "@/hooks/useModalDialog"
 import { EventImage } from "@/components/events/EventImage"
 import styles from "./studio/AdminStudio.module.css"
 

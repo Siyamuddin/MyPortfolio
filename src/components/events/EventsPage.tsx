@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, Camera, Images, MapPin } from "lucide-react"
 import { SectionTitle } from "@/components/ui/SectionTitle"
 import { CountUp } from "@/components/ui/CountUp"
+import { pageShellClassName } from "@/lib/cn"
 import { EVENT_CATEGORIES, formatEventDate, type EventCategory, type PortfolioEvent } from "@/lib/portfolio/events"
 import { EventImage } from "./EventImage"
 import styles from "./Events.module.css"
@@ -87,7 +88,7 @@ export function EventsPage({ events }: { events: PortfolioEvent[] }) {
   }, [category, filters.length])
 
   return (
-    <article className={`rounded-[20px] border border-jet bg-eerie-black-2 p-[15px] shadow-[var(--shadow-1)] min-[580px]:mx-auto min-[580px]:w-[520px] min-[580px]:p-[30px] min-[768px]:w-[700px] min-[1024px]:w-[950px] min-[1024px]:shadow-[var(--shadow-5)] min-[1250px]:w-auto min-[1250px]:min-h-full ${styles.page}`} aria-labelledby="events-title">
+    <article className={`${pageShellClassName} min-[1250px]:min-h-full ${styles.page}`} aria-labelledby="events-title">
       <header><SectionTitle as="h1"><span id="events-title">Events</span></SectionTitle></header>
       <div className={styles.intro}>
         <div>

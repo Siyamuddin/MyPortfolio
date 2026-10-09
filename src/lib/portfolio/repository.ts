@@ -14,10 +14,7 @@ import {
   mapService,
   mapSkill,
 } from "@/lib/portfolio/mappers"
-import {
-  getStaticBlogPostBySlug,
-  getStaticPortfolio,
-} from "@/lib/portfolio/static"
+import { getStaticPortfolio } from "@/lib/portfolio/static"
 import type {
   BlogCommentRow,
   BlogPostRow,
@@ -35,7 +32,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/env"
 
 export const PORTFOLIO_CACHE_TAG = "portfolio"
 
-const createAnonClient = () => {
+export const createAnonClient = () => {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   if (!url || !anonKey) return null
@@ -143,6 +140,7 @@ export const getPortfolioFreshness = cache(async (): Promise<Date | undefined> =
       "projects",
       "blog_posts",
       "faqs",
+      "events",
     ] as const
 
     const results = await Promise.all(
@@ -169,32 +167,10 @@ export const getPortfolioFreshness = cache(async (): Promise<Date | undefined> =
   }
 })
 
-export const getBlogPostBySlug = cache(
-  async (slug: string): Promise<BlogPost | null> => {
-    if (!isSupabaseConfigured()) {
-      return getStaticBlogPostBySlug(slug)
-    }
-
-    try {
-      const supabase = createAnonClient()
-      if (!supabase) return null
-
-      const { data, error } = await supabase
-        .from("blog_posts")
-        .select("*")
-        .eq("slug", slug)
-        .eq("status", "published")
-        .maybeSingle()
-
-      if (error) throw error
-      if (!data) return null
-      return mapBlogPost(data as BlogPostRow)
-    } catch (error) {
-      console.error("[blog] getBlogPostBySlug failed", error)
-      throw new Error("Article content is temporarily unavailable")
-    }
-  }
-)
+export const getBlogPostBySlug = cache(async (slug: string): Promise<BlogPost | null> => {
+  const portfolio = await getPortfolio()
+  return portfolio.blogPosts.find((post) => post.slug === slug) ?? null
+})
 
 export const getApprovedComments = cache(
   async (postId: string): Promise<BlogComment[]> => {

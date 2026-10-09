@@ -1,16 +1,8 @@
 import type { Profile } from "@/lib/types"
-import { SITE_NAME, SITE_URL } from "@/lib/seo"
+import { absoluteUrl, SITE_NAME, SITE_URL } from "@/lib/seo"
 
 const PERSON_ID = `${SITE_URL}/#person`
 const WEBSITE_ID = `${SITE_URL}/#website`
-
-export const toAbsoluteUrl = (pathOrUrl: string) => {
-  if (!pathOrUrl) return SITE_URL
-  if (pathOrUrl.startsWith("http://") || pathOrUrl.startsWith("https://")) {
-    return pathOrUrl
-  }
-  return `${SITE_URL}${pathOrUrl.startsWith("/") ? pathOrUrl : `/${pathOrUrl}`}`
-}
 
 export const isAbsoluteHttpUrl = (value: string) =>
   value.startsWith("http://") || value.startsWith("https://")
@@ -39,7 +31,7 @@ export const buildPersonNode = (
     jobTitle: profile.title,
     url: SITE_URL,
     email: profile.email,
-    image: toAbsoluteUrl(profile.avatar),
+    image: absoluteUrl(profile.avatar),
     sameAs,
     address: parseLocation(profile.location),
     ...(extras?.skills?.length
@@ -254,7 +246,7 @@ const buildEventNode = (event: EventJsonLdInput) => {
   if (event.organizer?.trim()) {
     node.organizer = { "@type": "Organization", name: event.organizer }
   }
-  if (event.image) node.image = toAbsoluteUrl(event.image)
+  if (event.image) node.image = absoluteUrl(event.image)
   if (event.url && isAbsoluteHttpUrl(event.url)) node.sameAs = event.url
   if (event.tags?.length) node.keywords = event.tags.join(", ")
   return node

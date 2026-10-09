@@ -64,11 +64,29 @@ test('structured data must escape closing script tags',()=>{
 test('blog article navigation should mark Blog active',()=>{
  assert.equal(sourceLoader()('src/lib/seo.ts').pathToNavPage('/blog/an-article'),'blog');
 });
-test('CMS unpublished or removed article must not fall back to a sample article',async()=>{
- const fake={slug:'sample',body:'sample article'};const chain={select(){return this},eq(){return this},maybeSingle:async()=>({data:null,error:null})};
- const load=sourceLoader({'react':{cache:fn=>fn},'next/cache':{unstable_cache:fn=>fn},'@supabase/supabase-js':{createClient:()=>({from:()=>chain})},'@/data/portfolio':{navPages:[]},'@/lib/portfolio/mappers':{},'@/lib/portfolio/static':{getStaticBlogPostBySlug:()=>fake,getStaticPortfolio:()=>({})},'@/lib/supabase/env':{isSupabaseConfigured:()=>true}},{process:{env:{NEXT_PUBLIC_SUPABASE_URL:'https://example.supabase.co',NEXT_PUBLIC_SUPABASE_ANON_KEY:'mock'}}});
- assert.equal(await load('src/lib/portfolio/repository.ts').getBlogPostBySlug('sample'),null);
-});
+test('CMS unpublished or removed article must not fall back to a sample article', async () => {
+ const chain = {
+  select() { return this },
+  eq() { return this },
+  order() { return this },
+  limit() { return this },
+  maybeSingle: async () => ({
+   data: { name: 'Siyam', title: 'Dev', email: 'a@b.c', location: 'Seoul', bio: [], avatar: '/a.webp' },
+   error: null,
+  }),
+  then(resolve) { return Promise.resolve({ data: [], error: null }).then(resolve) },
+ }
+ const load = sourceLoader({
+  react: { cache: (fn) => fn },
+  'next/cache': { unstable_cache: (fn) => fn },
+  '@supabase/supabase-js': { createClient: () => ({ from: () => chain }) },
+  '@/data/portfolio': { navPages: [] },
+  '@/lib/portfolio/static': {
+   getStaticPortfolio: () => { throw new Error('static portfolio fallback') },
+  },
+ }, { process: { env: { NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co', NEXT_PUBLIC_SUPABASE_ANON_KEY: 'mock' } } })
+ assert.equal(await load('src/lib/portfolio/repository.ts').getBlogPostBySlug('sample'), null)
+})
 test('project card source link comes from a GitHub project url',()=>{
  const {ProjectCard}=sourceLoader({'next/image':()=>null})('src/components/portfolio/ProjectCard.tsx');
  const html=renderToStaticMarkup(React.createElement(ProjectCard,{project:{title:'Example',category:'Applications',image:'/image.png',url:'https://github.com/example/repo',description:'Example'}}));

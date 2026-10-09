@@ -26,8 +26,3 @@ export const getStaticPortfolio = (): PortfolioData => ({
   navPages,
   source: "static",
 })
-
-export const getStaticBlogPostBySlug = (slug: string) =>
-  blogPosts.find(
-    (post) => post.slug === slug && post.status === "published"
-  ) ?? null

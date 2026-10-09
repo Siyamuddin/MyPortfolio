@@ -91,9 +91,11 @@ test("saving events preserves ordered captions and invalidates published content
   assert.deepEqual(Array.from(writes[0].filter), ["id", eventId]);
   assert.equal(writes[0].row.photos[0].caption, "The team");
   assert.equal(writes[0].row.status, "published");
+  assert.ok(invalidations.includes("portfolio"));
+  assert.ok(invalidations.includes("portfolio-tags"));
   assert.ok(invalidations.includes("portfolio-events"));
-  assert.ok(invalidations.includes("/events"));
-  assert.ok(invalidations.includes("/admin/events"));
+  assert.ok(invalidations.includes("/"));
+  assert.ok(invalidations.includes("/sitemap.xml"));
 });
 
 test("invalid form input never writes or erases existing photo collections", async () => {
@@ -119,7 +121,8 @@ test("deleting an event invalidates its public listing", async () => {
   const { actions, writes, invalidations } = actionHarness();
   assert.equal((await actions.deleteEventAction(eventId)).ok, true);
   assert.equal(writes[0].operation, "delete");
-  assert.ok(invalidations.includes("/events"));
+  assert.ok(invalidations.includes("portfolio-events"));
+  assert.ok(invalidations.includes("/sitemap.xml"));
 });
 
 test("photo uploads reject oversized, unsupported and MIME-spoofed files", async () => {
@@ -160,11 +163,13 @@ function repositoryHarness({ configured = true, result = { data: [], error: null
   const repository = sourceLoader({
     react: { cache: (fn) => fn }, "next/cache": { unstable_cache: (fn) => fn },
     "@supabase/supabase-js": { createClient: () => ({ from: () => query }) },
-    "@/lib/supabase/env": { isSupabaseConfigured: () => configured, getSupabaseEnv: () => ({ url: "https://example.supabase.co", anonKey: "test" }) },
+    "@/lib/supabase/env": { isSupabaseConfigured: () => configured },
     "@/lib/portfolio/auth": { requireAdmin: async () => {
       if (!authorized) throw new Error("Unauthorized");
       return { supabase: { from: () => query } };
     } },
+  }, {
+    process: { env: { NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co", NEXT_PUBLIC_SUPABASE_ANON_KEY: "test" } },
   })("src/lib/portfolio/events-repository.ts");
   return { repository, queries };
 }

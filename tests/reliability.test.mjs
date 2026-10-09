@@ -23,7 +23,14 @@ test('public comment mapping never serializes email, even if a wider row is supp
 });
 
 test('CMS failure does not republish static article content', async () => {
-  const chain = { select() { return this; }, eq() { return this; }, maybeSingle: async () => ({ error: { code: 'offline' } }) };
+  const chain = {
+    select() { return this; },
+    eq() { return this; },
+    order() { return this; },
+    limit() { return this; },
+    maybeSingle: async () => ({ error: { code: 'offline' } }),
+    then(resolve) { return Promise.resolve({ data: null, error: { code: 'offline' } }).then(resolve); },
+  };
   const load = sourceLoader({
     react: { cache: fn => fn }, 'next/cache': { unstable_cache: fn => fn },
     '@supabase/supabase-js': { createClient: () => ({ from: () => chain }) },

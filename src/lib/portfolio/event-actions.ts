@@ -61,7 +61,7 @@ export const upsertEventAction = async (formData: FormData): Promise<ActionResul
     if (error) return { ok: false, error: isMissingEventsTable(error) ? EVENTS_SETUP_MESSAGE : "Could not save this event. Please try again." }
     if (!data) return { ok: false, error: "This event no longer exists. Reload before saving again." }
     await syncTagRegistry(supabase, tags)
-    refreshEvents((data as { slug?: string }).slug)
+    refreshEvents()
     return { ok: true }
   } catch (error) {
     return actionError(error, "Could not save this event.")

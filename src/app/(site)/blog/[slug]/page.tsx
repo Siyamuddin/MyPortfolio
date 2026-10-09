@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { BlogArticle } from "@/components/blog/BlogArticle"
+import { isPublishedArticle } from "@/lib/portfolio/blog"
 import { renderMdx } from "@/lib/mdx/render"
 import {
   getApprovedComments,
@@ -26,7 +27,7 @@ type PageProps = {
 export const generateStaticParams = async () => {
   const portfolio = await getPortfolio()
   return portfolio.blogPosts
-    .filter((post) => post.status === "published" && post.body.trim())
+    .filter(isPublishedArticle)
     .map((post) => ({ slug: post.slug }))
 }
 

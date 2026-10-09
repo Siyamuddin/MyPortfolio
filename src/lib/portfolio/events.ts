@@ -101,7 +101,7 @@ export const eventSchema = z.object({
   og_image: z.string().trim().max(2048).refine((value) => !value || isSafeEventPhotoUrl(value), "Use an HTTPS image URL for the social preview.").optional().default(""),
 })
 
-/** Shape read back from the database. Tolerant of pre-migration rows. */
+/** Shape read back from the database. */
 export const eventRowSchema = eventSchema.extend({
   id: z.string().uuid(),
   slug: z.string().trim().optional(),

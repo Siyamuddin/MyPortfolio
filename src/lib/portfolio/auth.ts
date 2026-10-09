@@ -27,8 +27,5 @@ export const revalidatePortfolio = () => {
   revalidateTag(PORTFOLIO_CACHE_TAG)
   revalidateTag(TAGS_CACHE_TAG)
   revalidatePath("/", "layout")
-  revalidatePath("/blog", "layout")
-  revalidatePath("/admin", "layout")
-  revalidatePath("/tags", "layout")
   revalidatePath("/sitemap.xml")
 }

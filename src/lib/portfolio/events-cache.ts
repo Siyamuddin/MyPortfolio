@@ -1,4 +1,4 @@
-import { revalidatePath, revalidateTag } from "next/cache"
+import { revalidateTag } from "next/cache"
 import { revalidatePortfolio } from "@/lib/portfolio/auth"
 import { EVENTS_CACHE_TAG } from "@/lib/portfolio/events"
 
@@ -7,12 +7,7 @@ import { EVENTS_CACHE_TAG } from "@/lib/portfolio/events"
  * Admin event actions and the agent events API both use this so a publish
  * shows up on /events/[slug] without waiting for the cache TTL.
  */
-export const refreshEvents = (slug?: string) => {
+export const refreshEvents = () => {
   revalidatePortfolio()
   revalidateTag(EVENTS_CACHE_TAG)
-  revalidatePath("/")
-  revalidatePath("/events")
-  if (slug) revalidatePath(`/events/${slug}`)
-  revalidatePath("/admin/events")
-  revalidatePath("/admin")
 }

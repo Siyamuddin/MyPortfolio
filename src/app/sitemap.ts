@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next"
+import { isPublishedArticle } from "@/lib/portfolio/blog"
 import { getPortfolio, getPortfolioFreshness } from "@/lib/portfolio/repository"
 import { getPublishedEvents } from "@/lib/portfolio/events-repository"
 import { getTagsWithCounts } from "@/lib/portfolio/tags-repository"
@@ -23,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = toLastModified(siteFreshness)
 
   const articleEntries = portfolio.blogPosts
-    .filter((post) => post.status === "published" && post.body.trim() && post.slug)
+    .filter(isPublishedArticle)
     .map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
       lastModified: toLastModified(post.updatedAt),

@@ -1,16 +1,15 @@
 import { cache } from "react"
 import { unstable_cache } from "next/cache"
-import { createClient } from "@supabase/supabase-js"
 import { getPublishedEvents } from "@/lib/portfolio/events-repository"
 import type { PortfolioEvent } from "@/lib/portfolio/events"
-import { getPortfolio } from "@/lib/portfolio/repository"
+import { createAnonClient, getPortfolio } from "@/lib/portfolio/repository"
 import {
   labelFromSlug,
   TAGS_CACHE_TAG,
   type Tag,
   type TagWithCount,
 } from "@/lib/portfolio/tags"
-import { getSupabaseEnv, isSupabaseConfigured } from "@/lib/supabase/env"
+import { isSupabaseConfigured } from "@/lib/supabase/env"
 import type { BlogPost, Project } from "@/lib/types"
 
 export type TagContent = {
@@ -21,10 +20,8 @@ export type TagContent = {
 
 const getCachedRegistry = unstable_cache(
   async (): Promise<Tag[]> => {
-    const { url, anonKey } = getSupabaseEnv()
-    const supabase = createClient(url, anonKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    })
+    const supabase = createAnonClient()
+    if (!supabase) return []
     const { data, error } = await supabase
       .from("tags")
       .select("slug,label")

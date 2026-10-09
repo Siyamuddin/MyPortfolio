@@ -143,20 +143,10 @@ const syncEventTags = async (admin: SupabaseClient, tags: string[]) => {
 }
 
 const finishWrite = (
-  data: unknown,
-  previousSlug?: string
+  data: unknown
 ): { ok: true; event: ReturnType<typeof toPublicEvent> } | AgentFail => {
+  refreshEvents()
   const parsed = eventRowSchema.safeParse(data)
-  const rawSlug =
-    data &&
-    typeof data === "object" &&
-    typeof (data as { slug?: unknown }).slug === "string"
-      ? (data as { slug: string }).slug
-      : undefined
-
-  if (previousSlug) refreshEvents(previousSlug)
-  if (rawSlug && rawSlug !== previousSlug) refreshEvents(rawSlug)
-  if (!previousSlug && !rawSlug) refreshEvents()
 
   if (!parsed.success) {
     return { ok: false, error: "Saved event could not be read back.", status: 500 }
@@ -231,7 +221,7 @@ export const updateEventBySlug = async (slug: string, input: UpdateEventInput) =
   const admin = createServiceClient()
   const { data: existing, error: findError } = await admin
     .from("events")
-    .select("id, slug")
+    .select("id")
     .eq("slug", key)
     .maybeSingle()
 
@@ -254,7 +244,7 @@ export const updateEventBySlug = async (slug: string, input: UpdateEventInput) =
   if (!data) return { ok: false as const, error: "Could not save this event.", status: 500 }
 
   if (input.tags) await syncEventTags(admin, input.tags)
-  return finishWrite(data, typeof existing.slug === "string" ? existing.slug : key)
+  return finishWrite(data)
 }
 
 export const deleteEventBySlug = async (slug: string) => {
@@ -281,7 +271,7 @@ export const deleteEventBySlug = async (slug: string) => {
   if (!removed) return { ok: false as const, error: "Event not found", status: 404 }
 
   const deletedSlug = typeof existing.slug === "string" ? existing.slug : key
-  refreshEvents(deletedSlug)
+  refreshEvents()
   return {
     ok: true as const,
     deleted: {

@@ -96,7 +96,7 @@ Optional: `location`, `organizer`, `description`, `highlight`, `url`, `status`, 
 
 `tags` are lowercase slugs (`hackathon`), not display labels. `photos` is an array of `{ id, url, alt, caption }` (`id` is a UUID, `url` is HTTPS or `/images/...`).
 
-Writes refresh the same cache as an admin event save (`portfolio-events`, `portfolio-tags`, `/`, `/events`, `/events/{slug}`, `/admin/events`, sitemap).
+Writes refresh the same cache as an admin event save (`portfolio`, `portfolio-tags`, `portfolio-events`, the root layout, and `/sitemap.xml`).
 
 ```bash
 curl -sS -X POST "$SITE_URL/api/agent/events" \

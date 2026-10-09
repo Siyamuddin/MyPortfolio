@@ -111,21 +111,17 @@ const request = ({ body, auth = "Bearer test-only-key", failJson = false } = {})
   },
 })
 
-const expectRefresh = (cache, invalidations, slug) => {
+const expectRefresh = (cache, invalidations) => {
   const seen = invalidations.splice(0, invalidations.length)
   const { refreshEvents } = sourceLoader({ "next/cache": cache })("src/lib/portfolio/events-cache.ts")
   const before = invalidations.length
-  refreshEvents(slug)
+  refreshEvents()
   assert.deepEqual(seen, invalidations.slice(before))
   for (const entry of [
-    ["tag", "portfolio-events"],
+    ["tag", "portfolio"],
     ["tag", "portfolio-tags"],
-    ["path", "/", null],
-    ["path", "/events", null],
-    ["path", `/events/${slug}`, null],
-    ["path", "/tags", "layout"],
-    ["path", "/admin/events", null],
-    ["path", "/admin", null],
+    ["tag", "portfolio-events"],
+    ["path", "/", "layout"],
     ["path", "/sitemap.xml", null],
   ]) {
     assert.ok(
@@ -191,7 +187,7 @@ test("creating an event defaults to draft and refreshes the public events cache"
   assert.equal("slug" in writes[0].row, false)
   assert.equal("id" in writes[0].row, false)
   assert.equal(writes.some((write) => write.table === "tags"), false)
-  expectRefresh(cache, invalidations, "campus-hackathon")
+  expectRefresh(cache, invalidations)
 })
 
 test("published creates keep the requested slug, photos, and tag registry", async () => {
@@ -241,7 +237,7 @@ test("listing events includes drafts and does not filter by status", async () =>
   assert.deepEqual(clone(writes[0].orders[1]), ["created_at", { ascending: false }])
 })
 
-test("slug routes read, update, and delete drafts and refresh both slugs when renamed", async () => {
+test("slug routes read, update, and delete drafts and refresh the public cache when renamed", async () => {
   const renamed = storedEvent({ slug: "finals-weekend", status: "published" })
   const { writes, invalidations, cache, load } = harness({
     responses: [
@@ -273,8 +269,7 @@ test("slug routes read, update, and delete drafts and refresh both slugs when re
 
   const seen = invalidations.splice(0, invalidations.length)
   const { refreshEvents } = sourceLoader({ "next/cache": cache })("src/lib/portfolio/events-cache.ts")
-  refreshEvents("campus-hackathon")
-  refreshEvents("finals-weekend")
+  refreshEvents()
   assert.deepEqual(seen, invalidations.splice(0, invalidations.length))
 
   const removed = await routes.DELETE(request(), { params: Promise.resolve({ slug: "finals-weekend" }) })
@@ -285,7 +280,7 @@ test("slug routes read, update, and delete drafts and refresh both slugs when re
     title: "Campus hackathon",
   })
   assert.equal(writes.at(-1).operation, "delete")
-  expectRefresh(cache, invalidations, "finals-weekend")
+  expectRefresh(cache, invalidations)
 })
 
 test("partial updates do not clear omitted tags or refresh a missing event", async () => {

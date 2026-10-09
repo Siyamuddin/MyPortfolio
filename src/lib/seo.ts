@@ -86,13 +86,6 @@ export type PageSeoInput = {
   keywords?: string[]
 }
 
-/**
- * The single metadata builder every route type plugs into. Pages describe their
- * content (title, description, canonical path, optional overrides) and receive a
- * complete, consistent `Metadata` object with aligned canonical, Open Graph and
- * Twitter tags. Page-specific needs are expressed through the optional override
- * fields rather than hand-rolled metadata.
- */
 export const buildPageMetadata = ({
   title,
   description,

@@ -1,10 +1,13 @@
 import type { BlogPost } from "@/lib/types"
 
+export const isPublishedArticle = (
+  post: Pick<BlogPost, "status" | "slug" | "body">
+): boolean =>
+  post.status === "published" && Boolean(post.slug) && post.body.trim().length > 0
+
 /** Published MDX article → /blog/slug; else external url; else null (static card). */
 export const getBlogPostHref = (post: BlogPost): string | null => {
-  if (post.status === "published" && post.slug && post.body.trim()) {
-    return `/blog/${post.slug}`
-  }
+  if (isPublishedArticle(post)) return `/blog/${post.slug}`
   if (post.url.startsWith("http")) return post.url
   return null
 }

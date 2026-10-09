@@ -1,7 +1,7 @@
 import { cache } from "react"
 import { unstable_cache } from "next/cache"
-import { createClient } from "@supabase/supabase-js"
 import { requireAdmin } from "@/lib/portfolio/auth"
+import { createAnonClient } from "@/lib/portfolio/repository"
 import {
   EVENTS_CACHE_TAG,
   EVENTS_SETUP_MESSAGE,
@@ -10,7 +10,7 @@ import {
   mapEventRow,
   type PortfolioEvent,
 } from "@/lib/portfolio/events"
-import { getSupabaseEnv, isSupabaseConfigured } from "@/lib/supabase/env"
+import { isSupabaseConfigured } from "@/lib/supabase/env"
 
 const EVENT_COLUMNS =
   "id,slug,title,category,date,location,organizer,description,highlight,url,status,photos,tags,og_image,updated_at"
@@ -20,10 +20,8 @@ const parseEvents = (data: unknown): PortfolioEvent[] =>
 
 const getCachedPublishedEvents = unstable_cache(
   async (): Promise<PortfolioEvent[]> => {
-    const { url, anonKey } = getSupabaseEnv()
-    const supabase = createClient(url, anonKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    })
+    const supabase = createAnonClient()
+    if (!supabase) return []
     const { data, error } = await supabase
       .from("events")
       .select(EVENT_COLUMNS)

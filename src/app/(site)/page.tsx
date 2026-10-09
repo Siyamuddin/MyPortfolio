@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { AboutPage } from "@/components/pages/AboutPage"
+import { isPublishedArticle } from "@/lib/portfolio/blog"
 import { getPortfolio } from "@/lib/portfolio/repository"
 import { getPublishedEvents } from "@/lib/portfolio/events-repository"
 import { resolveFeaturedEvent } from "@/lib/portfolio/featured-event"
@@ -35,9 +36,7 @@ export default async function HomePage() {
         services={portfolio.services}
         skills={portfolio.skills}
         faqs={portfolio.faqs}
-        featuredPosts={portfolio.blogPosts.filter(
-          (post) => post.status === "published" && post.slug && post.body.trim(),
-        )}
+        featuredPosts={portfolio.blogPosts.filter(isPublishedArticle)}
         featuredEvent={featuredEvent}
       />
     </>

@@ -6,7 +6,7 @@ import {
   isLikelyBot,
   isTrackablePath,
 } from "@/lib/analytics/hash"
-import { trustedClientIp } from "@/lib/rate-limit"
+import { guardSubmissionRate, trustedClientIp } from "@/lib/rate-limit"
 import { createServiceClient } from "@/lib/supabase/admin"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 
@@ -41,6 +41,9 @@ export const POST = async (request: NextRequest) => {
     if (!isTrackablePath(path)) {
       return new NextResponse(null, { status: 204 })
     }
+
+    const blocked = await guardSubmissionRate(request, "analytics")
+    if (blocked) return new NextResponse(null, { status: 204 })
 
     const visitorHash = hashVisitor(trustedClientIp(request), userAgent)
     const admin = createServiceClient()

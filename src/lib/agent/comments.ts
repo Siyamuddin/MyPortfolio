@@ -18,8 +18,12 @@ export const listComments = async (status?: string) => {
     .select("*, blog_posts(title, slug)")
     .order("created_at", { ascending: false })
 
-  if (status && commentStatusSchema.safeParse(status).success) {
-    query = query.eq("status", status)
+  if (status !== undefined) {
+    const parsed = commentStatusSchema.safeParse(status)
+    if (!parsed.success) {
+      return { ok: false as const, error: "Validation failed.", status: 400 }
+    }
+    query = query.eq("status", parsed.data)
   }
 
   const { data, error } = await query

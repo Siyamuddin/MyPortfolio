@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { guardAgentRequest } from "@/lib/agent/auth"
+import { agentFailure } from "@/lib/agent/common"
 import { uploadPortfolioFile } from "@/lib/agent/upload"
 
 export const POST = async (request: NextRequest) => {
@@ -28,12 +29,7 @@ export const POST = async (request: NextRequest) => {
   }
 
   const result = await uploadPortfolioFile(file, folder)
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: result.status }
-    )
-  }
+  if (!result.ok) return agentFailure(result)
   return NextResponse.json({
     ok: true,
     url: result.url,

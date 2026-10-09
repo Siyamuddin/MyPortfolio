@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { guardAgentRequest } from "@/lib/agent/auth"
+import { agentFailure, readJsonBody } from "@/lib/agent/common"
 import { SEED_CONFIRM, seedFromStatic } from "@/lib/agent/seed"
 
 const seedSchema = z.object({
@@ -12,14 +13,10 @@ export const POST = async (request: NextRequest) => {
   const blocked = await guardAgentRequest(request)
   if (blocked) return blocked
 
-  let body: unknown
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json({ ok: false, error: "Invalid JSON body." }, { status: 400 })
-  }
+  const json = await readJsonBody(request)
+  if (!json.ok) return json.response
 
-  const parsed = seedSchema.safeParse(body)
+  const parsed = seedSchema.safeParse(json.body)
   if (!parsed.success) {
     return NextResponse.json(
       {
@@ -31,11 +28,6 @@ export const POST = async (request: NextRequest) => {
   }
 
   const result = await seedFromStatic(parsed.data.confirm)
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: result.status }
-    )
-  }
+  if (!result.ok) return agentFailure(result)
   return NextResponse.json({ ok: true, message: "Seeded from static portfolio data." })
 }

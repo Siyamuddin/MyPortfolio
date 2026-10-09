@@ -6,21 +6,21 @@ import {
 } from "@/lib/agent/common"
 import { createServiceClient } from "@/lib/supabase/admin"
 
-export const serviceCreateSchema = z.object({
+const serviceCreateSchema = z.object({
   title: z.string().min(1).max(200),
   description: z.string().min(1).max(5000),
   icon: z.string().min(1).max(100).default("Code2"),
   sort_order: z.coerce.number().int().optional(),
 })
 
-export const skillCreateSchema = z.object({
+const skillCreateSchema = z.object({
   name: z.string().min(1).max(200),
   color: z.string().min(1).max(50).default("#ffffff"),
   icon: z.string().max(2000).default(""),
   sort_order: z.coerce.number().int().optional(),
 })
 
-export const educationCreateSchema = z.object({
+const educationCreateSchema = z.object({
   school: z.string().min(1).max(300),
   degree: z.string().min(1).max(300),
   period: z.string().min(1).max(100),
@@ -28,7 +28,7 @@ export const educationCreateSchema = z.object({
   sort_order: z.coerce.number().int().optional(),
 })
 
-export const experienceCreateSchema = z.object({
+const experienceCreateSchema = z.object({
   role: z.string().min(1).max(300),
   company: z.string().min(1).max(300),
   period: z.string().min(1).max(100),
@@ -37,7 +37,7 @@ export const experienceCreateSchema = z.object({
   sort_order: z.coerce.number().int().optional(),
 })
 
-export const projectCreateSchema = z.object({
+const projectCreateSchema = z.object({
   title: z.string().min(1).max(300),
   category: z.enum(["Web Development", "Applications", "Automation"]),
   image: z.string().max(2000).default(""),
@@ -46,7 +46,7 @@ export const projectCreateSchema = z.object({
   sort_order: z.coerce.number().int().optional(),
 })
 
-export const faqCreateSchema = z.object({
+const faqCreateSchema = z.object({
   question: z.string().min(1).max(500),
   answer: z.string().min(1).max(10000),
   sort_order: z.coerce.number().int().optional(),

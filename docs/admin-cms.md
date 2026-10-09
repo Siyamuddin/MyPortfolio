@@ -56,7 +56,7 @@ Use `/admin` sections:
 - **Messages** — read/archive/delete contact form submissions
 - **Dashboard → Visitors** — page views and unique visitors for today, this month, and this year
 
-Uploads go to the `portfolio` Storage bucket (`avatars/`, `projects/`, `blog/`, `skills/`, `resume/`).
+Uploads go to the `portfolio` Storage bucket (`avatars/`, `projects/`, `blog/`, `skills/`, `resume/`, `events/`).
 
 Published posts with a body are available at `/blog/{slug}`. List cards prefer the article route, then an external `url`, otherwise a non-clickable card.
 
